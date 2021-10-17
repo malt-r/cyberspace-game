@@ -157,14 +157,14 @@ TODO.
 
 ## TODO ##
 
-- Spielidee präzisieren, was soll in den einzelnen Levels passieren?
-- Projektplan (Milestones)
-- Zuständigkeiten festlegen
+- [x] Spielidee präzisieren, was soll in den einzelnen Levels passieren?
+- [ ] Projektplan (Milestones)
+- [ ] Zuständigkeiten festlegen
 
 ## Spielidee präzisieren ##
 
-### Levels ###
-- 1
+### Spielablauf ###
+- Level 1
     - Tutorial (nicht generiert, immer die gleichen Voraussetzungen)
         - Story-Exposition
             - Computer sagt hallo
@@ -181,50 +181,90 @@ TODO.
         - Monster hinter Gitter darstellen, um Angst hervorzurufen (das erste Mal charakteristischen
             Soundeffekt abspielen)
         - Monster nach Laufen lernen freilassen, um Spieler aus Tutorial Level rauszujagen
+            - Motivation erhöhen, über das Tutorial hinauszugehen
+            - Wegfindung wird so auch gefördert
         - Danach Tür zum zweiten Teil von Level 1
     - zweiter Teil (generiert)
         - Fähigkeiten:
-            - Sprinten (um schnell genug über Abgrund springen zu können)
-            - Springen (um über Abgrund springen zu können)
+            - Sprinten (um schnell genug über Abgrund springen zu können) (left shift)
+            - Springen (um über Abgrund springen zu können) (leertaste)
+                - Bedienkonzept mit Maus allein definieren
+                    - klicken und halten: laufen
+                    - doppelklicken und halten: sprinten
+                    - rechte maustaste: springen
             - Iteragieren (um Rätsel zu starten, Items/Collectibles aufzuheben)
         - Collectibles einführen (2 Stück)
-        - Frei laufende Monster, die noch nicht besiegt werden können?
-            (evtl. schwierig im Balancing)
+            - Sammel / Erkundungsmotivation generieren
     - nach Level-Abschluss ein Zusammenfassungs-Bildschirm, der Statistik anzeigt
         - Zeit
         - besiegte Monster
         - gefundene Collectibles
-        - evtl. Hochrechnung (Level __gut__ abgeschlossen oder schlecht?)
-- 2
+- Level 2
     - Kampfmechnik einführen
-    - Rätselmechanik einführen
+        - 'Waffe' muss erst gefunden werden
+            - Waffe freischalten durch Rätsel an PC / Logikboard um anschließend Waffe runterladen zu können
+        - 'Waffe' muss Cooldown / Munition haben
+            - Überhitzen der Waffe ist hier erstmal am elegantesten und ist einfach
+            in der Umsetzung
+                - Verhindert, dass der Spieler keine Munition mehr hat, aber trotzdem
+                    nicht dauerhaft 'schießen' kann
+    - Rätselmechanik einführen (siehe oben)
+        - Nutzen, um Geheimtüren zu öffnen
+        - Rätsel in eigenem Fenster, welches durch Interaktion geöffnet wird
     - neue Fähigkeiten
-        - Dishonored-style 'Blink'? -> eher schwierig, sinnvoll einzusetzen
-        - Zeit verlangsamen? -> technisch einfach möglich? Evtl. sowieso durch
-            Pulsmessung triggern
-        -
+        - Gegner wegstoßen als Fähigkeit
+        - Mit Waffe die Überreste von Gegnern aufsammeln, um zu heilen
+        - Falls Gegner Fähigkeiten hat, und aufgesogen wird, bekommt Spieler der
+            Fähigkeit auch (als Waffenfähigkeit)
+        - Auswahl zwischen verschiedenen Waffenmodi -> Fähigkeiten werden auch mit
+            gleichem Energiepool versorgt, wie normale Angriffe
     - mehr Collectibles
-- 3
+- Level 3
     - Kampfmechanik und Rätselmechanik weiter herausfordern
         - mehr Gegner
         - schwerere Rätsel
-        - neue 'Waffe', welche für anderen Gegnertyp gebraucht wird
+        - neue Waffenfähigkeit, die für bestimmten Gegnertyp benötigt wird
+            - 'Logikbombe' für gepanzerten Gegner
     - mehr Collectibles
-    - Bosskampf
+    - Bosskampf (falls Zeit)
+        - Design: großer schwebener Computerbildschirm, der böse 'guckt' (mit ASCII-
+            Zeichen)
+        - 'Schildgeneratoren' machen Boss unbesiegbar -> müssen zerstört werden
+        - Boss hat große Lebensleiste
+        - Boss spawnt Gegner
+        - Boss macht Boden zu 'Lava' -> Level hat Erhöhungen, auf denen man stehen
+            muss, um keinen Schaden zu bekommen
 
-### Fähigkeiten ###
-- Tutorial Level (erster Teil Level 1)
-    - Gucken
+### Arbeitspakete / Kernmechaniken ###
+
+- Spielerbewegung (evtl. Unity First Person Controller nutzen)
     - Umsehen
     - Laufen
-- Sprinten (Falle,)
-- Springen
+    - Sprinten
+    - Springen
+- Kampfmechanik
+    - Fähigkeitenauswahl
+    - Schießen
+    - Überhitzen
+    - Gesundheit
+    - Überreste aufsaugen
+- Fähigkeiten
+    - Gegner wegstoßen
+    - Bombe werfen
+- Gegner
+    - KI
+    - Angriffsmuster
+    - Navigation
+- Collectibles
+    - Aufsammeln
+- Pulsmesser
+- Rätsel
+    - Rätselfenster
+    - Rätselmechanik
+        - Bsp: Logikgatter hin und her ziehen und verbinden
+- Bosskampf
+- 'Sprachausgabe' vom Computer
+- Hilfetaste
+- Levelgenerierung
 
-
-### Aufgaben ###
-
-
-<!-- Kerstin zu gitlab hinzufügen -->
-
-<!-- Andre Gruppe zu Assets fragen -->
 
