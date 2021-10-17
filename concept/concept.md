@@ -1,8 +1,24 @@
 # Konzept #
 
+Arbeitstitel: Cyberspace
+
 ## Für welche Zielgruppe / Personas? ##
 
 - Jugendliche & Junge Erwachsene (sollten Englisch sprechen können)
+TODO: Personas
+
+## Story ##
+
+Der Spieler ist in einem Computer (Cyberspace) gefangen und muss entkommen, indem er die Simulation
+durch das Lösen einiger Rätsel (evtl. Logikrätsel?) "manipuliert", das Level erkundet
+"Monster" bekämpft und so neue Fähigkeiten freischaltet.
+
+Erst ist der Spieler relativ machtlos, nach und nach stärker werden. Erst Monster große Bedrohung,
+nach und nach immer mehr Möglichkeiten, sich zu wehren.
+
+Gegner sind Computerviren. "Waffe" ist Virenscanner.
+<!-- Fähigkeiten sind Firmwaremodule. -->
+
 
 ## Spielidee ##
 
@@ -16,27 +32,14 @@
 - Währrenddessen:
     - Fähigkeiten freischalten, um zu entkommen
         - Bei Beginn fehlen die Basisfähigkeiten (z.B. sich umsehen)
-    - Rätsel lösen (Logikgatter) -> Lernaspekt, langsam steigender Schwierigkeitsgrad?
+    - Rätsel lösen (z.B. Logikgatter)
         - TODO: Anteil am gesamten Spielablauf festlegen!
     - Collectibles sammeln (Erkundungsmotivation), Freischaltung von Coolem Kram bei Vervollständigung
-    - Monster bekämpfen/ davor flüchten (Anteil von Blut und Gedärmen sollte gering sein)
+    - Monster bekämpfen/ davor flüchten
     - Monster sind Computerviren (bekämpfen mit 'Virenscanner')
-- Zeit: ca. 15 Minute zum Durchspielen
-    - evtl. auch so umsetzen, dass man mehr Zeit drin verbringen kann
+- Zeit: ca. 15-20 Minuten zum Durchspielen
+    - evtl. auch so umsetzen, dass man mehr Zeit verbringen kann
 - Mehrere Levels
-
-## Story ##
-
-Der Spieler ist in einem Computer gefangen und muss entkommen, indem er die Simulation
-durch das Lösen einiger Rätsel (evtl. Logikrätsel?) "manipuliert" und so neue
-Fähigkeiten freischaltet.
-
-Erst relativ machtlos, nach und nach stärker werden. Erst Monster große Bedrohung,
-nach und nach immer mehr Möglichkeiten, sich zu wehren.
-
-Fähigkeiten sind Firmwaremodule.
-
-Gegner sind Computerviren. "Waffe" ist Virenscanner.
 
 ## Welche Aufgaben werden gelöst ##
 
@@ -52,11 +55,11 @@ Gegner sind Computerviren. "Waffe" ist Virenscanner.
 
 Den "Computer" schlagen und aus dem Cyberspace entkommen.
 
-- Irgendwie noch Erkundungskomponente hinzufügen, um prozeduralen Aspekt zu berücksichtigen
+- Erkundungskomponente
     (Hauptaufgabe vs. kleine Zusatzinformationen, die man finden kann ('ROM-Module',
     die Hintergrundstory enthalten -> Zähler wird beim Finden inkrementiert, schafft
     Anreiz für Erkundung))
-- Einige Monste benötigen die richtige Waffe, um weiterzukommen -> muss andere Räume
+- Einige Monster benötigen die richtige 'Waffe', um weiterzukommen -> muss andere Räume
     erkunden, um zu finden
     - Bei falscher Waffe vermehren sich evtl. manche Gegner
 
@@ -65,8 +68,8 @@ Den "Computer" schlagen und aus dem Cyberspace entkommen.
 - Maus/Tastatur
 - nur Maus mit zusätzlicher Belegung von Maustasten und Mausrad
 - Gamepad
-- (Pulssensor & VR, falls möglich)
-- druckempfindliche Matte
+- (Pulssensor &/ VR, falls möglich)
+- (druckempfindliche Matte)
 
 ## Barrierefrei? ##
 
@@ -82,7 +85,7 @@ Springen mit rechtem Mausklick)
 - Farbliche Hervorhebung von relevanten Spielelementen
     - Umrandung
     - langsames Blinken
-    - Ansagen vom "Computer"
+- Ansagen vom "Computer"
 - Räume, in denen man schon war, werden auf karte angezeigt
 - magischer Pfeil, der Richtung anzeigt.
 - Hilfetaste (mit Cooldown)
@@ -103,8 +106,8 @@ Springen mit rechtem Mausklick)
 ## Aufgabe/Story motivierend? ##
 
 - Freiheitsgedanke ist attraktiv
-- ja, da gradueller Fähigkeitenzuwachs sich vielfach in der Spieleindustrie
-    bewährt hat
+- gradueller Fähigkeitenzuwachs hat sich vielfach in der Spieleindustrie
+    bewährt
 - durch konkrete Ebene/Level immer klare Signale, dass ein Spielabschnitt abgeschlossen
     wurde
 
@@ -140,21 +143,25 @@ Springen mit rechtem Mausklick)
 - Epilepsie-Disclaimer
 - Bei hohem Puls (falls Pulsmesser) Spielgeschwindigkeit verringern / beruhigende
     Musik abspielen
-    - Option, welche das umkehrt (Hardcore-Modus)
+    - Optional umgekehrter Zusammenhang
 
-# Kernkonzept Besprechung 08_10_21 #
+## Technologie ##
 
-- Proband in Spiele-Evaluation, bekommt VR-Brille auf, ist dann gefangen genommen.
-- Spielziel: Fähigkeiten erlangen, um aus Cyberspace zu entkommen
-- Währrenddessen:
-    - Rätsel lösen (Logikgatter) -> Lernaspekt, langsam steigender Schwierigkeitsgrad?
-        - TODO: Anteil am gesamten Spielablauf festlegen!
-    - Fähigkeiten freischalten
-    - Collectibles sammeln (Erkundungsmotivation), Freischaltung von Coolem Kram bei Vervollständigung
-    - Monster bekämpfen/ davor flüchten (Anteil am Spiel sollte gering sein)
-    - Monster sind Computerviren (bekämpfen mit 'Virenscanner')
-- Musik? Adaptiv? (Falls Zeit) Einfach irgendwas? Nur Soundeffekte?
-- Mehrere Level?
-- prozedurale Generierung von Levels (was genau generieren? Was vorher definieren?)
-    - Räume fertig modellieren, prozedural die Korridore dazwischen erzeugen
-- Boss? Irgendwas, was man besiegen / kaputtmachen muss -> Motivation.
+- Engine: Unity
+- Platform: Browser (Webassembly)
+
+## Projektplan ##
+
+TODO.
+
+## TODO ##
+
+- Spielidee präzisieren, was soll in den einzelnen Levels passieren?
+- Projektplan (Milestones)
+- Zuständigkeiten festlegen
+
+
+<!-- Kerstin zu gitlab hinzufügen -->
+
+<!-- Andre Gruppe zu Assets fragen -->
+
