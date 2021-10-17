@@ -40,6 +40,7 @@ Gegner sind Computerviren. "Waffe" ist Virenscanner.
 - Zeit: ca. 15-20 Minuten zum Durchspielen
     - evtl. auch so umsetzen, dass man mehr Zeit verbringen kann
 - Mehrere Levels
+- Low Poly Stil
 
 ## Welche Aufgaben werden gelöst ##
 
@@ -159,6 +160,68 @@ TODO.
 - Spielidee präzisieren, was soll in den einzelnen Levels passieren?
 - Projektplan (Milestones)
 - Zuständigkeiten festlegen
+
+## Spielidee präzisieren ##
+
+### Levels ###
+- 1
+    - Tutorial (nicht generiert, immer die gleichen Voraussetzungen)
+        - Story-Exposition
+            - Computer sagt hallo
+            - Computer erklärt, dass man gefangen ist und keine Macht in dem
+                Cyberspace hat
+            - Computer gibt Tipps auf sarkastische Art ("Bewege auf gar keinen Fall
+                die Maus" -> Mausbewegung führt zum Lernen von Fähigkeit "Sich umsehen", oder
+                so)
+        - Fähigkeiten:
+            - Gucken
+            - Umsehen
+            - Laufen
+        - Hilfetaste erwähnen
+        - Monster hinter Gitter darstellen, um Angst hervorzurufen (das erste Mal charakteristischen
+            Soundeffekt abspielen)
+        - Monster nach Laufen lernen freilassen, um Spieler aus Tutorial Level rauszujagen
+        - Danach Tür zum zweiten Teil von Level 1
+    - zweiter Teil (generiert)
+        - Fähigkeiten:
+            - Sprinten (um schnell genug über Abgrund springen zu können)
+            - Springen (um über Abgrund springen zu können)
+            - Iteragieren (um Rätsel zu starten, Items/Collectibles aufzuheben)
+        - Collectibles einführen (2 Stück)
+        - Frei laufende Monster, die noch nicht besiegt werden können?
+            (evtl. schwierig im Balancing)
+    - nach Level-Abschluss ein Zusammenfassungs-Bildschirm, der Statistik anzeigt
+        - Zeit
+        - besiegte Monster
+        - gefundene Collectibles
+        - evtl. Hochrechnung (Level __gut__ abgeschlossen oder schlecht?)
+- 2
+    - Kampfmechnik einführen
+    - Rätselmechanik einführen
+    - neue Fähigkeiten
+        - Dishonored-style 'Blink'? -> eher schwierig, sinnvoll einzusetzen
+        - Zeit verlangsamen? -> technisch einfach möglich? Evtl. sowieso durch
+            Pulsmessung triggern
+        -
+    - mehr Collectibles
+- 3
+    - Kampfmechanik und Rätselmechanik weiter herausfordern
+        - mehr Gegner
+        - schwerere Rätsel
+        - neue 'Waffe', welche für anderen Gegnertyp gebraucht wird
+    - mehr Collectibles
+    - Bosskampf
+
+### Fähigkeiten ###
+- Tutorial Level (erster Teil Level 1)
+    - Gucken
+    - Umsehen
+    - Laufen
+- Sprinten (Falle,)
+- Springen
+
+
+### Aufgaben ###
 
 
 <!-- Kerstin zu gitlab hinzufügen -->
