@@ -63,6 +63,16 @@ namespace StarterAssets
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
 
+
+		//Flags for basic skills
+		//Flags are used instead of setting speeds to zero, because it's easier
+		//to give the player hints when specific conditions are false
+		public bool canSee = false;
+		public bool canLookAround = false;
+		public bool canMove = false;
+		public bool canSprint = false;
+
+
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
@@ -94,6 +104,7 @@ namespace StarterAssets
 
 		private void Update()
 		{
+
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
@@ -113,8 +124,9 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
+			if (!canLookAround) { return; }
 			// if there is an input
-			if (_input.look.sqrMagnitude >= _threshold)
+			if (_input.look.sqrMagnitude >= 0)
 			{
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * Time.deltaTime;
 				_rotationVelocity = _input.look.x * RotationSpeed * Time.deltaTime;
@@ -132,8 +144,10 @@ namespace StarterAssets
 
 		private void Move()
 		{
+			if (!canMove) { return; }
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+
+			float targetSpeed = _input.sprint && canSprint ? SprintSpeed : MoveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -145,6 +159,7 @@ namespace StarterAssets
 			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
 			float speedOffset = 0.1f;
+
 			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
 			// accelerate or decelerate to target speed
