@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonGrid<T>
+// TODO: this should probably be extended by a fixed datatype to be able to store
+// room-data (at least as indexed collection)?
+public class DungeonGrid<T> 
 {
     T[] data;
 
     public Vector3Int Size { get; private set; }
     public Vector3Int Offset { get; set; }
+    public int CellSize { get; private set; }
 
 
-    public DungeonGrid(Vector3Int size, Vector3Int offset)
+    public DungeonGrid(Vector3Int size, Vector3Int offset, int cellsize)
     {
         Size = size;
         Offset = offset;
+        CellSize = cellsize;
 
         data = new T[size.x * size.y * size.z];
     }
 
     public int GetIndex(Vector3Int pos)
     {
-        return pos.x + (Size.x * pos.y) + (Size.x * Size.y * pos.z);
+        var scaledPos = pos / CellSize;
+        return scaledPos.x + (Size.x * scaledPos.y) + (Size.x * Size.y * scaledPos.z);
     }
 
     public bool InBounds(Vector3Int pos)
@@ -51,6 +56,27 @@ public class DungeonGrid<T>
         {
             pos += Offset;
             data[GetIndex(pos)] = value;
+        }
+    }
+
+    public void DrawGrid()
+    {
+        // draw grid
+        if (true)
+        {
+            for (int y = 0; y < Size.y; y++)
+            {
+                for (int z = 0; z <= Size.z; z++)
+                {
+                    Debug.DrawLine(new Vector3(0, y, z) * CellSize, new Vector3(Size.x, y, z) * CellSize, Color.green);
+                }
+
+                for (int x = 0; x <= Size.x; x++)
+                {
+                    Debug.DrawLine(new Vector3(x, y, 0) * CellSize, new Vector3(x, y, Size.z) * CellSize, Color.green);
+                }
+            }
+
         }
     }
 }

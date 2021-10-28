@@ -26,7 +26,7 @@ namespace Assets
                 gen.ReadRooms();
             }
 
-            if (GUILayout.Button("Place First Room"))
+            if (GUILayout.Button("Place Room"))
             {
                 gen.PlaceFirstRoom();
             }
