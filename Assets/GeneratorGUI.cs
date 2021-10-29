@@ -16,13 +16,9 @@ namespace Assets
             DrawDefaultInspector();
             DungeonGenerator gen = target as DungeonGenerator;
 
-            if (GUILayout.Button("Create Grid"))
+            if (GUILayout.Button("Setup"))
             {
                 gen.CreateGrid();
-            }
-
-            if (GUILayout.Button("Read Rooms"))
-            {
                 gen.ReadRooms();
             }
 
