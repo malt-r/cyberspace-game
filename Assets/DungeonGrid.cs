@@ -8,21 +8,18 @@ public class DungeonGrid<T>
 
     public Vector3Int Size { get; private set; }
     public Vector3Int Offset { get; set; }
-    public int CellSize { get; private set; }
 
-
-    public DungeonGrid(Vector3Int size, Vector3Int offset, int cellsize)
+    public DungeonGrid(Vector3Int size, Vector3Int offset)
     {
         Size = size;
         Offset = offset;
-        CellSize = cellsize;
 
         data = new T[size.x * size.y * size.z];
     }
 
     public int GetIndex(Vector3Int pos)
     {
-        var scaledPos = pos / CellSize;
+        var scaledPos = pos;/// CellSize;
         return scaledPos.x + (Size.x * scaledPos.y) + (Size.x * Size.y * scaledPos.z);
     }
 
@@ -45,26 +42,6 @@ public class DungeonGrid<T>
         {
             pos += Offset;
             return ref data[GetIndex(pos)];
-        }
-    }
-
-    public void DrawGrid()
-    {
-        // draw grid
-        if (true)
-        {
-            for (int y = 0; y < Size.y; y++)
-            {
-                for (int z = 0; z <= Size.z; z++)
-                {
-                    Debug.DrawLine(new Vector3(0, y, z) * CellSize, new Vector3(Size.x, y, z) * CellSize, Color.green);
-                }
-
-                for (int x = 0; x <= Size.x; x++)
-                {
-                    Debug.DrawLine(new Vector3(x, y, 0) * CellSize, new Vector3(x, y, Size.z) * CellSize, Color.green);
-                }
-            }
         }
     }
 }

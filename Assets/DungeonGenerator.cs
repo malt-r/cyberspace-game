@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DungeonGenerator : MonoBehaviour
 {
+    // coord-systems:
+    // - cell-coordinates (without consideration of cellsize)
+    // - grid-coordinates (with consideration of cellsize)
+    // - room-coordinates (used for scanning the geometry of a room, local to room itself)
     public struct Cell
     {
         public CellType type;
@@ -13,7 +17,8 @@ public class DungeonGenerator : MonoBehaviour
     {
         Free,
         Room,
-        Hallway
+        Hallway,
+        Bufferzone // adjacent to room or on border of grid
     };
 
     public class Room
@@ -23,6 +28,11 @@ public class DungeonGenerator : MonoBehaviour
         public Room(GameObject go)
         {
             GameObject = go;
+        }
+
+        public Vector3 MeshExtents()
+        {
+            return GameObject.GetComponent<MeshFilter>().sharedMesh.bounds.extents;
         }
     }
 
@@ -35,6 +45,9 @@ public class DungeonGenerator : MonoBehaviour
 
     [SerializeField]
     int CellSize = 4;
+
+    [SerializeField]
+    int OuterBufferZone = 2;
 
     [SerializeField]
     bool ShowGrid = true;
@@ -71,7 +84,28 @@ public class DungeonGenerator : MonoBehaviour
 
     public void CreateGrid()
     {
-        _grid = new DungeonGrid<Cell>(GridDimensions, Vector3Int.zero, CellSize);
+        Random.InitState(42);
+        _grid = new DungeonGrid<Cell>(GridDimensions, Vector3Int.zero);
+
+        for (int x = 0; x < _grid.Size.x; x++)
+        {
+            if (x < OuterBufferZone)
+            {
+                for (int z = 0; z < _grid.Size.z; z++)
+                {
+                    _grid[x, 0, z].type = CellType.Bufferzone;
+                    _grid[_grid.Size.x - x - 1, 0, _grid.Size.z - z - 1].type = CellType.Bufferzone;
+                }
+            }
+            else
+            {
+                for (int z = 0; z < OuterBufferZone; z++)
+                {
+                    _grid[x, 0, z].type = CellType.Bufferzone;
+                    _grid[_grid.Size.x - x - 1, 0, _grid.Size.z - z - 1].type = CellType.Bufferzone;
+                }
+            }
+        }
     }
 
     public void ReadRooms()
@@ -82,13 +116,19 @@ public class DungeonGenerator : MonoBehaviour
         }
         else 
         {
-            var colliders = Physics.OverlapBox(RoomFinder.bounds.center, RoomFinder.bounds.extents / 0.5f);
+            var colliders = 
+                Physics.OverlapBox
+                (
+                    RoomFinder.bounds.center,
+                    RoomFinder.bounds.extents / 0.5f
+                    );
             _rooms = new List<Room>(colliders.Length - 1);
 
             foreach (var collider in colliders)
             {
                 if (this.RoomFinder.gameObject != collider.gameObject) // will find the finder collider
                 {
+                    Debug.LogWarning("Found room: " + collider.gameObject.name + "; idx: " + _rooms.Count);
                     _rooms.Add(new Room(collider.gameObject));
                 }
             }
@@ -102,23 +142,42 @@ public class DungeonGenerator : MonoBehaviour
         PlaceRoom(RoomIdx, PlacementCell);
     }
 
-    // TODO: cleanup transformations
+    // select random cell within gird-size with border = 2 cells (to ensure,
+    // that doors always can be connected on each side
+    // ensure, that rooms are not directly placed besides each other (one cell in
+    // between)
+    // ensure, that room is completely placed within borders -> use mesh-extents
+    public void PlaceRooms()
+    {
+        foreach (var room in _rooms)
+        {
+            // get random position
+            int x = Mathf.FloorToInt(Random.Range(2.0f, (float)GridDimensions.x) - 2);
+            int y = Mathf.FloorToInt(Random.Range(2.0f, (float)GridDimensions.z) - 2);
+        }
+    }
+
 
     // foreach cell which intersects with the actual extents offset by 
     // the location (and rotation, tbd), check, if the mesh overlaps with the
     // middle-coordinate of the cell -> this is not an exact measurement,
     // but if all rooms adhere to the gridsize, this should match up
-    List<Vector3Int> GetOverlappingCells(GameObject room, Vector2 placementLocation, Vector3 rotation)
+    //
+    // The cells in the returned list will be laid out in z-columns in ascending order.
+    List<Vector3Int> GetOccupiedCells
+        (
+        Room room, 
+        Vector2 placementCell,
+        Vector3 rotation
+        ) 
     {
         List<Vector3Int> overlappingCells = new List<Vector3Int>();
 
         // get mesh extents
-        var filter = room.GetComponent<MeshFilter>();
-        var mesh = filter.sharedMesh;
-        var actualExtents = mesh.bounds.extents * 2;
+        var actualExtents = room.MeshExtents() * 2;
 
-        var roomObjectPosition = room.transform.position;
-        var placementLoc3 = new Vector3(placementLocation.x, 0, placementLocation.y);
+        var roomObjectPosition = room.GameObject.transform.position; // global coord
+        var placementLoc3 = new Vector3(placementCell.x, 0, placementCell.y);
 
         const int rayStartHeight = 50;
         const int rayDrawHeight = 1 - rayStartHeight;
@@ -130,7 +189,7 @@ public class DungeonGenerator : MonoBehaviour
         {
             for (int z = 0; z < actualExtents.z / CellSize; z++)
             {
-                // location in global coord-system
+                // global coord
                 var locToCheck = 
                     roomObjectPosition + 
                     new Vector3(
@@ -145,9 +204,9 @@ public class DungeonGenerator : MonoBehaviour
                 foreach (var hit in hits)
                 {
                     // TODO: should consider offset
-                    if (hit.collider.gameObject == room)
+                    if (hit.collider.gameObject == room.GameObject)
                     {
-                        var gridCell = placementLoc3 + new Vector3(x * CellSize, 0 , z * CellSize);
+                        var gridCell = placementLoc3 + new Vector3(x, 0, z);
                         overlappingCells.Add(Vector3Int.FloorToInt(gridCell));
                         break;
                     }
@@ -157,16 +216,27 @@ public class DungeonGenerator : MonoBehaviour
         return overlappingCells;
     }
 
+
+    //private bool IsPlacementValid(Room room, Vector2 location, List<Vector3Int> cellCoords)
+    //{
+    //    var extents = room.MeshExtents();
+
+    //    // do room extents lay in grid-boundaries?
+    //    if (extents.x > )
+
+    //    return true;
+    //}
+
     // returns false, if one of the passed cells is already occupied
-    private bool IsPlacementValid(List<Vector3Int> cellCoords)
+    private bool AreCellsFree(List<Vector3Int> cellCoords)
     {
         foreach (var cellCoord in cellCoords)
         {
-            var cellType = _grid[cellCoord].type;
+            var cellType = _grid[cellCoord].type; 
 
-            if (cellType == CellType.Room || cellType == CellType.Hallway)
+            if (cellType != CellType.Free)
             {
-                Debug.LogError("Sorry, can't place room in cell " + (cellCoord/CellSize).ToString());
+                Debug.LogError("Sorry, can't place room in cell " + cellCoord.ToString());
                 return false;
             }
         }
@@ -175,33 +245,139 @@ public class DungeonGenerator : MonoBehaviour
 
     // instantiate room gameobject at location and mark the overlapping cells 
     // as occupied
-    private void InstantiateRoom(Room room, Vector2 location, List<Vector3Int> overlappingCells)
+    private void InstantiateRoom(Room room, Vector2 cell, List<Vector3Int> overlappingCells)
     {
+        // location: grid-coords
+        var location = cell * CellSize; // TODO: this should be encapsulated in method and take into account the offset
+
         var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
         _instantiatedRooms.Add(go);
 
-        foreach (var cell in overlappingCells)
+        foreach (var overlappingCell in overlappingCells)
         {
-            _grid[cell].type = CellType.Room;
+            _grid[overlappingCell].type = CellType.Room;
         }
+
+        // TODO: designate cells around as bufferzone
+        Vector3Int previousCell = overlappingCells[0];
+        Vector3Int currentCell;
+
+        Vector3Int vecLeftBelow =   new Vector3Int(-1, 0, -1);
+        Vector3Int vecLeft =        new Vector3Int(-1, 0,  0);
+        Vector3Int vecLeftAbove =   new Vector3Int(-1, 0,  1);
+        Vector3Int vecAbove =       new Vector3Int( 0, 0,  1);
+        Vector3Int vecBelow =       new Vector3Int( 0, 0, -1);
+        Vector3Int vecRightAbove =  new Vector3Int( 1, 0,  1);
+        Vector3Int vecRight =       new Vector3Int( 1, 0,  0);
+        Vector3Int vecRightBelow =  new Vector3Int( 1, 0, -1);
+        //bool firstRow = true;
+        //bool switchedRow = false;
+        //int lastColMaxZ = 0;
+        //int lastColMinZ = 0;
+
+        for (int i = 0; i < overlappingCells.Count; i++)
+        {
+            currentCell = overlappingCells[i];
+            // check for each cell around, if a room, and if not, set to bufferzone
+            if (_grid[currentCell + vecLeftBelow].type != CellType.Room) _grid[currentCell + vecLeftBelow].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecLeft].type != CellType.Room) _grid[currentCell + vecLeft].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecLeftAbove].type != CellType.Room) _grid[currentCell + vecLeftAbove].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecAbove].type != CellType.Room) _grid[currentCell + vecAbove].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecBelow].type != CellType.Room) _grid[currentCell + vecBelow].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecRightAbove].type != CellType.Room) _grid[currentCell + vecRightAbove].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecRight].type != CellType.Room) _grid[currentCell + vecRight].type = CellType.Bufferzone;
+            if (_grid[currentCell + vecRightBelow].type != CellType.Room) _grid[currentCell + vecRightBelow].type = CellType.Bufferzone;
+        }
+
+        // lesson of today: don't try to be smart...
+        //for (int i = 0; i < overlappingCells.Count; i++)
+        //{
+        //    currentCell = overlappingCells[i];
+
+        //    if (currentCell.x > previousCell.x) 
+        //    {
+        //        // switched row, mark one above previous row and one below current
+        //        _grid[previousCell + new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
+        //        _grid[currentCell - new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
+
+        //        switchedRow = true;
+        //        lastColMaxZ = previousCell.z;
+        //        lastColMinZ = currentCell.z;
+        //    }
+        //    if (firstRow)
+        //    {
+        //        if (0 == i) // first cell
+        //        {
+        //            // mark one below and left 
+        //            _grid[currentCell - new Vector3Int(1, 0, 1)].type = CellType.Bufferzone;
+        //            // mark one below
+        //            _grid[currentCell - new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
+        //        }
+        //        if (switchedRow)
+        //        {
+        //            // one below and right
+        //            _grid[previousCell - new Vector3Int(1, 0, -1)].type = CellType.Bufferzone;
+        //            firstRow = false;
+        //        } 
+        //        else
+        //        {
+        //            // mark one left
+        //            _grid[currentCell - new Vector3Int(1, 0, 0)].type = CellType.Bufferzone;
+        //        }
+        //    }
+
+        //    if (currentCell.z > lastColMaxZ || currentCell.z < lastColMinZ)
+        //    {
+
+        //    }
+
+        //    switchedRow = false;
+        //    previousCell = currentCell;
+
+        //    if (i == overlappingCells.Count - 1) // last cell
+        //    {
+        //        Debug.LogWarning("LAST CELL");
+        //        // mark one above
+        //        _grid[currentCell + new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
+
+        //        // mark one above and right
+        //        _grid[currentCell + new Vector3Int(1, 0, 1)].type = CellType.Bufferzone;
+
+        //        // walk backwards through last column
+        //        int lastColumnX = currentCell.x;
+        //        int j;
+        //        for (j = i; lastColumnX == currentCell.x; j--)
+        //        {
+        //            Debug.LogWarning("j" + j.ToString());
+        //            // mark one right
+        //            _grid[currentCell + new Vector3Int(1, 0, 0)].type = CellType.Bufferzone;
+        //            currentCell = overlappingCells[j];
+        //        }
+
+        //        currentCell = overlappingCells[j+2];
+        //        // mark one below and right
+        //        _grid[currentCell + new Vector3Int(1, 0, -1)].type = CellType.Bufferzone;
+        //        Debug.LogWarning("LEAVING");
+        //    }
+        //}
     }
 
-    private void PlaceRoom(int roomIdx, Vector2Int cell)
+
+    private void PlaceRoom(int roomIdx, Vector2Int cell) // cell: Zellenkoordinaten
     { 
         var room = _rooms[roomIdx];
-        var location = cell * CellSize;
-        var cells = GetOverlappingCells(room.GameObject, location, Vector3.zero);
+        var occupiedCells = GetOccupiedCells(room, cell, Vector3.zero);
 
-        if (IsPlacementValid(cells))
+        if (AreCellsFree(occupiedCells))
         {
             Debug.LogWarning(
                 string.Format(
                     "Placing Room: {0} at location {1} in cell {2}",
                     room.GameObject.name,
-                    location,
+                    cell * CellSize,
                     cell)
                 );
-            InstantiateRoom(room, location, cells);
+            InstantiateRoom(room, cell, occupiedCells);
         }
     }
 
@@ -215,24 +391,50 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    private void DrawCellMarking(Cell cell, Vector3 cellLocation)
+    {
+        var lowerCorner = cellLocation * CellSize;
+        var upperCorner = (cellLocation + new Vector3(1, 0, 1)) * CellSize;
+        if (CellType.Room == cell.type)
+        {
+            Debug.DrawLine(lowerCorner, upperCorner, Color.red);
+        } 
+        else if (CellType.Bufferzone == cell.type)
+        {
+            Debug.DrawLine(lowerCorner, upperCorner, Color.blue);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         // draw grid
         if (null != _grid && ShowGrid)
         {
-            _grid.DrawGrid();
+            // draw grid
+            if (true)
+            {
+                for (int y = 0; y < _grid.Size.y; y++)
+                {
+                    for (int z = 0; z <= _grid.Size.z; z++)
+                    {
+                        Debug.DrawLine(new Vector3(0, y, z) * CellSize, new Vector3(_grid.Size.x, y, z) * CellSize, Color.green);
+                    }
 
-            // draw filled cells
+                    for (int x = 0; x <= _grid.Size.x; x++)
+                    {
+                        Debug.DrawLine(new Vector3(x, y, 0) * CellSize, new Vector3(x, y, _grid.Size.z) * CellSize, Color.green);
+                    }
+                }
+            }
+
+            // draw occupied room cells
             for (int x = 0; x < _grid.Size.x; x++)
             {
                 for (int z = 0; z < _grid.Size.z; z++)
                 {
-                    var cell = _grid[x * CellSize, 0, z * CellSize];
-                    if (CellType.Room == cell.type)
-                    {
-                        // draw a diagonal line in cell
-                        Debug.DrawLine(new Vector3(x, 0, z) * CellSize, new Vector3(x + 1, 0, z + 1) * CellSize, Color.red);
-                    }
+                    var cellLocation = new Vector3(x, 0, z);
+                    var cell = _grid[Vector3Int.FloorToInt(cellLocation)];
+                    DrawCellMarking(cell, cellLocation);
                 }
             }
         }
