@@ -1,11 +1,14 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 public class DungeonGenerator : MonoBehaviour
 {
+    public struct Cell
+    {
+        public CellType type;
+        public int roomIdx;
+    }
+
     public enum CellType
     {
         Free,
@@ -13,7 +16,7 @@ public class DungeonGenerator : MonoBehaviour
         Hallway
     };
 
-    private class Room
+    public class Room
     {
         public GameObject GameObject { get; private set; }
 
@@ -23,11 +26,12 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    // Collider, which is used to find room-templates contained in it
     [SerializeField]
     BoxCollider RoomFinder;
 
     [SerializeField]
-    Vector3Int GridSize = new Vector3Int(10, 1, 10);
+    Vector3Int GridDimensions = new Vector3Int(10, 1, 10);
 
     [SerializeField]
     int CellSize = 4;
@@ -37,7 +41,7 @@ public class DungeonGenerator : MonoBehaviour
 
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
-    DungeonGrid<CellType> _grid;
+    DungeonGrid<Cell> _grid;
 
     // the read-in rooms of the roomfinder
     List<Room> _rooms;
@@ -49,6 +53,7 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     Vector2Int PlacementCell;
 
+    // temporary parameter for testing
     [SerializeField]
     int RoomIdx;
 
@@ -66,12 +71,16 @@ public class DungeonGenerator : MonoBehaviour
 
     public void CreateGrid()
     {
-        _grid = new DungeonGrid<CellType>(GridSize, Vector3Int.zero, CellSize);
+        _grid = new DungeonGrid<Cell>(GridDimensions, Vector3Int.zero, CellSize);
     }
 
     public void ReadRooms()
     {
-        if (null != RoomFinder)
+        if (null == RoomFinder)
+        {
+            Debug.LogError("RoomFinder of DungeonGenerator is null, cannot find rooms");
+        }
+        else 
         {
             var colliders = Physics.OverlapBox(RoomFinder.bounds.center, RoomFinder.bounds.extents / 0.5f);
             _rooms = new List<Room>(colliders.Length - 1);
@@ -88,7 +97,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public void PlaceFirstRoom ()
+    public void PlaceRoomWithSelectedIdx ()
     {
         PlaceRoom(RoomIdx, PlacementCell);
     }
@@ -103,12 +112,16 @@ public class DungeonGenerator : MonoBehaviour
     {
         List<Vector3Int> overlappingCells = new List<Vector3Int>();
 
+        // get mesh extents
         var filter = room.GetComponent<MeshFilter>();
         var mesh = filter.sharedMesh;
         var actualExtents = mesh.bounds.extents * 2;
 
         var roomObjectPosition = room.transform.position;
         var placementLoc3 = new Vector3(placementLocation.x, 0, placementLocation.y);
+
+        const int rayStartHeight = 50;
+        const int rayDrawHeight = 1 - rayStartHeight;
         // calculate the cell occupation on original mesh location
         // and translate each position to a cell location in the actual grid
         // THIS CURRENTLY ABSOLUTELY REQUIRES NO ROTATION TO BE APPLIED TO THE 
@@ -118,10 +131,16 @@ public class DungeonGenerator : MonoBehaviour
             for (int z = 0; z < actualExtents.z / CellSize; z++)
             {
                 // location in global coord-system
-                var locToCheck = roomObjectPosition + new Vector3(x * CellSize + CellSize / 2, 50 , z * CellSize + CellSize / 2);
+                var locToCheck = 
+                    roomObjectPosition + 
+                    new Vector3(
+                        x * CellSize + CellSize / 2,
+                        rayStartHeight,
+                        z * CellSize + CellSize / 2
+                        );
                 RaycastHit[] hits = Physics.RaycastAll(locToCheck, Vector3.down, Mathf.Infinity);
 
-                Debug.DrawRay(locToCheck + new Vector3(0,-49,0), Vector3.down, Color.red, 1.0f);
+                Debug.DrawRay(locToCheck + new Vector3(0, rayDrawHeight, 0), Vector3.down, Color.red, 1.0f);
 
                 foreach (var hit in hits)
                 {
@@ -138,11 +157,12 @@ public class DungeonGenerator : MonoBehaviour
         return overlappingCells;
     }
 
+    // returns false, if one of the passed cells is already occupied
     private bool IsPlacementValid(List<Vector3Int> cellCoords)
     {
         foreach (var cellCoord in cellCoords)
         {
-            var cellType = _grid[cellCoord];
+            var cellType = _grid[cellCoord].type;
 
             if (cellType == CellType.Room || cellType == CellType.Hallway)
             {
@@ -153,6 +173,8 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
+    // instantiate room gameobject at location and mark the overlapping cells 
+    // as occupied
     private void InstantiateRoom(Room room, Vector2 location, List<Vector3Int> overlappingCells)
     {
         var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
@@ -160,7 +182,7 @@ public class DungeonGenerator : MonoBehaviour
 
         foreach (var cell in overlappingCells)
         {
-            _grid[cell] = CellType.Room;
+            _grid[cell].type = CellType.Room;
         }
     }
 
@@ -168,25 +190,24 @@ public class DungeonGenerator : MonoBehaviour
     { 
         var room = _rooms[roomIdx];
         var location = cell * CellSize;
-
-        Debug.LogWarning(
-            string.Format(
-                "Placing Room: {0} at location {1} in cell {2}",
-                room.GameObject.name,
-                location,
-                cell)
-            );
-
         var cells = GetOverlappingCells(room.GameObject, location, Vector3.zero);
 
         if (IsPlacementValid(cells))
         {
+            Debug.LogWarning(
+                string.Format(
+                    "Placing Room: {0} at location {1} in cell {2}",
+                    room.GameObject.name,
+                    location,
+                    cell)
+                );
             InstantiateRoom(room, location, cells);
         }
     }
 
     public void Cleanup()
     {
+        _rooms = null;
         _grid = null;
         foreach (var room in _instantiatedRooms)
         {
@@ -206,18 +227,11 @@ public class DungeonGenerator : MonoBehaviour
             {
                 for (int z = 0; z < _grid.Size.z; z++)
                 {
-                    try
+                    var cell = _grid[x * CellSize, 0, z * CellSize];
+                    if (CellType.Room == cell.type)
                     {
-                        var cellInfo = _grid[x * CellSize, 0, z * CellSize];
-                        var type = cellInfo;
-                        if (type == CellType.Room)
-                        {
-                            Debug.DrawLine(new Vector3(x, 0, z) * CellSize, new Vector3(x + 1, 0, z + 1) * CellSize, Color.red);
-                        }
-                    }
-                    catch(Exception)
-                    {
-                        bool b = true;
+                        // draw a diagonal line in cell
+                        Debug.DrawLine(new Vector3(x, 0, z) * CellSize, new Vector3(x + 1, 0, z + 1) * CellSize, Color.red);
                     }
                 }
             }

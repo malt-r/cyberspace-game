@@ -24,7 +24,7 @@ namespace Assets
 
             if (GUILayout.Button("Place Room"))
             {
-                gen.PlaceFirstRoom();
+                gen.PlaceRoomWithSelectedIdx();
             }
 
             if (GUILayout.Button("Cleanup"))

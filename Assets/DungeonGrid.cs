@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: this should probably be extended by a fixed datatype to be able to store
-// room-data (at least as indexed collection)?
 public class DungeonGrid<T> 
 {
     T[] data;
@@ -33,29 +31,20 @@ public class DungeonGrid<T>
         return new BoundsInt(Vector3Int.zero, Size).Contains(pos + Offset);
     }
 
-    public T this[int x, int y, int z]
+    public ref T this[int x, int y, int z]
     {
         get
         {
-            return this[new Vector3Int(x, y, z)];
-        }
-        set
-        {
-            this[new Vector3Int(x, y, z)] = value;
+            return ref this[new Vector3Int(x, y, z)];
         }
     }
 
-    public T this[Vector3Int pos]
+    public ref T this[Vector3Int pos]
     {
         get
         {
             pos += Offset;
-            return data[GetIndex(pos)];
-        }
-        set
-        {
-            pos += Offset;
-            data[GetIndex(pos)] = value;
+            return ref data[GetIndex(pos)];
         }
     }
 
@@ -76,7 +65,6 @@ public class DungeonGrid<T>
                     Debug.DrawLine(new Vector3(x, y, 0) * CellSize, new Vector3(x, y, Size.z) * CellSize, Color.green);
                 }
             }
-
         }
     }
 }
