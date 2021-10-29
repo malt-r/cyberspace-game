@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.ProBuilder;
 
-// TODO: Calculate cells occupied by the Room and check bounds of grid
-// TODO: Mark occupied cells as such
-// TODO: Create context-graph
 public class DungeonGenerator : MonoBehaviour
 {
     public enum CellType
