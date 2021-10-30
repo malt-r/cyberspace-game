@@ -70,6 +70,12 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int RoomIdx;
 
+    [SerializeField]
+    int RandomSeed;
+
+    // TODO: find better place for this
+    HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
+
     public enum NeighborDirection
     {
         leftbelow = 0,
@@ -135,6 +141,8 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
+
+        _triedCells = new HashSet<Vector2Int>();
     }
 
     public void ReadRooms()
@@ -178,11 +186,35 @@ public class DungeonGenerator : MonoBehaviour
     // ensure, that room is completely placed within borders -> use mesh-extents
     public void PlaceRooms()
     {
-        foreach (var room in _rooms)
+        Random.InitState(RandomSeed);
+        int i;
+        for (i = 0; i < _rooms.Count; i++)
         {
-            // get random position
-            int x = Mathf.FloorToInt(Random.Range(2.0f, (float)GridDimensions.x) - 2);
-            int y = Mathf.FloorToInt(Random.Range(2.0f, (float)GridDimensions.z) - 2);
+            var room = _rooms[i];
+            bool success = false;
+            Vector2Int cell;
+            do
+            {
+                // get random position
+                int x = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.x - OuterBufferZone));
+                int y = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.z - OuterBufferZone));
+
+                int cellNum = y * GridDimensions.x + x;
+                cell = new Vector2Int(x, y);
+                if (_triedCells.Contains(cell))
+                {
+                    Debug.LogWarning("Skipping cell x:" + x.ToString() + " y:" + y.ToString());
+                }
+                else
+                {
+                    _triedCells.Add(cell);
+                    success = PlaceRoom(i, cell);
+                }
+            } while (!success || _triedCells.Count > GridDimensions.x * GridDimensions.z * 0.8f);
+        }
+        if (i < _rooms.Count)
+        {
+            Debug.LogError("Could not place all rooms, tried cells: " + _triedCells.Count.ToString());
         }
     }
 
@@ -274,6 +306,8 @@ public class DungeonGenerator : MonoBehaviour
         foreach (var overlappingCell in overlappingCells)
         {
             _grid[overlappingCell].type = CellType.Room;
+            //int cellNum = overlappingCell.z * GridDimensions.x + overlappingCell.x;
+            _triedCells.Add(new Vector2Int(overlappingCell.x, overlappingCell.z));
         }
 
         Vector3Int currentCell;
@@ -289,7 +323,7 @@ public class DungeonGenerator : MonoBehaviour
     }
 
 
-    private void PlaceRoom(int roomIdx, Vector2Int cell) // cell: Zellenkoordinaten
+    private bool PlaceRoom(int roomIdx, Vector2Int cell) // cell: Zellenkoordinaten
     { 
         var room = _rooms[roomIdx];
         var occupiedCells = GetOccupiedCells(room, cell, Vector3.zero);
@@ -304,13 +338,16 @@ public class DungeonGenerator : MonoBehaviour
                     cell)
                 );
             InstantiateRoom(room, cell, occupiedCells);
+            return true;
         }
+        return false;
     }
 
     public void Cleanup()
     {
         _rooms = null;
         _grid = null;
+        _triedCells = null;
         foreach (var room in _instantiatedRooms)
         {
             DestroyImmediate(room);

@@ -26,6 +26,12 @@ namespace Assets
             {
                 gen.PlaceRoomWithSelectedIdx();
             }
+            
+
+            if (GUILayout.Button("Place all Rooms"))
+            {
+                gen.PlaceRooms();
+            }
 
             if (GUILayout.Button("Cleanup"))
             {
