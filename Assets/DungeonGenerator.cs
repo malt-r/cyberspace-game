@@ -70,6 +70,35 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int RoomIdx;
 
+    public enum NeighborDirection
+    {
+        leftbelow = 0,
+        left = 1,
+        leftabove = 2,
+        above = 3,
+        below = 4,
+        rightabove = 5,
+        right = 6,
+        rightbelow = 7
+    };
+
+    Vector3Int[] _gridDirections = new Vector3Int[]
+    {
+        new Vector3Int(-1, 0, -1), // left below
+        new Vector3Int(-1, 0,  0), // left
+        new Vector3Int(-1, 0,  1), // left above
+        new Vector3Int( 0, 0,  1), // above
+        new Vector3Int( 0, 0, -1), // below
+        new Vector3Int( 1, 0,  1), // right above
+        new Vector3Int( 1, 0,  0), // right
+        new Vector3Int( 1, 0, -1)  // right below
+    };
+
+    private Vector3Int GetNeighborDir(NeighborDirection dir)
+    {
+        return _gridDirections[((int)dir)];
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -216,17 +245,6 @@ public class DungeonGenerator : MonoBehaviour
         return overlappingCells;
     }
 
-
-    //private bool IsPlacementValid(Room room, Vector2 location, List<Vector3Int> cellCoords)
-    //{
-    //    var extents = room.MeshExtents();
-
-    //    // do room extents lay in grid-boundaries?
-    //    if (extents.x > )
-
-    //    return true;
-    //}
-
     // returns false, if one of the passed cells is already occupied
     private bool AreCellsFree(List<Vector3Int> cellCoords)
     {
@@ -258,108 +276,16 @@ public class DungeonGenerator : MonoBehaviour
             _grid[overlappingCell].type = CellType.Room;
         }
 
-        // TODO: designate cells around as bufferzone
-        Vector3Int previousCell = overlappingCells[0];
         Vector3Int currentCell;
-
-        Vector3Int vecLeftBelow =   new Vector3Int(-1, 0, -1);
-        Vector3Int vecLeft =        new Vector3Int(-1, 0,  0);
-        Vector3Int vecLeftAbove =   new Vector3Int(-1, 0,  1);
-        Vector3Int vecAbove =       new Vector3Int( 0, 0,  1);
-        Vector3Int vecBelow =       new Vector3Int( 0, 0, -1);
-        Vector3Int vecRightAbove =  new Vector3Int( 1, 0,  1);
-        Vector3Int vecRight =       new Vector3Int( 1, 0,  0);
-        Vector3Int vecRightBelow =  new Vector3Int( 1, 0, -1);
-        //bool firstRow = true;
-        //bool switchedRow = false;
-        //int lastColMaxZ = 0;
-        //int lastColMinZ = 0;
-
-        for (int i = 0; i < overlappingCells.Count; i++)
+        for (int i = 0; i < overlappingCells.Count; i++) 
         {
             currentCell = overlappingCells[i];
             // check for each cell around, if a room, and if not, set to bufferzone
-            if (_grid[currentCell + vecLeftBelow].type != CellType.Room) _grid[currentCell + vecLeftBelow].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecLeft].type != CellType.Room) _grid[currentCell + vecLeft].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecLeftAbove].type != CellType.Room) _grid[currentCell + vecLeftAbove].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecAbove].type != CellType.Room) _grid[currentCell + vecAbove].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecBelow].type != CellType.Room) _grid[currentCell + vecBelow].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecRightAbove].type != CellType.Room) _grid[currentCell + vecRightAbove].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecRight].type != CellType.Room) _grid[currentCell + vecRight].type = CellType.Bufferzone;
-            if (_grid[currentCell + vecRightBelow].type != CellType.Room) _grid[currentCell + vecRightBelow].type = CellType.Bufferzone;
+            foreach (var direction in _gridDirections)
+            {
+                if (_grid[currentCell + direction].type != CellType.Room) _grid[currentCell + direction].type = CellType.Bufferzone;
+            }
         }
-
-        // lesson of today: don't try to be smart...
-        //for (int i = 0; i < overlappingCells.Count; i++)
-        //{
-        //    currentCell = overlappingCells[i];
-
-        //    if (currentCell.x > previousCell.x) 
-        //    {
-        //        // switched row, mark one above previous row and one below current
-        //        _grid[previousCell + new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
-        //        _grid[currentCell - new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
-
-        //        switchedRow = true;
-        //        lastColMaxZ = previousCell.z;
-        //        lastColMinZ = currentCell.z;
-        //    }
-        //    if (firstRow)
-        //    {
-        //        if (0 == i) // first cell
-        //        {
-        //            // mark one below and left 
-        //            _grid[currentCell - new Vector3Int(1, 0, 1)].type = CellType.Bufferzone;
-        //            // mark one below
-        //            _grid[currentCell - new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
-        //        }
-        //        if (switchedRow)
-        //        {
-        //            // one below and right
-        //            _grid[previousCell - new Vector3Int(1, 0, -1)].type = CellType.Bufferzone;
-        //            firstRow = false;
-        //        } 
-        //        else
-        //        {
-        //            // mark one left
-        //            _grid[currentCell - new Vector3Int(1, 0, 0)].type = CellType.Bufferzone;
-        //        }
-        //    }
-
-        //    if (currentCell.z > lastColMaxZ || currentCell.z < lastColMinZ)
-        //    {
-
-        //    }
-
-        //    switchedRow = false;
-        //    previousCell = currentCell;
-
-        //    if (i == overlappingCells.Count - 1) // last cell
-        //    {
-        //        Debug.LogWarning("LAST CELL");
-        //        // mark one above
-        //        _grid[currentCell + new Vector3Int(0, 0, 1)].type = CellType.Bufferzone;
-
-        //        // mark one above and right
-        //        _grid[currentCell + new Vector3Int(1, 0, 1)].type = CellType.Bufferzone;
-
-        //        // walk backwards through last column
-        //        int lastColumnX = currentCell.x;
-        //        int j;
-        //        for (j = i; lastColumnX == currentCell.x; j--)
-        //        {
-        //            Debug.LogWarning("j" + j.ToString());
-        //            // mark one right
-        //            _grid[currentCell + new Vector3Int(1, 0, 0)].type = CellType.Bufferzone;
-        //            currentCell = overlappingCells[j];
-        //        }
-
-        //        currentCell = overlappingCells[j+2];
-        //        // mark one below and right
-        //        _grid[currentCell + new Vector3Int(1, 0, -1)].type = CellType.Bufferzone;
-        //        Debug.LogWarning("LEAVING");
-        //    }
-        //}
     }
 
 
