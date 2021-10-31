@@ -36,21 +36,56 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    // Collider, which is used to find room-templates contained in it
-    [SerializeField]
-    BoxCollider RoomFinder;
+    [Header("Grid specification")]
 
+    [Tooltip("Dimensions of Grid in cells")]
     [SerializeField]
     Vector3Int GridDimensions = new Vector3Int(10, 1, 10);
 
+    [Tooltip("Size of the sides of one cell")]
     [SerializeField]
     int CellSize = 4;
 
+    [Tooltip("Number of cells to leave as bufferzone around grid")]
     [SerializeField]
     int OuterBufferZone = 2;
 
+    [Tooltip("Number of cells to leave as bufferzone around every room")]
+    [SerializeField]
+    int RoomBufferZone = 2;
+
+    [Tooltip("Show gizmos for grid?")]
     [SerializeField]
     bool ShowGrid = true;
+
+    // temporary parameter for testing
+    //[SerializeField]
+    Vector2Int PlacementCell;
+
+    // temporary parameter for testing
+    //[SerializeField]
+    int RoomIdx;
+
+    [Space(20)]
+
+    [Header("Room placement")]
+
+    // Collider, which is used to find room-templates contained in it
+    [Tooltip("Boxcollider; Is used to scan for rooms (must be contained in bounds of collider)")]
+    [SerializeField]
+    BoxCollider RoomFinder;
+
+    [Tooltip("Maximum of tries for one room to be placed")]
+    [SerializeField]
+    int MaxPlacementTriesPerRoom = 10;
+
+    [Tooltip("Fixed seed to use for random room placement")]
+    [SerializeField]
+    int RandomSeed;
+
+    [Tooltip("Use externally generated seed for room placement")]
+    [SerializeField]
+    bool UseExternalEntropy;
 
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
@@ -62,16 +97,6 @@ public class DungeonGenerator : MonoBehaviour
     // the instantiated gameobjects, which should be removed on cleanup
     List<GameObject> _instantiatedRooms = new List<GameObject>();
 
-    // temporary parameter for testing
-    [SerializeField]
-    Vector2Int PlacementCell;
-
-    // temporary parameter for testing
-    [SerializeField]
-    int RoomIdx;
-
-    [SerializeField]
-    int RandomSeed;
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -117,9 +142,15 @@ public class DungeonGenerator : MonoBehaviour
 
     }
 
+    private long GetExternalSeed()
+    {
+        var now = System.DateTime.Now;
+        var notNow = now.AddSeconds((double)Random.Range(0.0f, 100.0f));
+        return now.ToBinary() ^ notNow.ToBinary();
+    }
+
     public void CreateGrid()
     {
-        Random.InitState(42);
         _grid = new DungeonGrid<Cell>(GridDimensions, Vector3Int.zero);
 
         for (int x = 0; x < _grid.Size.x; x++)
@@ -186,10 +217,23 @@ public class DungeonGenerator : MonoBehaviour
     // ensure, that room is completely placed within borders -> use mesh-extents
     public void PlaceRooms()
     {
-        Random.InitState(RandomSeed);
+        if (UseExternalEntropy)
+        {
+            long seed = GetExternalSeed();
+            Random.InitState((int)seed);
+            Debug.Log("Using seed " + seed + " for placement");
+        }
+        else 
+        {
+            Random.InitState(RandomSeed);
+        }
+
         int i;
+        int iterationCount; // number of iterations to try for one room
+        int roomsSkipped = 0;
         for (i = 0; i < _rooms.Count; i++)
         {
+            iterationCount = 0;
             var room = _rooms[i];
             bool success = false;
             Vector2Int cell;
@@ -210,11 +254,22 @@ public class DungeonGenerator : MonoBehaviour
                     _triedCells.Add(cell);
                     success = PlaceRoom(i, cell);
                 }
-            } while (!success || _triedCells.Count > GridDimensions.x * GridDimensions.z * 0.8f);
+                iterationCount++;
+            } while (!success && _triedCells.Count < GridDimensions.x * GridDimensions.z * 0.8f && iterationCount <= MaxPlacementTriesPerRoom);
+            if (iterationCount > MaxPlacementTriesPerRoom)
+            {
+                Debug.LogError("Could not place room: " + room.GameObject.name + ", to many tries");
+                roomsSkipped++;
+            }
         }
-        if (i < _rooms.Count)
+        if (i < _rooms.Count || roomsSkipped > 0)
         {
-            Debug.LogError("Could not place all rooms, tried cells: " + _triedCells.Count.ToString());
+            Debug.LogError(
+                    "Could not place all rooms, tried cells: " + 
+                    _triedCells.Count.ToString() + 
+                    ", skipped rooms: " + 
+                    roomsSkipped
+                    );
         }
     }
 
@@ -303,21 +358,37 @@ public class DungeonGenerator : MonoBehaviour
         var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
         _instantiatedRooms.Add(go);
 
+        List<Vector3Int> markedCells = new List<Vector3Int>();
+        // mark room-cells
         foreach (var overlappingCell in overlappingCells)
         {
             _grid[overlappingCell].type = CellType.Room;
             //int cellNum = overlappingCell.z * GridDimensions.x + overlappingCell.x;
             _triedCells.Add(new Vector2Int(overlappingCell.x, overlappingCell.z));
+            markedCells.Add(overlappingCell);
         }
 
+        // create buffer zone
+        // RoomBufferZone determines the number of passes
         Vector3Int currentCell;
-        for (int i = 0; i < overlappingCells.Count; i++) 
+        int checkedCellIdx = 0;
+        for (int i = 0; i < RoomBufferZone; i++)
         {
-            currentCell = overlappingCells[i];
-            // check for each cell around, if a room, and if not, set to bufferzone
-            foreach (var direction in _gridDirections)
+            int maxIndex = markedCells.Count;
+            for (; checkedCellIdx < maxIndex; checkedCellIdx++) 
             {
-                if (_grid[currentCell + direction].type != CellType.Room) _grid[currentCell + direction].type = CellType.Bufferzone;
+                currentCell = markedCells[checkedCellIdx];
+                // check for each cell around, if a room, and if not, set to bufferzone
+                foreach (var direction in _gridDirections)
+                {
+                    var neighborCell = currentCell + direction;
+                    if (_grid[neighborCell].type != CellType.Room && 
+                        _grid[neighborCell].type != CellType.Bufferzone)
+                    {
+                        _grid[neighborCell].type = CellType.Bufferzone;
+                        markedCells.Add(neighborCell);
+                    }
+                }
             }
         }
     }

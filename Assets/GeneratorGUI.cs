@@ -16,23 +16,27 @@ namespace Assets
             DrawDefaultInspector();
             DungeonGenerator gen = target as DungeonGenerator;
 
+            GUILayout.Space(20);
+            GUILayout.Label("Generator controls");
+            GUILayout.Label("First press this:");
             if (GUILayout.Button("Setup"))
             {
                 gen.CreateGrid();
                 gen.ReadRooms();
             }
 
-            if (GUILayout.Button("Place Room"))
-            {
-                gen.PlaceRoomWithSelectedIdx();
-            }
-            
+            //if (GUILayout.Button("Place Room"))
+            //{
+            //    gen.PlaceRoomWithSelectedIdx();
+            //}
 
+            GUILayout.Label("Then press this:");
             if (GUILayout.Button("Place all Rooms"))
             {
                 gen.PlaceRooms();
             }
 
+            GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))
             {
                 gen.Cleanup();
