@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -54,6 +56,16 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		//Flags for basic skills
+		//Flags are used instead of setting speeds to zero, because it's easier
+		//to give the player hints when specific conditions are false
+		[Header("Skills")]
+		public bool canSee = false;
+		public bool canLookAround = false;
+		public bool canMove = false;
+		public bool canJump = false;
+		public bool canSprint = false;
+
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
@@ -64,13 +76,7 @@ namespace StarterAssets
 		private float _terminalVelocity = 53.0f;
 
 
-		//Flags for basic skills
-		//Flags are used instead of setting speeds to zero, because it's easier
-		//to give the player hints when specific conditions are false
-		public bool canSee = false;
-		public bool canLookAround = false;
-		public bool canMove = false;
-		public bool canSprint = false;
+		
 
 
 		// timeout deltatime
@@ -126,7 +132,7 @@ namespace StarterAssets
 		{
 			if (!canLookAround) { return; }
 			// if there is an input
-			if (_input.look.sqrMagnitude >= 0)
+			if (_input.look.sqrMagnitude >= _threshold)
 			{
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * Time.deltaTime;
 				_rotationVelocity = _input.look.x * RotationSpeed * Time.deltaTime;
@@ -135,8 +141,8 @@ namespace StarterAssets
 				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
 				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
 
+				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
@@ -206,7 +212,7 @@ namespace StarterAssets
 				}
 
 				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+				if (canJump && _input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);

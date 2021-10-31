@@ -150,6 +150,61 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "Mouse",
+                    "id": "70b82ce8-0712-44e7-81c9-6c0519e4e174",
+                    "path": "2DVector(mode=1)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "3a35cca0-4c00-4cf9-8623-3a681354b47a",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "a5c99c00-b147-42ae-bb39-30609c7c0167",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "9f6059bf-fcae-4191-a66b-729ab6e8eed9",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "5eb498a4-35d8-4cac-8ffc-71809cf3afb4",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "ed66cbff-2900-4a62-8896-696503cfcd31",
                     "path": "<Pointer>/delta",
@@ -195,6 +250,17 @@
                 },
                 {
                     "name": "",
+                    "id": "b8b5ce28-ecc0-48b4-8e87-9a191c885636",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "dc65b89f-9bd3-43fb-92af-d0d87ba5faa4",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "",
@@ -211,6 +277,17 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "28efdeae-a93b-4730-bc54-e72230746b59",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
                     "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
