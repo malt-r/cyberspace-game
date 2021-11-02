@@ -1,3 +1,4 @@
+using Graphs;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,16 +24,44 @@ public class DungeonGenerator : MonoBehaviour
 
     public class Room
     {
+        private readonly List<Vector3Int> _occupiedCells;
+
         public GameObject GameObject { get; private set; }
 
         public Room(GameObject go)
         {
             GameObject = go;
+            _occupiedCells = new List<Vector3Int>();
         }
+
+        public Room(GameObject go, List<Vector3Int> occupiedCells)
+        {
+            GameObject = go;
+            _occupiedCells = occupiedCells;
+        }
+
+        public List<Vector3Int> Occupiedcells { get => _occupiedCells; }
 
         public Vector3 MeshExtents()
         {
+            var meshs = GameObject.GetComponents<MeshFilter>();
             return GameObject.GetComponent<MeshFilter>().sharedMesh.bounds.extents;
+        }
+
+        public bool HasBarrier()
+        {
+            var marker = GameObject.GetComponentInChildren<StoryMarker>();
+            return null != marker;
+        }
+
+        public StoryMarker[] GetStoryMarkers()
+        {
+            return GameObject.GetComponentsInChildren<StoryMarker>();
+        }
+
+        public DoorMarker[] GetDoorMarkers()
+        {
+            return GameObject.GetComponentsInChildren<DoorMarker>();
         }
     }
 
@@ -57,6 +86,7 @@ public class DungeonGenerator : MonoBehaviour
     [Tooltip("Show gizmos for grid?")]
     [SerializeField]
     bool ShowGrid = true;
+
 
     // temporary parameter for testing
     //[SerializeField]
@@ -87,16 +117,24 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     bool UseExternalEntropy;
 
+    [Header("Graphs")]
+    [SerializeField]
+    bool ShowDelauney = true;
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
 
     // the read-in rooms of the roomfinder
-    List<Room> _rooms;
+    List<Room> _roomTemplates;
+
+    List<int> _barrierRooms;
 
     // the instantiated gameobjects, which should be removed on cleanup
-    List<GameObject> _instantiatedRooms = new List<GameObject>();
+    //List<GameObject> _instantiatedRooms = new List<GameObject>();
+    List<Room> _instantiatedRooms;
 
+    Delaunay2D _delaunay;
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -149,6 +187,28 @@ public class DungeonGenerator : MonoBehaviour
         return now.ToBinary() ^ notNow.ToBinary();
     }
 
+    public void Triangulate()
+    {
+        List<Vertex> vertices = new List<Vertex>();
+
+        foreach (var room in _instantiatedRooms)
+        {
+            var mesh = room.GameObject.GetComponent<MeshFilter>().sharedMesh;
+            var boundsPos = room.GameObject.transform.position + mesh.bounds.center;
+            var position = new Vector2(boundsPos.x, boundsPos.z);
+            vertices.Add(new Vertex<Room>(position, room));
+        }
+
+        _delaunay = Delaunay2D.Triangulate(vertices);
+    }
+
+    public void Setup()
+    {
+        Cleanup();
+        CreateGrid();
+        ReadRooms();
+    }
+
     public void CreateGrid()
     {
         _grid = new DungeonGrid<Cell>(GridDimensions, Vector3Int.zero);
@@ -178,6 +238,7 @@ public class DungeonGenerator : MonoBehaviour
 
     public void ReadRooms()
     {
+        _instantiatedRooms = new List<Room>();
         if (null == RoomFinder)
         {
             Debug.LogError("RoomFinder of DungeonGenerator is null, cannot find rooms");
@@ -190,18 +251,32 @@ public class DungeonGenerator : MonoBehaviour
                     RoomFinder.bounds.center,
                     RoomFinder.bounds.extents / 0.5f
                     );
-            _rooms = new List<Room>(colliders.Length - 1);
+            _roomTemplates = new List<Room>(colliders.Length - 1);
 
             foreach (var collider in colliders)
             {
-                if (this.RoomFinder.gameObject != collider.gameObject) // will find the finder collider
+                var roomMarker = collider.gameObject.GetComponent<RoomMarker>();
+                if (null != roomMarker && RoomFinder.gameObject != collider.gameObject) // will find the finder collider
                 {
-                    Debug.LogWarning("Found room: " + collider.gameObject.name + "; idx: " + _rooms.Count);
-                    _rooms.Add(new Room(collider.gameObject));
+                    Debug.LogWarning("Found room: " + collider.gameObject.name + "; idx: " + _roomTemplates.Count);
+                    _roomTemplates.Add(new Room(collider.gameObject));
                 }
             }
 
-            Debug.LogWarning("Found " + _rooms.Count.ToString() + " rooms in roomfinder");
+            Debug.LogWarning("Found " + _roomTemplates.Count.ToString() + " rooms in roomfinder");
+        }
+    }
+
+    private void ReadInBarrierRooms()
+    {
+        Room room;
+        for (int i = 0; i < _instantiatedRooms.Count; i++)
+        {
+            room = _instantiatedRooms[i];
+            if (room.HasBarrier())
+            {
+                _barrierRooms.Add(i);
+            }
         }
     }
 
@@ -212,9 +287,9 @@ public class DungeonGenerator : MonoBehaviour
 
     // select random cell within gird-size with border = 2 cells (to ensure,
     // that doors always can be connected on each side
-    // ensure, that rooms are not directly placed besides each other (one cell in
+    // ensure, that rooms are not directly placed besides each other (marked bufferzone in
     // between)
-    // ensure, that room is completely placed within borders -> use mesh-extents
+    // ensure, that room is completely placed within borders -> use buffer zone
     public void PlaceRooms()
     {
         if (UseExternalEntropy)
@@ -231,10 +306,10 @@ public class DungeonGenerator : MonoBehaviour
         int i;
         int iterationCount; // number of iterations to try for one room
         int roomsSkipped = 0;
-        for (i = 0; i < _rooms.Count; i++)
+        for (i = 0; i < _roomTemplates.Count; i++)
         {
             iterationCount = 0;
-            var room = _rooms[i];
+            var room = _roomTemplates[i];
             bool success = false;
             Vector2Int cell;
             do
@@ -243,7 +318,6 @@ public class DungeonGenerator : MonoBehaviour
                 int x = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.x - OuterBufferZone));
                 int y = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.z - OuterBufferZone));
 
-                int cellNum = y * GridDimensions.x + x;
                 cell = new Vector2Int(x, y);
                 if (_triedCells.Contains(cell))
                 {
@@ -262,8 +336,10 @@ public class DungeonGenerator : MonoBehaviour
                 roomsSkipped++;
             }
         }
-        if (i < _rooms.Count || roomsSkipped > 0)
+        if (i < _roomTemplates.Count || roomsSkipped > 0)
         {
+            // TODO: in runtime code, this needs to retry the placement, until every
+            // room is placed
             Debug.LogError(
                     "Could not place all rooms, tried cells: " + 
                     _triedCells.Count.ToString() + 
@@ -271,6 +347,8 @@ public class DungeonGenerator : MonoBehaviour
                     roomsSkipped
                     );
         }
+
+        ReadInBarrierRooms();
     }
 
 
@@ -352,28 +430,34 @@ public class DungeonGenerator : MonoBehaviour
     // as occupied
     private void InstantiateRoom(Room room, Vector2 cell, List<Vector3Int> overlappingCells)
     {
+
         // location: grid-coords
         var location = cell * CellSize; // TODO: this should be encapsulated in method and take into account the offset
 
         var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
-        _instantiatedRooms.Add(go);
+        Room instantiatedRoom = new Room(go, overlappingCells);
+        _instantiatedRooms.Add(instantiatedRoom);
 
+        // mark room-cells and store room idx
         List<Vector3Int> markedCells = new List<Vector3Int>();
-        // mark room-cells
         foreach (var overlappingCell in overlappingCells)
         {
             _grid[overlappingCell].type = CellType.Room;
-            //int cellNum = overlappingCell.z * GridDimensions.x + overlappingCell.x;
+            // TODO: I think this is really brittle and needs to be improved
+            _grid[overlappingCell].roomIdx = _instantiatedRooms.Count - 1;
+
             _triedCells.Add(new Vector2Int(overlappingCell.x, overlappingCell.z));
             markedCells.Add(overlappingCell);
         }
 
         // create buffer zone
         // RoomBufferZone determines the number of passes
+        // iterate progressively over the markedCells
         Vector3Int currentCell;
         int checkedCellIdx = 0;
         for (int i = 0; i < RoomBufferZone; i++)
         {
+            // determine index range of current pass
             int maxIndex = markedCells.Count;
             for (; checkedCellIdx < maxIndex; checkedCellIdx++) 
             {
@@ -396,7 +480,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private bool PlaceRoom(int roomIdx, Vector2Int cell) // cell: Zellenkoordinaten
     { 
-        var room = _rooms[roomIdx];
+        var room = _roomTemplates[roomIdx];
         var occupiedCells = GetOccupiedCells(room, cell, Vector3.zero);
 
         if (AreCellsFree(occupiedCells))
@@ -416,13 +500,19 @@ public class DungeonGenerator : MonoBehaviour
 
     public void Cleanup()
     {
-        _rooms = null;
+        _roomTemplates = null;
         _grid = null;
         _triedCells = null;
-        foreach (var room in _instantiatedRooms)
+
+        if (null != _instantiatedRooms)
         {
-            DestroyImmediate(room);
+            foreach (var room in _instantiatedRooms)
+            {
+                DestroyImmediate(room.GameObject);
+            }
         }
+        _instantiatedRooms = new List<Room>();
+        _delaunay = null;
     }
 
     private void DrawCellMarking(Cell cell, Vector3 cellLocation)
@@ -469,6 +559,23 @@ public class DungeonGenerator : MonoBehaviour
                     var cellLocation = new Vector3(x, 0, z);
                     var cell = _grid[Vector3Int.FloorToInt(cellLocation)];
                     DrawCellMarking(cell, cellLocation);
+                }
+            }
+        }
+
+        if (null != _delaunay && ShowDelauney)
+        {
+            foreach (var edge in _delaunay.Edges)
+            {
+                if (!edge.IsBad)
+                {
+                    var p1 = edge.U.Position;
+                    var p2 = edge.V.Position;
+                    Debug.DrawLine(
+                        new Vector3(p1.x, 0, p1.y), 
+                        new Vector3(p2.x, 0, p2.y),
+                        Color.red
+                        );
                 }
             }
         }

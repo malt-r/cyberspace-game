@@ -18,11 +18,10 @@ namespace Assets
 
             GUILayout.Space(20);
             GUILayout.Label("Generator controls");
-            GUILayout.Label("First press this:");
+            GUILayout.Label("First press this (will cleanup, create grid and read rooms):");
             if (GUILayout.Button("Setup"))
             {
-                gen.CreateGrid();
-                gen.ReadRooms();
+                gen.Setup();
             }
 
             //if (GUILayout.Button("Place Room"))
@@ -35,6 +34,12 @@ namespace Assets
             {
                 gen.PlaceRooms();
             }
+
+            if (GUILayout.Button("Triangulate"))
+            {
+                gen.Triangulate();
+            }
+
 
             GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))
