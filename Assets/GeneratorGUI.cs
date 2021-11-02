@@ -30,9 +30,14 @@ namespace Assets
             //}
 
             GUILayout.Label("Then press this:");
-            if (GUILayout.Button("Place all Rooms"))
+            if (GUILayout.Button("Place all Rooms (try once)"))
             {
                 gen.PlaceRooms();
+            }
+
+            if (GUILayout.Button("sudo Place all Rooms"))
+            {
+                gen.SudoPlaceRooms();
             }
 
             if (GUILayout.Button("Create Context Graph"))

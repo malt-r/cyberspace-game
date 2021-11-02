@@ -2,7 +2,7 @@ using Graphs;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DungeonGenerator : MonoBehaviour
+public partial class DungeonGenerator : MonoBehaviour
 {
     // coord-systems:
     // - cell-coordinates (without consideration of cellsize)
@@ -22,106 +22,17 @@ public class DungeonGenerator : MonoBehaviour
         Bufferzone // adjacent to room or on border of grid
     };
 
-    private class RoomComparer : IComparer<Room>
+    public struct RoomTemplateCandiate
     {
-        public int Compare(Room x, Room y)
+        public int TemplateIdx;
+        public Vector2Int Cell;
+        public List<Vector3Int> OccupiedCells;
+
+        public RoomTemplateCandiate(int templateIdx, Vector2Int cell, List<Vector3Int> occupiedCells)
         {
-            // x less than y -> neg val
-            // eq -> 0
-            // x greater than y -> pos val
-
-            if (x == y)
-            {
-                return 0;
-            }
-
-            var xMarker = x.GetStoryMarker();
-            var yMarker = y.GetStoryMarker();
-
-            // null checks
-            if (null == xMarker && null != yMarker)
-            {
-                return -1;
-            }
-
-            if (null != xMarker && null == yMarker)
-            {
-                return 1;
-            }
-
-            if (null == xMarker && null == yMarker)
-            {
-                return 0;
-            }
-
-            // x is not relevant for story, but y is
-            if (!xMarker.RelevantForStory && yMarker.RelevantForStory)
-            {
-                return -1;
-            }
-
-            // x is relevant for story, but y is not
-            if (xMarker.RelevantForStory && !yMarker.RelevantForStory)
-            {
-                return 1;
-            }
-
-            // both are not relevant to story
-            if (!xMarker.RelevantForStory && !yMarker.RelevantForStory)
-            {
-                return 0;
-            }
-
-            return xMarker.IndexInStory.CompareTo(yMarker.IndexInStory);
-        }
-    }
-
-    public class Room
-    {
-        private readonly List<Vector3Int> _occupiedCells;
-
-        public GameObject GameObject { get; private set; }
-
-        public Room(GameObject go)
-        {
-            GameObject = go;
-            _occupiedCells = new List<Vector3Int>();
-        }
-
-        public Room(GameObject go, List<Vector3Int> occupiedCells)
-        {
-            GameObject = go;
-            _occupiedCells = occupiedCells;
-        }
-
-        public List<Vector3Int> Occupiedcells { get => _occupiedCells; }
-
-        public Vector3 MeshExtents()
-        {
-            var meshs = GameObject.GetComponents<MeshFilter>();
-            return GameObject.GetComponent<MeshFilter>().sharedMesh.bounds.extents;
-        }
-
-        public Vector3 GetMeshCenter()
-        {
-            var mesh = GameObject.GetComponent<MeshFilter>().sharedMesh;
-            return GameObject.transform.position + mesh.bounds.center;
-        }
-
-        public bool HasBarrier()
-        {
-            var marker = GameObject.GetComponentInChildren<StoryMarker>();
-            return null != marker;
-        }
-
-        public StoryMarker GetStoryMarker()
-        {
-            return GameObject.GetComponentInChildren<StoryMarker>();
-        }
-
-        public DoorMarker[] GetDoorMarkers()
-        {
-            return GameObject.GetComponentsInChildren<DoorMarker>();
+            TemplateIdx = templateIdx;
+            Cell = cell;
+            OccupiedCells = occupiedCells;
         }
     }
 
@@ -169,6 +80,10 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int MaxPlacementTriesPerRoom = 10;
 
+    [Tooltip("Maximum of tries to place all rooms")]
+    [SerializeField]
+    int MaxTotalPlacementTries = 10;
+
     [Tooltip("Fixed seed to use for random room placement")]
     [SerializeField]
     int RandomSeed;
@@ -186,13 +101,13 @@ public class DungeonGenerator : MonoBehaviour
     DungeonGrid<Cell> _grid;
 
     // the read-in rooms of the roomfinder
-    List<Room> _roomTemplates;
+    List<Room> _roomTemplates = new List<Room>();
 
-    //List<int> _barrierRooms;
 
     // the instantiated gameobjects, which should be removed on cleanup
-    //List<GameObject> _instantiatedRooms = new List<GameObject>();
-    List<Room> _instantiatedRooms;
+    List<Room> _instantiatedRooms = new List<Room>();
+
+    List<RoomTemplateCandiate> _roomTemplateIdxsToInstantiate = new List<RoomTemplateCandiate>();
 
     Delaunay2D _delaunay;
 
@@ -266,7 +181,6 @@ public class DungeonGenerator : MonoBehaviour
         Triangulate();
         // sort list of rooms based on story-index
         // -> store rooms with no index at the beginning
-        _instantiatedRooms.Sort(new RoomComparer());
 
         bool yeah = true;
     }
@@ -274,7 +188,6 @@ public class DungeonGenerator : MonoBehaviour
     public void Setup()
     {
         Cleanup();
-        CreateGrid();
         ReadRooms();
     }
 
@@ -327,31 +240,30 @@ public class DungeonGenerator : MonoBehaviour
                 var roomMarker = collider.gameObject.GetComponent<RoomMarker>();
                 if (null != roomMarker && RoomFinder.gameObject != collider.gameObject) // will find the finder collider
                 {
-                    Debug.LogWarning("Found room: " + collider.gameObject.name + "; idx: " + _roomTemplates.Count);
                     _roomTemplates.Add(new Room(collider.gameObject));
                 }
             }
 
+            _roomTemplates.Sort(new RoomComparer());
             Debug.LogWarning("Found " + _roomTemplates.Count.ToString() + " rooms in roomfinder");
         }
     }
 
-    //private void ReadInBarrierRooms()
-    //{
-    //    Room room;
-    //    for (int i = 0; i < _instantiatedRooms.Count; i++)
-    //    {
-    //        room = _instantiatedRooms[i];
-    //        if (room.HasBarrier())
-    //        {
-    //            _barrierRooms.Add(i);
-    //        }
-    //    }
-    //}
-
-    public void PlaceRoomWithSelectedIdx ()
+    // try, until it works
+    public bool SudoPlaceRooms()
     {
-        PlaceRoom(RoomIdx, PlacementCell);
+        int count = 1;
+        while (!PlaceRooms() && count <= MaxTotalPlacementTries) count++;
+        if (count > MaxTotalPlacementTries)
+        {
+            Debug.Log("Could not place all rooms with multiple tries");
+            return false;
+        }
+        else
+        {
+            Debug.Log("Placement took " + count.ToString() + " tries");
+            return true;
+        }
     }
 
     // select random cell within gird-size with border = 2 cells (to ensure,
@@ -359,8 +271,11 @@ public class DungeonGenerator : MonoBehaviour
     // ensure, that rooms are not directly placed besides each other (marked bufferzone in
     // between)
     // ensure, that room is completely placed within borders -> use buffer zone
-    public void PlaceRooms()
+    public bool PlaceRooms()
     {
+        CreateGrid();
+        UnmarkTemplatesForInstantiation();
+
         if (UseExternalEntropy)
         {
             long seed = GetExternalSeed();
@@ -388,36 +303,36 @@ public class DungeonGenerator : MonoBehaviour
                 int y = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.z - OuterBufferZone));
 
                 cell = new Vector2Int(x, y);
-                if (_triedCells.Contains(cell))
-                {
-                    Debug.LogWarning("Skipping cell x:" + x.ToString() + " y:" + y.ToString());
-                }
-                else
+                if (!_triedCells.Contains(cell))
                 {
                     _triedCells.Add(cell);
                     success = PlaceRoom(i, cell);
                 }
                 iterationCount++;
             } while (!success && _triedCells.Count < GridDimensions.x * GridDimensions.z * 0.8f && iterationCount <= MaxPlacementTriesPerRoom);
+
             if (iterationCount > MaxPlacementTriesPerRoom)
             {
                 Debug.LogError("Could not place room: " + room.GameObject.name + ", to many tries");
                 roomsSkipped++;
             }
         }
+
         if (i < _roomTemplates.Count || roomsSkipped > 0)
         {
-            // TODO: in runtime code, this needs to retry the placement, until every
-            // room is placed
             Debug.LogError(
                     "Could not place all rooms, tried cells: " + 
                     _triedCells.Count.ToString() + 
                     ", skipped rooms: " + 
                     roomsSkipped
                     );
+            CreateGrid();
+            UnmarkTemplatesForInstantiation();
+            return false;
         }
 
-        //ReadInBarrierRooms();
+        InstantiateRooms();
+        return true;
     }
 
 
@@ -444,6 +359,7 @@ public class DungeonGenerator : MonoBehaviour
 
         const int rayStartHeight = 50;
         const int rayDrawHeight = 1 - rayStartHeight;
+
         // calculate the cell occupation on original mesh location
         // and translate each position to a cell location in the actual grid
         // THIS CURRENTLY ABSOLUTELY REQUIRES NO ROTATION TO BE APPLIED TO THE 
@@ -488,60 +404,30 @@ public class DungeonGenerator : MonoBehaviour
 
             if (cellType != CellType.Free)
             {
-                Debug.LogError("Sorry, can't place room in cell " + cellCoord.ToString());
                 return false;
             }
         }
         return true;
     }
 
-    // instantiate room gameobject at location and mark the overlapping cells 
+    // instantiate room templates at location and mark the overlapping cells 
     // as occupied
-    private void InstantiateRoom(Room room, Vector2 cell, List<Vector3Int> overlappingCells)
+    private void InstantiateRooms()
     {
-
-        // location: grid-coords
-        var location = cell * CellSize; // TODO: this should be encapsulated in method and take into account the offset
-
-        var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
-        Room instantiatedRoom = new Room(go, overlappingCells);
-        _instantiatedRooms.Add(instantiatedRoom);
-
-        // mark room-cells and store room idx
-        List<Vector3Int> markedCells = new List<Vector3Int>();
-        foreach (var overlappingCell in overlappingCells)
+        foreach (var placementCandidate in _roomTemplateIdxsToInstantiate)
         {
-            _grid[overlappingCell].type = CellType.Room;
-            // TODO: I think this is really brittle and needs to be improved
-            _grid[overlappingCell].roomIdx = _instantiatedRooms.Count - 1;
+            var room = _roomTemplates[placementCandidate.TemplateIdx];
+            // location: grid-coords
+            var location = placementCandidate.Cell * CellSize; // TODO: this should be encapsulated in method and take into account the offset
 
-            _triedCells.Add(new Vector2Int(overlappingCell.x, overlappingCell.z));
-            markedCells.Add(overlappingCell);
-        }
+            var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
+            Room instantiatedRoom = new Room(go);
+            _instantiatedRooms.Add(instantiatedRoom);
 
-        // create buffer zone
-        // RoomBufferZone determines the number of passes
-        // iterate progressively over the markedCells
-        Vector3Int currentCell;
-        int checkedCellIdx = 0;
-        for (int i = 0; i < RoomBufferZone; i++)
-        {
-            // determine index range of current pass
-            int maxIndex = markedCells.Count;
-            for (; checkedCellIdx < maxIndex; checkedCellIdx++) 
+            foreach (var occupiedCell in placementCandidate.OccupiedCells)
             {
-                currentCell = markedCells[checkedCellIdx];
-                // check for each cell around, if a room, and if not, set to bufferzone
-                foreach (var direction in _gridDirections)
-                {
-                    var neighborCell = currentCell + direction;
-                    if (_grid[neighborCell].type != CellType.Room && 
-                        _grid[neighborCell].type != CellType.Bufferzone)
-                    {
-                        _grid[neighborCell].type = CellType.Bufferzone;
-                        markedCells.Add(neighborCell);
-                    }
-                }
+                // TODO: I think this is really brittle and needs to be improved
+                _grid[occupiedCell].roomIdx = _instantiatedRooms.Count - 1;
             }
         }
     }
@@ -554,6 +440,9 @@ public class DungeonGenerator : MonoBehaviour
 
         if (AreCellsFree(occupiedCells))
         {
+            // deferred instantiation
+            _roomTemplateIdxsToInstantiate.Add(new RoomTemplateCandiate(roomIdx, cell, occupiedCells));
+
             Debug.LogWarning(
                 string.Format(
                     "Placing Room: {0} at location {1} in cell {2}",
@@ -561,7 +450,44 @@ public class DungeonGenerator : MonoBehaviour
                     cell * CellSize,
                     cell)
                 );
-            InstantiateRoom(room, cell, occupiedCells);
+
+            // mark room-cells and store room idx
+            List<Vector3Int> markedCells = new List<Vector3Int>();
+            foreach (var occupyingCell in occupiedCells)
+            {
+                _grid[occupyingCell].type = CellType.Room;
+
+
+                _triedCells.Add(new Vector2Int(occupyingCell.x, occupyingCell.z));
+                markedCells.Add(occupyingCell);
+            }
+
+            // create buffer zone
+            // RoomBufferZone determines the number of passes
+            // iterate progressively over the markedCells
+            Vector3Int currentCell;
+            int checkedCellIdx = 0;
+            for (int i = 0; i < RoomBufferZone; i++)
+            {
+                // determine index range of current pass
+                int maxIndex = markedCells.Count;
+                for (; checkedCellIdx < maxIndex; checkedCellIdx++) 
+                {
+                    currentCell = markedCells[checkedCellIdx];
+                    // check for each cell around, if a room, and if not, set to bufferzone
+                    foreach (var direction in _gridDirections)
+                    {
+                        var neighborCell = currentCell + direction;
+                        if (_grid[neighborCell].type != CellType.Room && 
+                            _grid[neighborCell].type != CellType.Bufferzone)
+                        {
+                            _grid[neighborCell].type = CellType.Bufferzone;
+                            markedCells.Add(neighborCell);
+                        }
+                    }
+                }
+            }
+
             return true;
         }
         return false;
@@ -569,10 +495,14 @@ public class DungeonGenerator : MonoBehaviour
 
     public void Cleanup()
     {
-        _roomTemplates = null;
+        _roomTemplates.Clear();
         _grid = null;
-        _triedCells = null;
+        DestroyRooms();
+        _delaunay = null;
+    }
 
+    private void DestroyRooms()
+    {
         if (null != _instantiatedRooms)
         {
             foreach (var room in _instantiatedRooms)
@@ -581,8 +511,16 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
         _instantiatedRooms = new List<Room>();
-        _delaunay = null;
+        _triedCells = new HashSet<Vector2Int>();
     }
+
+    private void UnmarkTemplatesForInstantiation()
+    {
+        _triedCells = new HashSet<Vector2Int>();
+        _roomTemplateIdxsToInstantiate.Clear();
+    }
+
+    #region Visualization
 
     private void DrawCellMarking(Cell cell, Vector3 cellLocation)
     {
@@ -649,4 +587,5 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
     }
+    #endregion
 }
