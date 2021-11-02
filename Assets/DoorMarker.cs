@@ -31,6 +31,6 @@ public class DoorMarker : MonoBehaviour
         var p1 = this.transform.position;
         var p2 = this.transform.position + this.transform.forward * 3;
         var thickness = 8;
-        Handles.DrawBezier(p1,p2,p1,p2, Color.red,null,thickness);
+        Handles.DrawBezier(p1,p2,p1,p2, Color.blue, null, thickness);
     }
 }

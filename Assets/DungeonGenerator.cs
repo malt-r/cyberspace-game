@@ -22,6 +22,60 @@ public class DungeonGenerator : MonoBehaviour
         Bufferzone // adjacent to room or on border of grid
     };
 
+    private class RoomComparer : IComparer<Room>
+    {
+        public int Compare(Room x, Room y)
+        {
+            // x less than y -> neg val
+            // eq -> 0
+            // x greater than y -> pos val
+
+            if (x == y)
+            {
+                return 0;
+            }
+
+            var xMarker = x.GetStoryMarker();
+            var yMarker = y.GetStoryMarker();
+
+            // null checks
+            if (null == xMarker && null != yMarker)
+            {
+                return -1;
+            }
+
+            if (null != xMarker && null == yMarker)
+            {
+                return 1;
+            }
+
+            if (null == xMarker && null == yMarker)
+            {
+                return 0;
+            }
+
+            // x is not relevant for story, but y is
+            if (!xMarker.RelevantForStory && yMarker.RelevantForStory)
+            {
+                return -1;
+            }
+
+            // x is relevant for story, but y is not
+            if (xMarker.RelevantForStory && !yMarker.RelevantForStory)
+            {
+                return 1;
+            }
+
+            // both are not relevant to story
+            if (!xMarker.RelevantForStory && !yMarker.RelevantForStory)
+            {
+                return 0;
+            }
+
+            return xMarker.IndexInStory.CompareTo(yMarker.IndexInStory);
+        }
+    }
+
     public class Room
     {
         private readonly List<Vector3Int> _occupiedCells;
@@ -48,15 +102,21 @@ public class DungeonGenerator : MonoBehaviour
             return GameObject.GetComponent<MeshFilter>().sharedMesh.bounds.extents;
         }
 
+        public Vector3 GetMeshCenter()
+        {
+            var mesh = GameObject.GetComponent<MeshFilter>().sharedMesh;
+            return GameObject.transform.position + mesh.bounds.center;
+        }
+
         public bool HasBarrier()
         {
             var marker = GameObject.GetComponentInChildren<StoryMarker>();
             return null != marker;
         }
 
-        public StoryMarker[] GetStoryMarkers()
+        public StoryMarker GetStoryMarker()
         {
-            return GameObject.GetComponentsInChildren<StoryMarker>();
+            return GameObject.GetComponentInChildren<StoryMarker>();
         }
 
         public DoorMarker[] GetDoorMarkers()
@@ -128,7 +188,7 @@ public class DungeonGenerator : MonoBehaviour
     // the read-in rooms of the roomfinder
     List<Room> _roomTemplates;
 
-    List<int> _barrierRooms;
+    //List<int> _barrierRooms;
 
     // the instantiated gameobjects, which should be removed on cleanup
     //List<GameObject> _instantiatedRooms = new List<GameObject>();
@@ -183,7 +243,7 @@ public class DungeonGenerator : MonoBehaviour
     private long GetExternalSeed()
     {
         var now = System.DateTime.Now;
-        var notNow = now.AddSeconds((double)Random.Range(0.0f, 100.0f));
+        var notNow = now.AddDays((double)Random.Range(0.0f, 100.0f));
         return now.ToBinary() ^ notNow.ToBinary();
     }
 
@@ -193,13 +253,22 @@ public class DungeonGenerator : MonoBehaviour
 
         foreach (var room in _instantiatedRooms)
         {
-            var mesh = room.GameObject.GetComponent<MeshFilter>().sharedMesh;
-            var boundsPos = room.GameObject.transform.position + mesh.bounds.center;
-            var position = new Vector2(boundsPos.x, boundsPos.z);
+            var meshCenter = room.GetMeshCenter();
+            var position = new Vector2(meshCenter.x, meshCenter.z);
             vertices.Add(new Vertex<Room>(position, room));
         }
 
         _delaunay = Delaunay2D.Triangulate(vertices);
+    }
+
+    public void CreateContextGraph()
+    {
+        Triangulate();
+        // sort list of rooms based on story-index
+        // -> store rooms with no index at the beginning
+        _instantiatedRooms.Sort(new RoomComparer());
+
+        bool yeah = true;
     }
 
     public void Setup()
@@ -267,18 +336,18 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void ReadInBarrierRooms()
-    {
-        Room room;
-        for (int i = 0; i < _instantiatedRooms.Count; i++)
-        {
-            room = _instantiatedRooms[i];
-            if (room.HasBarrier())
-            {
-                _barrierRooms.Add(i);
-            }
-        }
-    }
+    //private void ReadInBarrierRooms()
+    //{
+    //    Room room;
+    //    for (int i = 0; i < _instantiatedRooms.Count; i++)
+    //    {
+    //        room = _instantiatedRooms[i];
+    //        if (room.HasBarrier())
+    //        {
+    //            _barrierRooms.Add(i);
+    //        }
+    //    }
+    //}
 
     public void PlaceRoomWithSelectedIdx ()
     {
@@ -348,7 +417,7 @@ public class DungeonGenerator : MonoBehaviour
                     );
         }
 
-        ReadInBarrierRooms();
+        //ReadInBarrierRooms();
     }
 
 

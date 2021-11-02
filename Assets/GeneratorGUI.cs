@@ -35,9 +35,9 @@ namespace Assets
                 gen.PlaceRooms();
             }
 
-            if (GUILayout.Button("Triangulate"))
+            if (GUILayout.Button("Create Context Graph"))
             {
-                gen.Triangulate();
+                gen.CreateContextGraph();
             }
 
 
