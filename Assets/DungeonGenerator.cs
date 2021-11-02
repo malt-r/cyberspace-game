@@ -21,18 +21,19 @@ public partial class DungeonGenerator : MonoBehaviour
         Hallway,
         Bufferzone // adjacent to room or on border of grid
     };
-
     public struct RoomTemplateCandiate
     {
         public int TemplateIdx;
         public Vector2Int Cell;
         public List<Vector3Int> OccupiedCells;
+        public Vector3 Rotation;
 
-        public RoomTemplateCandiate(int templateIdx, Vector2Int cell, List<Vector3Int> occupiedCells)
+        public RoomTemplateCandiate(int templateIdx, Vector2Int cell, List<Vector3Int> occupiedCells, Vector3 rotation)
         {
             TemplateIdx = templateIdx;
             Cell = cell;
             OccupiedCells = occupiedCells;
+            Rotation = rotation;
         }
     }
 
@@ -83,6 +84,9 @@ public partial class DungeonGenerator : MonoBehaviour
     [Tooltip("Maximum of tries to place all rooms")]
     [SerializeField]
     int MaxTotalPlacementTries = 10;
+
+    [SerializeField]
+    bool AllowRoomRotation = true;
 
     [Tooltip("Fixed seed to use for random room placement")]
     [SerializeField]
@@ -302,11 +306,34 @@ public partial class DungeonGenerator : MonoBehaviour
                 int x = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.x - OuterBufferZone));
                 int y = Mathf.FloorToInt(Random.Range(OuterBufferZone, (float)GridDimensions.z - OuterBufferZone));
 
+                // pick random rotation
+                float rotationAroundY = 0.0f;
+                if (AllowRoomRotation)
+                {
+                    var rotIdx = Mathf.FloorToInt(Random.Range(0, 3));
+                    switch (rotIdx)
+                    {
+                        case 1:
+                            rotationAroundY = 90.0f;
+                            break;
+                        case 2:
+                            rotationAroundY = 180.0f;
+                            break;
+                        case 3:
+                            rotationAroundY = 270.0f;
+                            break;
+                        default:
+                            rotationAroundY = 0.0f;
+                            break;
+                    }
+                }
+                Vector3 rotation = new Vector3(0, rotationAroundY, 0);
+
                 cell = new Vector2Int(x, y);
                 if (!_triedCells.Contains(cell))
                 {
                     _triedCells.Add(cell);
-                    success = PlaceRoom(i, cell);
+                    success = PlaceRoom(i, cell, rotation);
                 }
                 iterationCount++;
             } while (!success && _triedCells.Count < GridDimensions.x * GridDimensions.z * 0.8f && iterationCount <= MaxPlacementTriesPerRoom);
@@ -344,9 +371,9 @@ public partial class DungeonGenerator : MonoBehaviour
     // The cells in the returned list will be laid out in z-columns in ascending order.
     List<Vector3Int> GetOccupiedCells
         (
-        Room room, 
+        Room room,
         Vector2 placementCell,
-        Vector3 rotation
+        Vector3 Rotation
         ) 
     {
         List<Vector3Int> overlappingCells = new List<Vector3Int>();
@@ -356,6 +383,8 @@ public partial class DungeonGenerator : MonoBehaviour
 
         var roomObjectPosition = room.GameObject.transform.position; // global coord
         var placementLoc3 = new Vector3(placementCell.x, 0, placementCell.y);
+
+        var rotation = Quaternion.Euler(Rotation);
 
         const int rayStartHeight = 50;
         const int rayDrawHeight = 1 - rayStartHeight;
@@ -385,8 +414,11 @@ public partial class DungeonGenerator : MonoBehaviour
                     // TODO: should consider offset
                     if (hit.collider.gameObject == room.GameObject)
                     {
-                        var gridCell = placementLoc3 + new Vector3(x, 0, z);
-                        overlappingCells.Add(Vector3Int.FloorToInt(gridCell));
+                        // guess, this would be the place to apply rotation to room to
+                        // translate rotation to the cell locations
+
+                        var gridCell =  placementLoc3 + rotation * new Vector3(x, 0, z);
+                        overlappingCells.Add(Vector3Int.RoundToInt(gridCell));
                         break;
                     }
                 }
@@ -400,9 +432,15 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         foreach (var cellCoord in cellCoords)
         {
-            var cellType = _grid[cellCoord].type; 
+            try
+            {
+                var cellType = _grid[cellCoord].type; 
 
-            if (cellType != CellType.Free)
+                if (cellType != CellType.Free)
+                {
+                    return false;
+                }
+            } catch (System.Exception ex ) // TODO: this does occur, if the cellcoord is negative or exceeds the boundaries, which may happen due to rotation (should be caught earlier)
             {
                 return false;
             }
@@ -420,7 +458,34 @@ public partial class DungeonGenerator : MonoBehaviour
             // location: grid-coords
             var location = placementCandidate.Cell * CellSize; // TODO: this should be encapsulated in method and take into account the offset
 
-            var go = Instantiate(room.GameObject, new Vector3(location.x, 0, location.y), this.transform.rotation, this.transform);
+            // because the rotation should be applied cell-wise and not coninously
+            // an offset is required for the non-0 deg rotations
+            // got no time to be smart, hard code
+            int rot = Mathf.RoundToInt(placementCandidate.Rotation.y);
+            int rotMod = rot % 360;
+
+            Vector3Int offset = new Vector3Int(0,0,0);
+            if (rotMod == 90)
+            {
+                offset = new Vector3Int(0, 0, 1);
+            }
+            else if (rotMod == 180)
+            {
+                offset = new Vector3Int(1, 0, 1);
+            } 
+            else if (rotMod == 270)
+            {
+                offset = new Vector3Int(1, 0, 0);
+            }
+            offset = offset * CellSize;
+
+            var go = Instantiate(
+                room.GameObject,
+                new Vector3(location.x, 0, location.y) + offset,
+                Quaternion.Euler(placementCandidate.Rotation),
+                this.transform
+                );
+
             Room instantiatedRoom = new Room(go);
             _instantiatedRooms.Add(instantiatedRoom);
 
@@ -433,15 +498,15 @@ public partial class DungeonGenerator : MonoBehaviour
     }
 
 
-    private bool PlaceRoom(int roomIdx, Vector2Int cell) // cell: Zellenkoordinaten
+    private bool PlaceRoom(int roomIdx, Vector2Int cell, Vector3 rotation) // cell: Zellenkoordinaten
     { 
         var room = _roomTemplates[roomIdx];
-        var occupiedCells = GetOccupiedCells(room, cell, Vector3.zero);
+        var occupiedCells = GetOccupiedCells(room, cell, rotation);
 
         if (AreCellsFree(occupiedCells))
         {
             // deferred instantiation
-            _roomTemplateIdxsToInstantiate.Add(new RoomTemplateCandiate(roomIdx, cell, occupiedCells));
+            _roomTemplateIdxsToInstantiate.Add(new RoomTemplateCandiate(roomIdx, cell, occupiedCells, rotation));
 
             Debug.LogWarning(
                 string.Format(
@@ -453,13 +518,13 @@ public partial class DungeonGenerator : MonoBehaviour
 
             // mark room-cells and store room idx
             List<Vector3Int> markedCells = new List<Vector3Int>();
-            foreach (var occupyingCell in occupiedCells)
+            foreach (var occupiedCell in occupiedCells)
             {
-                _grid[occupyingCell].type = CellType.Room;
+                _grid[occupiedCell].type = CellType.Room;
 
 
-                _triedCells.Add(new Vector2Int(occupyingCell.x, occupyingCell.z));
-                markedCells.Add(occupyingCell);
+                _triedCells.Add(new Vector2Int(occupiedCell.x, occupiedCell.z));
+                markedCells.Add(occupiedCell);
             }
 
             // create buffer zone

@@ -24,7 +24,7 @@ public partial class DungeonGenerator
         public Vector3 GetMeshCenter()
         {
             var mesh = GameObject.GetComponent<MeshFilter>().sharedMesh;
-            return GameObject.transform.position + mesh.bounds.center;
+            return GameObject.transform.position + GameObject.transform.rotation * mesh.bounds.center;
         }
 
         public bool HasBarrier()
