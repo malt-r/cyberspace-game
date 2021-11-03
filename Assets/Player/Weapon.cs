@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class Laser : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     public Transform firepoint;
     public float range = 500;
+    public bool shoot = false;
     private LineRenderer lr;
 
 
@@ -24,6 +25,11 @@ public class Laser : MonoBehaviour
 
     void UpdateRoute()
     {
+        if (!shoot){
+            if (lr.enabled) { lr.enabled = false; }
+            return; 
+        }
+        lr.enabled = true; 
         lr.SetPosition(0, firepoint.position);
         RaycastHit hit;
         if (Physics.Raycast(firepoint.position, firepoint.forward, out hit))
@@ -41,9 +47,4 @@ public class Laser : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        
-    }
 }
