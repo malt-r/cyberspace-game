@@ -3946,8 +3946,10 @@ MonoBehaviour:
   RandomSeed: 2147483647
   UseExternalEntropy: 0
   ShowDelauney: 1
-  ShowPartition: 1
+  ShowPartition: 0
   PartitionIdxToShow: 0
+  ShowDoorPartition: 1
+  DoorPartitionIdxToShow: 0
 --- !u!4 &784526399
 Transform:
   m_ObjectHideFlags: 0
@@ -9312,7 +9314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4736782793661835751, guid: fc8c6bf6e1c61174fa1115a37b707099, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4736782793661835751, guid: fc8c6bf6e1c61174fa1115a37b707099, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9320,7 +9322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4736782793661835751, guid: fc8c6bf6e1c61174fa1115a37b707099, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4736782793661835751, guid: fc8c6bf6e1c61174fa1115a37b707099, type: 3}
       propertyPath: m_LocalRotation.w

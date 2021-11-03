@@ -48,7 +48,7 @@ public class StoryMarker : MonoBehaviour
 
     public Vector3 GetBarrierDirection()
     {
-        return transform.right;
+        return transform.forward;
     }
 
     private void OnDrawGizmosSelected()
@@ -65,8 +65,8 @@ public class StoryMarker : MonoBehaviour
         if (IsBarrier)
         {
             // draw thicc line to indicate direction of door marker
-            var p1 = transform.position + GetBarrierDirection() * -BarrierVisualizationLength;
-            var p2 = transform.position + GetBarrierDirection() * BarrierVisualizationLength;
+            var p1 = transform.position + transform.right * -BarrierVisualizationLength;
+            var p2 = transform.position + transform.right * BarrierVisualizationLength;
             var thickness = 8;
             Handles.DrawBezier(p1,p2,p1,p2, Color.red, null, thickness);
 

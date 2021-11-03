@@ -7,10 +7,20 @@ public partial class DungeonGenerator
     public class Room
     {
         public GameObject GameObject { get; private set; }
+        public List<Vector3Int> DoorCells { get; }
 
         public Room(GameObject go)
         {
             GameObject = go;
+            DoorCells = new List<Vector3Int>();
+        }
+
+        public void AddDoorCell(Vector3Int cell)
+        {
+            if (!DoorCells.Contains(cell))
+            {
+                DoorCells.Add(cell);
+            }
         }
 
         public Vector3 MeshExtents()

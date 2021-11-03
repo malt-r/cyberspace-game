@@ -25,6 +25,32 @@ public class DoorMarker : MonoBehaviour
         
     }
 
+    bool BeforeBarrier()
+    {
+        bool beforeBarrier = true;
+        var roomMarker = gameObject.GetComponentInParent<RoomMarker>();
+        var marker = roomMarker.gameObject.GetComponentInChildren<StoryMarker>();
+
+        if (marker != null && marker.IsBarrier)
+        {
+            var barrierDir = marker.GetBarrierDirection();
+            var barrierLoc = marker.transform.position;
+            List<Vector3Int> doorCellsOnSide = new List<Vector3Int>();
+            
+            var diff = this.transform.position - barrierLoc;
+            var dot = Vector3.Dot(barrierDir, diff);
+            if (dot > 0 && beforeBarrier)
+            {
+                return true;
+            } 
+            else if (dot > 0 && !beforeBarrier)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void OnDrawGizmosSelected()
     {
         // draw thicc line to indicate direction of door marker
@@ -32,5 +58,15 @@ public class DoorMarker : MonoBehaviour
         var p2 = this.transform.position + this.transform.forward * 2;
         var thickness = 8;
         Handles.DrawBezier(p1,p2,p1,p2, Color.blue, null, thickness);
+
+        p2 = this.transform.position + this.transform.up * 3;
+        if (BeforeBarrier())
+        {
+            Handles.DrawBezier(p1,p2,p1,p2, Color.green, null, thickness);
+        } 
+        else
+        {
+            Handles.DrawBezier(p1,p2,p1,p2, Color.red, null, thickness);
+        }
     }
 }

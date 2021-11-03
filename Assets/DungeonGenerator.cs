@@ -29,11 +29,18 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         public int StartIdxInclusive;
         public int EndIdxExclusive;
+        public bool IsRelevantForStory;
 
-        public Partition(int startIdxInclusive, int endIdxExclusive)
+        public Partition(int startIdxInclusive, int endIdxExclusive, bool isRelevantForStory)
         {
             StartIdxInclusive = startIdxInclusive;
             EndIdxExclusive = endIdxExclusive;
+            IsRelevantForStory = isRelevantForStory;
+        }
+
+        public Partition(int startIdxInclusive, int endIdxExclusive) : this(startIdxInclusive, endIdxExclusive, true)
+        {
+
         }
     }
 
@@ -122,6 +129,12 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int PartitionIdxToShow = 0;
 
+    [SerializeField]
+    bool ShowDoorPartition = false;
+
+    [SerializeField]
+    int DoorPartitionIdxToShow = 0;
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
@@ -135,9 +148,11 @@ public partial class DungeonGenerator : MonoBehaviour
 
     List<RoomTemplateCandiate> _roomTemplateIdxsToInstantiate = new List<RoomTemplateCandiate>();
 
-    Delaunay2D _delaunay;
+    List<Delaunay2D> _delaunays;
 
     List<Partition> _partitions = new List<Partition>();
+
+    List<List<DoorMarker>> _doorPartitions = new List<List<DoorMarker>>();
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -190,18 +205,21 @@ public partial class DungeonGenerator : MonoBehaviour
         return now.ToBinary() ^ notNow.ToBinary();
     }
 
-    public void Triangulate()
+    public Delaunay2D TriangulateDoorPartition(List<DoorMarker> doorMarkers)
     {
         List<Vertex> vertices = new List<Vertex>();
 
-        foreach (var room in _instantiatedRooms)
+        foreach (var marker in doorMarkers)
         {
-            var meshCenter = room.GetMeshCenter();
-            var position = new Vector2(meshCenter.x, meshCenter.z);
-            vertices.Add(new Vertex<Room>(position, room));
+            //var meshCenter = room.GetMeshCenter();
+            // TODO: check, conversions... maybe, this could be done completely with cells
+            var doorCell = GlobalToCellIdx(marker.transform.position);
+
+            var position = new Vector2(doorCell.x, doorCell.z);
+            vertices.Add(new Vertex<Vector3Int>(position, doorCell));
         }
 
-        _delaunay = Delaunay2D.Triangulate(vertices);
+        return Delaunay2D.Triangulate(vertices);
     }
 
     private bool IsMarkerRelevantForStory(StoryMarker marker)
@@ -211,13 +229,18 @@ public partial class DungeonGenerator : MonoBehaviour
 
     public void CreateContextGraph()
     {
-        Triangulate();
+        //Triangulate();
         // sort list of rooms based on story-index
         // -> store rooms with no index at the beginning
 
         foreach(var room in _instantiatedRooms)
         {
             var doorCells = GetDoorCellsOfPlacedRoom(room, true);
+            foreach (var cell in doorCells)
+            {
+                room.AddDoorCell(cell);
+            }
+
             var dockCells = GetDoorDockCells(doorCells);
             foreach (var dockCell in dockCells)
             {
@@ -234,7 +257,7 @@ public partial class DungeonGenerator : MonoBehaviour
             Room room = _instantiatedRooms[i];
             if (!prevRoomStoryRelevant && IsMarkerRelevantForStory(room.GetStoryMarker()))
             {
-                partitions.Add(new Partition(0, i));
+                partitions.Add(new Partition(0, i, false));
                 prevRoomStoryRelevant = true;
                 continue;
             }
@@ -250,10 +273,120 @@ public partial class DungeonGenerator : MonoBehaviour
         _partitions = partitions;
 
         // TODO:
-        // partition doors
         // -> randomly put doors of non-story-relevant rooms in partitions (in the same per room obviously)
+        Dictionary<int, List<int>> nonRelevantRooms = new Dictionary<int, List<int>>();
+        if (!_partitions[0].IsRelevantForStory)
+        {
+            for (int j = 0; j < _partitions[0].EndIdxExclusive; j++ )
+            {
+                int partitionIdx = Mathf.RoundToInt(Random.Range(1f, _partitions.Count));
+                if (!nonRelevantRooms.ContainsKey(partitionIdx))
+                {
+                    nonRelevantRooms.Add(partitionIdx, new List<int>());
+                }
+                nonRelevantRooms[partitionIdx].Add(j);
+            }
+        }
+        // partition doors-cells
+        List<List<DoorMarker>> doorPartitions = new List<List<DoorMarker>>();
+        int firstRelevantPartition = _partitions[0].IsRelevantForStory ? 0 : 1;
+
+        // init
+        for (int j = firstRelevantPartition; j < _partitions.Count; j++)
+        {
+            doorPartitions.Add(new List<DoorMarker>());
+        }
+
+        int currentDoorPartition = 0;
+        // partition over every relevant partitions
+        for (int j = firstRelevantPartition; j < _partitions.Count; j++)
+        {
+            var partition = _partitions[j];
+
+            // iterate over every room in partition and put doors in partition
+            for (int n = partition.StartIdxInclusive; n < partition.EndIdxExclusive; n++)
+            {
+                var room = _instantiatedRooms[n];
+                if (!room.HasBarrier())
+                {
+                    // if the room has no barriers, put every door into current partition
+                    foreach (var cell in room.DoorCells)
+                    {
+                        doorPartitions[currentDoorPartition].AddRange(_grid[cell].doorMarkers);
+                    }
+                }
+                else
+                {
+                    var doorCellsAfterBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: false);
+                    foreach (var cell in doorCellsAfterBarrier)
+                    {
+                        doorPartitions[currentDoorPartition + 1].AddRange(_grid[cell].doorMarkers);
+                    }
+
+                    var doorCellsBeforeBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: true);
+                    foreach (var cell in doorCellsBeforeBarrier)
+                    {
+                        doorPartitions[currentDoorPartition].AddRange(_grid[cell].doorMarkers);
+                    }
+                    // put doors of barrier room also in next partition, if no doors are behind barriers
+                    // TODO: unite the two partitions
+                    if (doorCellsAfterBarrier.Count == 0)
+                    {
+                        foreach (var cell in doorCellsBeforeBarrier)
+                        {
+                            doorPartitions[currentDoorPartition + 1].AddRange(_grid[cell].doorMarkers);
+                        }
+                    }
+                }
+            }
+
+            if (nonRelevantRooms.ContainsKey(j))
+            {
+                foreach (var roomIdx in nonRelevantRooms[j])
+                {
+                    var room = _instantiatedRooms[roomIdx];
+                    foreach (var cell in room.DoorCells)
+                    {
+                        doorPartitions[currentDoorPartition].AddRange(_grid[cell].doorMarkers);
+                    }
+                }
+            }
+            currentDoorPartition++;
+        }
+
+        _doorPartitions = doorPartitions;
+
+
         // create delaunay between doors of one partition
+        foreach(var partition in _doorPartitions)
+        {
+            _delaunays.Add(TriangulateDoorPartition(partition));
+        }
+
         // select paths -> minimum spanning tree? oder irgendwie anders
+    }
+
+    List<Vector3Int> GetDoorsOnSideOfBarrier(Room room, bool beforeBarrier)
+    {
+        var barrierMarker = room.GetStoryMarker();
+        var barrierDir = barrierMarker.GetBarrierDirection();
+        var barrierLoc = barrierMarker.transform.position;
+        List<Vector3Int> doorCellsOnSide = new List<Vector3Int>();
+        foreach (var cell in room.DoorCells)
+        {
+            var cellGlobalLoc = CellIdxToGlobal(cell);
+            var diff = cellGlobalLoc - barrierLoc;
+            var dot = Vector3.Dot(barrierDir, diff);
+            if (dot > 0 && !beforeBarrier)
+            {
+                doorCellsOnSide.Add(cell);
+            } 
+            else if (dot < 0 && beforeBarrier)
+            {
+                doorCellsOnSide.Add(cell);
+            }
+        }
+        return doorCellsOnSide;
     }
 
     public void Setup()
@@ -293,6 +426,13 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         var downScaled = globalCoord / CellSize;
         return Vector3Int.RoundToInt(downScaled);
+    }
+
+    public Vector3 CellIdxToGlobal(Vector3Int cell)
+    {
+        // this should account for transform of parent 
+        var coord = cell * CellSize + new Vector3Int(1,0,1) * CellSize / 2;
+        return coord; //?
     }
 
     public void ReadRooms()
@@ -706,8 +846,9 @@ public partial class DungeonGenerator : MonoBehaviour
         _roomTemplates.Clear();
         _grid = null;
         DestroyRooms();
-        _delaunay = null;
+        _delaunays = new List<Delaunay2D>();
         _partitions = new List<Partition>();
+        _doorPartitions = new List<List<DoorMarker>>();
     }
 
     private void DestroyRooms()
@@ -787,22 +928,6 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
 
-        if (null != _delaunay && ShowDelauney)
-        {
-            foreach (var edge in _delaunay.Edges)
-            {
-                if (!edge.IsBad)
-                {
-                    var p1 = edge.U.Position;
-                    var p2 = edge.V.Position;
-                    Debug.DrawLine(
-                        new Vector3(p1.x, 0, p1.y), 
-                        new Vector3(p2.x, 0, p2.y),
-                        Color.red
-                        );
-                }
-            }
-        }
 
         if (null != _partitions && PartitionIdxToShow < _partitions.Count && ShowPartition)
         {
@@ -811,6 +936,44 @@ public partial class DungeonGenerator : MonoBehaviour
             {
                 var room = _instantiatedRooms[i];
                 Handles.DrawWireDisc(room.GetMeshCenter(), room.GameObject.transform.up, 10, 10);
+            }
+        }
+
+        if (null != _doorPartitions && DoorPartitionIdxToShow < _doorPartitions.Count && ShowDoorPartition)
+        {
+            var partition = _doorPartitions[DoorPartitionIdxToShow];
+            foreach (var doorMarker in partition)
+            {
+                var trans = doorMarker.transform;
+                Handles.DrawSolidDisc(trans.position, trans.up, 5);
+            }
+
+            if (null != _delaunays && ShowDelauney && DoorPartitionIdxToShow < _delaunays.Count)
+            {
+                var delaunay = _delaunays[DoorPartitionIdxToShow];
+                foreach (var edge in delaunay.Edges)
+                {
+                    if (!edge.IsBad)
+                    {
+                        var p1 = edge.U.Position * CellSize;
+                        var p2 = edge.V.Position * CellSize;
+                        Debug.DrawLine(
+                            new Vector3(p1.x, 0, p1.y), 
+                            new Vector3(p2.x, 0, p2.y),
+                            Color.red
+                            );
+                    }
+                }
+                if (delaunay.Vertices.Count == 2)
+                {
+                    var p1 = delaunay.Vertices[0].Position * CellSize;
+                    var p2 = delaunay.Vertices[1].Position * CellSize;
+                    Debug.DrawLine(
+                        new Vector3(p1.x, 0, p1.y), 
+                        new Vector3(p2.x, 0, p2.y),
+                        Color.red
+                        );
+                }
             }
         }
     }
