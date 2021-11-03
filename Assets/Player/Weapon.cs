@@ -4,6 +4,7 @@ public class Weapon : MonoBehaviour
 {
     public Transform firepoint;
     public float range = 500;
+    public float damage = 1;
     public bool shoot = false;
     private LineRenderer lr;
 
@@ -37,6 +38,10 @@ public class Weapon : MonoBehaviour
             if (hit.collider)
             {
                 lr.SetPosition(1, hit.point);
+                var enemy = hit.collider.gameObject.GetComponent<ActorStats>();
+                if (!enemy) { return; }
+                enemy.TakeDamage(this.damage);
+               
             }
         }
         else
