@@ -1,5 +1,6 @@
 using Graphs;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public partial class DungeonGenerator : MonoBehaviour
@@ -23,6 +24,18 @@ public partial class DungeonGenerator : MonoBehaviour
         Door,
         Bufferzone // adjacent to room or on border of grid
     };
+
+    public struct Partition
+    {
+        public int StartIdxInclusive;
+        public int EndIdxExclusive;
+
+        public Partition(int startIdxInclusive, int endIdxExclusive)
+        {
+            StartIdxInclusive = startIdxInclusive;
+            EndIdxExclusive = endIdxExclusive;
+        }
+    }
 
     public struct RoomTemplateCandiate
     {
@@ -103,6 +116,12 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     bool ShowDelauney = true;
 
+    [SerializeField]
+    bool ShowPartition = false;
+
+    [SerializeField]
+    int PartitionIdxToShow = 0;
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
@@ -117,6 +136,8 @@ public partial class DungeonGenerator : MonoBehaviour
     List<RoomTemplateCandiate> _roomTemplateIdxsToInstantiate = new List<RoomTemplateCandiate>();
 
     Delaunay2D _delaunay;
+
+    List<Partition> _partitions = new List<Partition>();
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -183,6 +204,11 @@ public partial class DungeonGenerator : MonoBehaviour
         _delaunay = Delaunay2D.Triangulate(vertices);
     }
 
+    private bool IsMarkerRelevantForStory(StoryMarker marker)
+    {
+        return marker.RelevantForStory && marker.IndexInStory >= 0;
+    }
+
     public void CreateContextGraph()
     {
         Triangulate();
@@ -200,7 +226,34 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
 
-        bool yeah = true;
+        List<Partition> partitions = new List<Partition>();
+        int i;
+        bool prevRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetStoryMarker());
+        for (i = 1; i < _instantiatedRooms.Count; i++)
+        {
+            Room room = _instantiatedRooms[i];
+            if (!prevRoomStoryRelevant && IsMarkerRelevantForStory(room.GetStoryMarker()))
+            {
+                partitions.Add(new Partition(0, i));
+                prevRoomStoryRelevant = true;
+                continue;
+            }
+
+            // check for barriers
+            if (room.HasBarrier())
+            {
+                partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i+1));
+            }
+        }
+        partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
+
+        _partitions = partitions;
+
+        // TODO:
+        // partition doors
+        // -> randomly put doors of non-story-relevant rooms in partitions (in the same per room obviously)
+        // create delaunay between doors of one partition
+        // select paths -> minimum spanning tree? oder irgendwie anders
     }
 
     public void Setup()
@@ -654,6 +707,7 @@ public partial class DungeonGenerator : MonoBehaviour
         _grid = null;
         DestroyRooms();
         _delaunay = null;
+        _partitions = new List<Partition>();
     }
 
     private void DestroyRooms()
@@ -747,6 +801,16 @@ public partial class DungeonGenerator : MonoBehaviour
                         Color.red
                         );
                 }
+            }
+        }
+
+        if (null != _partitions && PartitionIdxToShow < _partitions.Count && ShowPartition)
+        {
+            var partition = _partitions[PartitionIdxToShow];
+            for (int i = partition.StartIdxInclusive; i < partition.EndIdxExclusive; i++)
+            {
+                var room = _instantiatedRooms[i];
+                Handles.DrawWireDisc(room.GetMeshCenter(), room.GameObject.transform.up, 10, 10);
             }
         }
     }

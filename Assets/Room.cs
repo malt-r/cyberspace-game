@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public partial class DungeonGenerator
@@ -30,8 +31,8 @@ public partial class DungeonGenerator
 
         public bool HasBarrier()
         {
-            var marker = GameObject.GetComponentInChildren<StoryMarker>();
-            return null != marker;
+            var markers = GameObject.GetComponentsInChildren<StoryMarker>();
+            return markers.Where(marker => marker.IsBarrier).Any();
         }
 
         public StoryMarker GetStoryMarker()
