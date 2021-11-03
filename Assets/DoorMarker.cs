@@ -29,7 +29,7 @@ public class DoorMarker : MonoBehaviour
     {
         // draw thicc line to indicate direction of door marker
         var p1 = this.transform.position;
-        var p2 = this.transform.position + this.transform.forward * 3;
+        var p2 = this.transform.position + this.transform.forward * 2;
         var thickness = 8;
         Handles.DrawBezier(p1,p2,p1,p2, Color.blue, null, thickness);
     }

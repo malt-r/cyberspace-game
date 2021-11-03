@@ -12,6 +12,7 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         public CellType type;
         public int roomIdx;
+        public List<DoorMarker> doorMarkers;
     }
 
     public enum CellType
@@ -19,8 +20,10 @@ public partial class DungeonGenerator : MonoBehaviour
         Free,
         Room,
         Hallway,
+        Door,
         Bufferzone // adjacent to room or on border of grid
     };
+
     public struct RoomTemplateCandiate
     {
         public int TemplateIdx;
@@ -120,25 +123,25 @@ public partial class DungeonGenerator : MonoBehaviour
 
     public enum NeighborDirection
     {
-        leftbelow = 0,
-        left = 1,
-        leftabove = 2,
-        above = 3,
-        below = 4,
-        rightabove = 5,
-        right = 6,
+        left = 0,
+        above = 1,
+        below = 2,
+        right = 3,
+        leftbelow = 4,
+        leftabove = 5,
+        rightabove = 6,
         rightbelow = 7
     };
 
     Vector3Int[] _gridDirections = new Vector3Int[]
     {
-        new Vector3Int(-1, 0, -1), // left below
         new Vector3Int(-1, 0,  0), // left
-        new Vector3Int(-1, 0,  1), // left above
         new Vector3Int( 0, 0,  1), // above
         new Vector3Int( 0, 0, -1), // below
-        new Vector3Int( 1, 0,  1), // right above
         new Vector3Int( 1, 0,  0), // right
+        new Vector3Int(-1, 0, -1), // left below
+        new Vector3Int(-1, 0,  1), // left above
+        new Vector3Int( 1, 0,  1), // right above
         new Vector3Int( 1, 0, -1)  // right below
     };
 
@@ -186,6 +189,17 @@ public partial class DungeonGenerator : MonoBehaviour
         // sort list of rooms based on story-index
         // -> store rooms with no index at the beginning
 
+        foreach(var room in _instantiatedRooms)
+        {
+            var doorCells = GetDoorCellsOfPlacedRoom(room, true);
+            var dockCells = GetDoorDockCells(doorCells);
+            foreach (var dockCell in dockCells)
+            {
+                // temporary, for testing
+                _grid[dockCell].type = CellType.Hallway;
+            }
+        }
+
         bool yeah = true;
     }
 
@@ -220,6 +234,12 @@ public partial class DungeonGenerator : MonoBehaviour
         }
 
         _triedCells = new HashSet<Vector2Int>();
+    }
+
+    public Vector3Int GlobalToCellIdx(Vector3 globalCoord)
+    {
+        var downScaled = globalCoord / CellSize;
+        return Vector3Int.RoundToInt(downScaled);
     }
 
     public void ReadRooms()
@@ -427,6 +447,71 @@ public partial class DungeonGenerator : MonoBehaviour
         return overlappingCells;
     }
 
+    // this should be called, when the rooms were placed
+    private List<Vector3Int> GetDoorCellsOfPlacedRoom(Room room, bool overwriteCellType)
+    {
+        HashSet<Vector3Int> doorCells = new HashSet<Vector3Int>();
+
+        var doorMarkers = room.GetDoorMarkers();
+        var roomPosition = room.GameObject.transform.position;
+
+        foreach (var marker in doorMarkers)
+        {
+            // get room-local position of marker
+            var markerLocalPos = marker.transform.localPosition;
+            // apply placement rotation
+            // get gridcell
+            var scaledPos = (roomPosition + markerLocalPos) / CellSize;
+            var gridCell = Vector3Int.FloorToInt(scaledPos);
+
+            // the doorCell must be an occupied room cell or another door
+            if (_grid[gridCell].type != CellType.Room &&
+                _grid[gridCell].type != CellType.Door)
+            {
+                // if it is not, select nearest room-cell
+                foreach (var dir in _gridDirections)
+                {
+                    if (_grid[gridCell + dir].type == CellType.Room ||
+                        _grid[gridCell + dir].type == CellType.Door)
+                    {
+                        gridCell = gridCell + dir;
+                        break;
+                    }
+                }
+            }
+            doorCells.Add(gridCell);
+            _grid[gridCell].type = CellType.Door;
+            if (_grid[gridCell].doorMarkers == null)
+            {
+                _grid[gridCell].doorMarkers = new List<DoorMarker>();
+            }
+            _grid[gridCell].doorMarkers.Add(marker);
+        }
+
+        List<Vector3Int> doorCellList = new List<Vector3Int>();
+        foreach (var cell in doorCells)
+        {
+            doorCellList.Add(cell);
+        }
+
+        return doorCellList;
+    }
+
+    private List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)
+    {
+        List<Vector3Int> doorDockCells = new List<Vector3Int>();
+        foreach (var doorCell in doorCells)
+        {
+            var doorMarkers = _grid[doorCell].doorMarkers;
+            foreach (var marker in doorMarkers)
+            {
+                var markerDirection = marker.gameObject.transform.forward;
+                doorDockCells.Add(doorCell - Vector3Int.RoundToInt(markerDirection));
+            }
+        }
+        return doorDockCells;
+    }
+
     // returns false, if one of the passed cells is already occupied
     private bool AreCellsFree(List<Vector3Int> cellCoords)
     {
@@ -448,6 +533,27 @@ public partial class DungeonGenerator : MonoBehaviour
         return true;
     }
 
+    private Vector3Int GetRotationRelatedCellOffset(Vector3 rotation)
+    {
+        int rot = Mathf.RoundToInt(rotation.y);
+        int rotMod = rot % 360;
+
+        Vector3Int offset = new Vector3Int(0,0,0);
+        if (rotMod == 90)
+        {
+            offset = new Vector3Int(0, 0, 1);
+        }
+        else if (rotMod == 180)
+        {
+            offset = new Vector3Int(1, 0, 1);
+        } 
+        else if (rotMod == 270)
+        {
+            offset = new Vector3Int(1, 0, 0);
+        }
+        return offset;
+    }
+
     // instantiate room templates at location and mark the overlapping cells 
     // as occupied
     private void InstantiateRooms()
@@ -461,22 +567,7 @@ public partial class DungeonGenerator : MonoBehaviour
             // because the rotation should be applied cell-wise and not coninously
             // an offset is required for the non-0 deg rotations
             // got no time to be smart, hard code
-            int rot = Mathf.RoundToInt(placementCandidate.Rotation.y);
-            int rotMod = rot % 360;
-
-            Vector3Int offset = new Vector3Int(0,0,0);
-            if (rotMod == 90)
-            {
-                offset = new Vector3Int(0, 0, 1);
-            }
-            else if (rotMod == 180)
-            {
-                offset = new Vector3Int(1, 0, 1);
-            } 
-            else if (rotMod == 270)
-            {
-                offset = new Vector3Int(1, 0, 0);
-            }
+            Vector3Int offset = GetRotationRelatedCellOffset(placementCandidate.Rotation);
             offset = offset * CellSize;
 
             var go = Instantiate(
@@ -496,7 +587,6 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
     }
-
 
     private bool PlaceRoom(int roomIdx, Vector2Int cell, Vector3 rotation) // cell: Zellenkoordinaten
     { 
@@ -522,7 +612,6 @@ public partial class DungeonGenerator : MonoBehaviour
             {
                 _grid[occupiedCell].type = CellType.Room;
 
-
                 _triedCells.Add(new Vector2Int(occupiedCell.x, occupiedCell.z));
                 markedCells.Add(occupiedCell);
             }
@@ -544,7 +633,8 @@ public partial class DungeonGenerator : MonoBehaviour
                     {
                         var neighborCell = currentCell + direction;
                         if (_grid[neighborCell].type != CellType.Room && 
-                            _grid[neighborCell].type != CellType.Bufferzone)
+                            _grid[neighborCell].type != CellType.Bufferzone && 
+                            _grid[neighborCell].type != CellType.Door)
                         {
                             _grid[neighborCell].type = CellType.Bufferzone;
                             markedCells.Add(neighborCell);
@@ -598,6 +688,14 @@ public partial class DungeonGenerator : MonoBehaviour
         else if (CellType.Bufferzone == cell.type)
         {
             Debug.DrawLine(lowerCorner, upperCorner, Color.blue);
+        }
+        else if (CellType.Door == cell.type)
+        {
+            Debug.DrawLine(lowerCorner, upperCorner, Color.cyan);
+        }
+        else if (CellType.Hallway == cell.type)
+        {
+            Debug.DrawLine(lowerCorner, upperCorner, Color.magenta);
         }
     }
 
