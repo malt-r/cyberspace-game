@@ -3937,19 +3937,21 @@ MonoBehaviour:
   GridDimensions: {x: 30, y: 1, z: 30}
   CellSize: 4
   OuterBufferZone: 2
-  RoomBufferZone: 1
+  RoomBufferZone: 2
   ShowGrid: 0
   RoomFinder: {fileID: 941624019}
   MaxPlacementTriesPerRoom: 100
   MaxTotalPlacementTries: 10
-  AllowRoomRotation: 0
+  AllowRoomRotation: 1
   RandomSeed: 2147483647
-  UseExternalEntropy: 0
-  ShowDelauney: 1
+  UseExternalEntropy: 1
+  ShowDelauney: 0
   ShowPartition: 0
   PartitionIdxToShow: 0
   ShowDoorPartition: 1
   DoorPartitionIdxToShow: 0
+  ShowMST: 0
+  ShowPaths: 1
 --- !u!4 &784526399
 Transform:
   m_ObjectHideFlags: 0
