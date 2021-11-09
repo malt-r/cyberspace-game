@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Graphs;
 
+// TODO: this should be extended to get a vertex<T> (template whole Prim-Class) and
+// use external cost-function, like for astar (only that this modifies the used distance of the edge connected by
+// the vertices) -> could be used to create more interesting paths, which does not simply
+// connect all doors of the same room with a simple path
 public static class Prim {
     public class Edge : Graphs.Edge {
         public float Distance { get; private set; }

@@ -57,7 +57,7 @@ public class DungeonPathfinder2D {
         }
     }
 
-    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int end, Func<Node, Node, PathCost> costFunction) {
+    public Tuple<List<Vector2Int>, float> FindPath(Vector2Int start, Vector2Int end, Func<Node, Node, PathCost> costFunction) {
         ResetNodes();
         queue.Clear();
         closed.Clear();
@@ -73,7 +73,7 @@ public class DungeonPathfinder2D {
             closed.Add(node);
 
             if (node.Position == end) {
-                return ReconstructPath(node);
+                return new Tuple<List<Vector2Int>, float>(ReconstructPath(node), node.Cost);
             }
 
             foreach (var offset in neighbors) {
