@@ -1,14 +1,14 @@
 using UnityEngine;
+using System;
 
 public class ActorStats : MonoBehaviour
 {
 
 	public float maxHealth = 100;
 	[SerializeField]
-	public float currentHealth { get; protected set; }   
-	public float damage = 10;
-
-	public event System.Action OnHealthReachedZero;
+	private float currentHealth;
+	public event Action OnHealthReachedZero;
+	public float CurrentHealth { get { return currentHealth; } }
 
     public void Awake()
     {
@@ -20,16 +20,14 @@ public class ActorStats : MonoBehaviour
 		Debug.Log(transform.name + " takes " + damage + " damage.");
 
 		if (currentHealth > 0) { return; }
-		if (OnHealthReachedZero != null) { OnHealthReachedZero(); }
+        OnHealthReachedZero?.Invoke(); 
 		gameObject.SetActive(false);
 	}
 
-	public void Heal(int amount)
+	public void Heal(float amount)
 	{
 		currentHealth += amount;
 		currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 	}
-
-
 
 }

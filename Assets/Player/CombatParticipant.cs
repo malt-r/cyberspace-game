@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponControl))]
 [RequireComponent(typeof(ActorStats))]
 public class CombatParticipant : MonoBehaviour
 {
-    private ActorStats myStats;
+    private ActorStats stats;
+    private WeaponControl weaponControl;
     // Start is called before the first frame update
     void Start()
     {
-        myStats.GetComponent<ActorStats>();
+        stats = GetComponent<ActorStats>();
+        weaponControl = GetComponent<WeaponControl>();
     }
 
     // Update is called once per frame
@@ -18,8 +21,16 @@ public class CombatParticipant : MonoBehaviour
         
     }
 
-    public void Attack(ActorStats enemy)
+    public void Attack(CombatParticipant enemy)
     {
-        enemy.TakeDamage(myStats.damage);
+        Debug.Log("Attacking");
+        enemy.TakeDamage(this);
     }
+
+    public void TakeDamage(CombatParticipant enemy)
+    {
+        Debug.Log("Getting Damage");
+        stats.TakeDamage(enemy.weaponControl.Damage);
+    }
+
 }
