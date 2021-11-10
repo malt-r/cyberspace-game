@@ -16,12 +16,40 @@ public partial class DungeonGenerator : MonoBehaviour
         public int roomIdx;
         public List<DoorMarker> doorMarkers;
         public Path path;
+        public Vector3Int doorCellOfDoorDock;
     }
 
     public struct Path
     {
         public List<Vector2Int> cells;
         public int partitionIdx;
+    }
+
+    public enum CorridorType
+    {
+        None,
+        Straight,
+        Turn,
+        Crossing,
+        TCrossSplit
+    }
+
+    public struct CellPathData
+    {
+        // use flags
+        public PathDirection incomingDirections;
+        public bool doorDock;
+        public CorridorType type;
+        public float rotationInDeg;
+    }
+
+    public enum PathDirection
+    {
+        None    = 0x0000,
+        Up      = 0x0001,
+        Down    = 0x0010,
+        Left    = 0x0100,
+        Right   = 0x1000
     }
 
     public enum CellType
@@ -154,6 +182,16 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     bool ShowPaths = true;
 
+    [Header("CorridorPlacement")]
+    [SerializeField]
+    GameObject StraigtCorridor;
+
+    [SerializeField]
+    GameObject LeftTurnCorridor;
+
+    [SerializeField]
+    GameObject TCrossCorridor;
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
@@ -165,6 +203,8 @@ public partial class DungeonGenerator : MonoBehaviour
     // the instantiated gameobjects, which should be removed on cleanup
     List<Room> _instantiatedRooms = new List<Room>();
 
+    List<GameObject> _instantiatedCorridors = new List<GameObject>();
+
     List<RoomTemplateCandiate> _roomTemplateIdxsToInstantiate = new List<RoomTemplateCandiate>();
 
     List<Delaunay2D> _delaunays;
@@ -175,7 +215,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     List<List<Prim.Edge>> _msts = new List<List<Prim.Edge>>();
 
-    List<Path> _paths = new List<Path>();
+    List<List<Path>> _partitionedPaths = new List<List<Path>>();
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -209,10 +249,19 @@ public partial class DungeonGenerator : MonoBehaviour
         return _gridDirections[((int)dir)];
     }
 
+    [SerializeField]
+    GameObject playerPrefab;
+
+    public void InstantiatePlayer()
+    {
+        var rooms = _instantiatedRooms.Where(room => room.GetStoryMarker().IndexInStory == 0);
+        var startRoom = rooms.First();
+        Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -385,7 +434,8 @@ public partial class DungeonGenerator : MonoBehaviour
                     var doorCellsAfterBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: false);
                     doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsAfterBarrier));
 
-                    // test this!!
+                    // the barrier room is part of the next partition, but the doors before the barrier should be part of 
+                    // the partition before
                     if (doorCellsAfterBarrier.Any())
                     {
                         var doorCellsBeforeBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: true);
@@ -396,16 +446,6 @@ public partial class DungeonGenerator : MonoBehaviour
                         var doorCellsBeforeBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: true);
                         doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
                     }
-
-                    // put doors of barrier room also in next partition, if no doors are behind barriers
-
-                    // TODO: unite the two partitions
-                    // this should probably be done earlier, when the rooms are partitioned?
-                    // removed, because union is created earlier now
-                    //if (doorCellsAfterBarrier.Count == 0)
-                    //{
-                    //    doorPartitions[currentDoorPartition + 1].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
-                    //}
                 }
             }
 
@@ -480,6 +520,7 @@ public partial class DungeonGenerator : MonoBehaviour
         foreach (var mst in _msts)
         {
             var doorPartition = _doorPartitions[pathPartitionIdx];
+            _partitionedPaths.Add(new List<Path>());
             foreach (var edge in mst)
             {
                 var startCellDoorf = edge.U.Position;
@@ -526,13 +567,15 @@ public partial class DungeonGenerator : MonoBehaviour
                 else
                 {
                     float pathCost = path.Item2;
-                    Debug.LogError("Pathcost: " + pathCost.ToString());
-
+                    if (pathCost > 100000)
+                    {
+                        Debug.LogError("Pathcost exceeds 100000, the pathfinder created a crossing of partitions!");
+                    }
 
                     Path newPath = new Path();
                     newPath.partitionIdx = pathPartitionIdx;
                     newPath.cells = path.Item1;
-                    _paths.Add(newPath);
+                    _partitionedPaths[pathPartitionIdx].Add(newPath);
 
                     foreach (var cell in path.Item1)
                     {
@@ -572,6 +615,195 @@ public partial class DungeonGenerator : MonoBehaviour
     }
 
 
+
+    #endregion
+
+    #region corridor placement
+
+    // dir must be an adjacent cell
+    private PathDirection GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
+    {
+        if (relativeTo.x < other.x)
+        {
+            return PathDirection.Right;
+        }
+        if (relativeTo.x > other.x)
+        {
+            return PathDirection.Left;
+        }
+        if (relativeTo.y < other.y)
+        {
+            return PathDirection.Up;
+        }
+        if (relativeTo.y > other.y)
+        {
+            return PathDirection.Down;
+        }
+        // same?
+        return PathDirection.None;
+    }
+
+    private PathDirection InvertDirection(PathDirection dir)
+    {
+        if (dir.HasFlag(PathDirection.Right))
+        {
+            return PathDirection.Left;
+        }
+        if (dir.HasFlag(PathDirection.Left))
+        {
+            return PathDirection.Right;
+        }
+        if (dir.HasFlag(PathDirection.Up))
+        {
+            return PathDirection.Down;
+        }
+        if (dir.HasFlag(PathDirection.Down))
+        {
+            return PathDirection.Up;
+        }
+        return PathDirection.None;
+    }
+
+    public void PlaceCorridors()
+    {
+        CellPathData[,] cellData = new CellPathData[GridDimensions.x, GridDimensions.z];
+        Vector2Int previousCell;
+        foreach (var pathsOfPartition in _partitionedPaths)
+        {
+            // TODO: does not only need to know, where we came from, but also where we are going
+            // (the incoming direction of the next cell is the inverse of the outgoing of the last one)
+            foreach (var path in pathsOfPartition)
+            {
+                // start door dock
+                var startDoorDock = path.cells.First();
+                var door = _grid[startDoorDock.x, 0, startDoorDock.y].doorCellOfDoorDock;
+                var door2Int = new Vector2Int(door.x, door.z);
+
+                cellData[startDoorDock.x, startDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(startDoorDock, door2Int);
+                cellData[startDoorDock.x, startDoorDock.y].doorDock = true;
+
+                previousCell = startDoorDock;
+                for (int i = 1; i < path.cells.Count; i++)
+                {
+                    var cell = path.cells[i];
+
+                    var direction = GetDirectionRelativeToCell(cell, previousCell); // where do we come from, where is the previous cell located relative to current cell?
+                    cellData[cell.x, cell.y].incomingDirections |= direction;
+
+                    // set outgoing direction of previous cell
+                    cellData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
+
+                    previousCell = cell;
+                }
+
+                // end door dock, get relative door position
+                var endDoorDock = path.cells.Last();
+                door = _grid[endDoorDock.x, 0, endDoorDock.y].doorCellOfDoorDock;
+                door2Int = new Vector2Int(door.x, door.z);
+
+                cellData[endDoorDock.x, endDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(endDoorDock, door2Int);
+                cellData[endDoorDock.x, endDoorDock.y].doorDock = true;
+            }
+        }
+
+        // convert incoming directions to corridor type
+        // TODO: directly place module at location
+        for (int x = 0; x < GridDimensions.x; x++)
+        {
+            for (int z = 0; z < GridDimensions.z; z++)
+            {
+                var cell = cellData[x, z];
+                var directions = cell.incomingDirections;
+                switch (directions)
+                {
+                    case PathDirection.None:
+                        break;
+                    case PathDirection.Up | PathDirection.Down:
+                        cell.type = CorridorType.Straight;
+                        cell.rotationInDeg = 0.0f;
+                        break;
+                    case PathDirection.Left | PathDirection.Right:
+                        cell.type = CorridorType.Straight;
+                        cell.rotationInDeg = 90.0f;
+                        break;
+                    case PathDirection.Down | PathDirection.Left | PathDirection.Right:
+                        cell.type = CorridorType.TCrossSplit;
+                        cell.rotationInDeg = 0.0f;
+                        break;
+                    case PathDirection.Down | PathDirection.Left | PathDirection.Up:
+                        cell.type = CorridorType.TCrossSplit;
+                        cell.rotationInDeg = 90.0f;
+                        break;
+                    case PathDirection.Up | PathDirection.Left | PathDirection.Right:
+                        cell.type = CorridorType.TCrossSplit;
+                        cell.rotationInDeg = 180.0f;
+                        break;
+                    case PathDirection.Up | PathDirection.Right | PathDirection.Down:
+                        cell.type = CorridorType.TCrossSplit;
+                        cell.rotationInDeg = 270.0f;
+                        break;
+                    case PathDirection.Down | PathDirection.Left:
+                        cell.type = CorridorType.Turn;
+                        cell.rotationInDeg = 0.0f;
+                        break;
+                    case PathDirection.Up | PathDirection.Left:
+                        cell.type = CorridorType.Turn;
+                        cell.rotationInDeg = 90.0f;
+                        break;
+                    case PathDirection.Up | PathDirection.Right:
+                        cell.type = CorridorType.Turn;
+                        cell.rotationInDeg = 180.0f;
+                        break;
+                    case PathDirection.Down | PathDirection.Right:
+                        cell.type = CorridorType.Turn;
+                        cell.rotationInDeg = 270.0f;
+                        break;
+                    case PathDirection.Down | PathDirection.Up | PathDirection.Right | PathDirection.Left:
+                        cell.type = CorridorType.Crossing;
+                        cell.rotationInDeg = 0.0f;
+                        break;
+                    default:
+                        break;
+                }
+                InstantiateCorridorTile(new Vector2Int(x,z), cell.type, cell.rotationInDeg);
+            }
+        }
+        //InstantiateCorridorTile(new Vector2Int(0,0), CorridorType.Straight, 0.0f);
+    }
+
+    private void InstantiateCorridorTile(Vector2Int cell, CorridorType type, float rotationInDeg)
+    {
+        var placementCell = new Vector3Int(cell.x, 0, cell.y);
+        var rotationOffset = GetRotationRelatedCellOffset(new Vector3(0, rotationInDeg, 0));
+
+        var location = (placementCell + rotationOffset) * CellSize;
+
+        GameObject corridorTemplate = null;
+        switch (type)
+        {
+            case CorridorType.None:
+                return;
+            case CorridorType.Straight:
+                corridorTemplate = StraigtCorridor;
+                break;
+            case CorridorType.Turn:
+                corridorTemplate = LeftTurnCorridor;
+                break;
+            case CorridorType.Crossing:
+                return;
+            case CorridorType.TCrossSplit:
+                corridorTemplate = TCrossCorridor;
+                break;
+        }
+
+        var go = Instantiate(
+            corridorTemplate,
+            new Vector3(location.x, 0, location.z),
+            Quaternion.Euler(new Vector3(0, rotationInDeg, 0)),
+            this.transform
+            );
+        _instantiatedCorridors.Add(go);
+    }
 
     #endregion
 
@@ -648,12 +880,25 @@ public partial class DungeonGenerator : MonoBehaviour
         _roomTemplates.Clear();
         _grid = null;
         DestroyRooms();
+        DestroyCorridors();
         _delaunays = new List<Delaunay2D>();
         _partitions = new List<Partition>();
         //_doorPartitions = new List<List<DoorMarker>>();
         _doorPartitions = new List<List<Vector3Int>>();
         _msts = new List<List<Prim.Edge>>();
-        _paths = new List<Path>();
+        _partitionedPaths = new List<List<Path>>();
+    }
+
+    private void DestroyCorridors()
+    {
+        if (null != _instantiatedCorridors)
+        {
+            foreach (var corridor in _instantiatedCorridors)
+            {
+                DestroyImmediate(corridor);
+            }
+        }
+        _instantiatedCorridors = new List<GameObject>();
     }
 
     private void DestroyRooms()
@@ -1011,7 +1256,10 @@ public partial class DungeonGenerator : MonoBehaviour
             foreach (var marker in doorMarkers)
             {
                 var markerDirection = marker.gameObject.transform.forward;
-                doorDockCells.Add(doorCell - Vector3Int.RoundToInt(markerDirection));
+                var doorDockCell = doorCell - Vector3Int.RoundToInt(markerDirection);
+                doorDockCells.Add(doorDockCell);
+
+                _grid[doorDockCell].doorCellOfDoorDock = doorCell;
             }
         }
         return doorDockCells;
@@ -1080,6 +1328,7 @@ public partial class DungeonGenerator : MonoBehaviour
         return Vector3Int.RoundToInt(downScaled);
     }
 
+    // calculate the center of the cell
     public Vector3 CellIdxToGlobal(Vector3Int cell)
     {
         // this should account for transform of parent 
@@ -1164,11 +1413,6 @@ public partial class DungeonGenerator : MonoBehaviour
         if (null != _doorPartitions && DoorPartitionIdxToShow < _doorPartitions.Count && ShowDoorPartition)
         {
             var partition = _doorPartitions[DoorPartitionIdxToShow];
-            //foreach (var doorMarker in partition)
-            //{
-            //    var trans = doorMarker.transform;
-            //    Handles.DrawSolidDisc(trans.position, trans.up, 5);
-            //}
             foreach (var cell in partition)
             {
                 var trans = cell * CellSize + new Vector3Int(1,0,1) * CellSize / 2;
@@ -1219,9 +1463,9 @@ public partial class DungeonGenerator : MonoBehaviour
             }
 
             // only show paths for current partition
-            if (null != _paths && ShowPaths)
+            if (null != _partitionedPaths && ShowPaths)
             {
-                var pathsForPartition = _paths.Where(path => path.partitionIdx == DoorPartitionIdxToShow);
+                var pathsForPartition = _partitionedPaths[DoorPartitionIdxToShow];
                 if (pathsForPartition.Any())
                 {
                     foreach(var path in pathsForPartition)
@@ -1241,10 +1485,8 @@ public partial class DungeonGenerator : MonoBehaviour
                         }
                     }
                 }
-
             }
         }
-
     }
     #endregion
 }

@@ -45,6 +45,16 @@ namespace Assets
                 gen.CreateContextGraph();
             }
 
+            if (GUILayout.Button("Place Corridors..."))
+            {
+                gen.PlaceCorridors();
+            }
+
+            if (GUILayout.Button("Instantiate Player"))
+            {
+                gen.InstantiatePlayer();
+            }
+
 
             GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))
