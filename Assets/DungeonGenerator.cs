@@ -4,6 +4,34 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
+// Note (Malte Reinsch, 2021/11/10):
+// Generator creates walkable corridors between rooms and is thus in a workable state.
+// Multiple areas of improvement:
+// 
+// Path improvement:
+//  - mst currenlty only creates shortes paths, the prim-algorithm could be modified to
+//    detect connection to same room and only create it with smaller than 1 probability
+//  - Because rooms are currently placed truly random, paths tend to be fairly long and 
+//    overlapping paths are common; could partition rooms before placing and place major
+//    portion in designated zone for this partition; only place rooms outside of zone with
+//    probability less than 1
+//  - store length of mst edge to be able to create paths in specific order
+//  - Astar algo creates squiggly paths; these don't really hinder playability but aren't
+//    visually appealing; astar could be modified to put cost on often changing direction
+//  - astar could perform multiple passes with different orders of partitions and choose the
+//    permutation with lowest path-cost overall
+//  - some partition crossings do occur; detect and retry path creation
+//  - for both above, the path should not be stored direclty in grid but be stored in lookup
+//    structure
+//
+// Refactoring:
+//  - vector-conversions from Vec2 to Vec3 and back between different stages of context graph
+//    creation
+//  - redundant storage of the same information in different places (currently for convenience)
+//  - many iterations (which could be united?)
+//
+// 
+
 public partial class DungeonGenerator : MonoBehaviour
 {
     // coord-systems:
@@ -368,11 +396,12 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
 
+        // continuation of room partitioning
         for (; i < _instantiatedRooms.Count; i++)
         {
             Room room = _instantiatedRooms[i];
             // check for barriers
-            // TODO: check, if room has only doors in front of barrier -> unite partitions
+            // check, if room has only doors in front of barrier -> unite partitions
             if (room.HasBarrier())
             {
                 var doorsBehindBarrier = GetDoorsOnSideOfBarrier(room, false);
@@ -670,8 +699,6 @@ public partial class DungeonGenerator : MonoBehaviour
         Vector2Int previousCell;
         foreach (var pathsOfPartition in _partitionedPaths)
         {
-            // TODO: does not only need to know, where we came from, but also where we are going
-            // (the incoming direction of the next cell is the inverse of the outgoing of the last one)
             foreach (var path in pathsOfPartition)
             {
                 // start door dock
@@ -687,10 +714,12 @@ public partial class DungeonGenerator : MonoBehaviour
                 {
                     var cell = path.cells[i];
 
-                    var direction = GetDirectionRelativeToCell(cell, previousCell); // where do we come from, where is the previous cell located relative to current cell?
+                    // where do we come from, where is the previous cell located relative to current cell?
+                    var direction = GetDirectionRelativeToCell(cell, previousCell); 
                     cellData[cell.x, cell.y].incomingDirections |= direction;
 
-                    // set outgoing direction of previous cell
+                    // set outgoing direction of previous cell (incoming direction of this cell is the inverse of the outgoing
+                    // of the last one)
                     cellData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
 
                     previousCell = cell;
