@@ -12,6 +12,8 @@ public class Weapon : MonoBehaviour
     private CombatParticipant owner;
     public bool hit2 = false;
 
+    private ParticleSystem overheatParticleSystem;
+
     public float condition = 100f;
     public float maxCondition = 100f;
     public bool overHeated = false;
@@ -31,10 +33,12 @@ public class Weapon : MonoBehaviour
         Application.onBeforeRender -= UpdateRoute;
     }
 
-    void Start()
+    void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         owner = transform.parent.GetComponent<CombatParticipant>();
+        overheatParticleSystem = GetComponentInChildren<ParticleSystem>();
+        overheatParticleSystem.Stop();
     }
 
     void UpdateRoute()
@@ -93,6 +97,22 @@ public class Weapon : MonoBehaviour
         }
        
                
+    }
+    public void Update()
+    {
+        DrawParticleSystem();
+    }
+
+    private void DrawParticleSystem()
+    {
+        if (overHeated && overheatParticleSystem.isStopped)
+        {
+            overheatParticleSystem.Play();
+        }
+        else if(!overHeated &&  overheatParticleSystem.isPlaying)
+        {
+            overheatParticleSystem.Stop();
+        }
     }
 
     IEnumerator StartWeaponCooldown()
