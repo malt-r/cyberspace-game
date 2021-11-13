@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-[RequireComponent(typeof(ActorStats))]
+[RequireComponent(typeof(CombatParticipant))]
 public class Enemy : MonoBehaviour
 {
-    public Transform player;
     public float Speed = 1f;
     public float minFollowDistance = 5f;
     public float maxFollowDistance = 10f;
@@ -13,38 +11,76 @@ public class Enemy : MonoBehaviour
     private bool isFollowing = false;
     public float distance;
     private ActorStats stats;
+    private PlayerDetector playerDetector;
+    private CombatParticipant combat;
+
+    [SerializeField]
+    private float rotationSpeed = 0.5f;
 
     public bool inverse = true;
     // Start is called before the first frame update
     void Start()
     {
         stats = GetComponent<ActorStats>();
-        Debug.Log(transform.localScale);
+        playerDetector = GetComponentInChildren<PlayerDetector>();
+        combat = GetComponent<CombatParticipant>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float deadRatio = 1;
+        HandleCombat();
+        SearchAndFollowPlayer();
+        transform.Rotate(0, rotationSpeed, 0);
         
-        deadRatio = (stats.CurrentHealth+1)  / stats.maxHealth;
+    }
 
+    private void HandleCombat()
+    {
+        handleHealth();
+        if (playerDetector.DetectedPlayer == null)
+        {
+            return;
+        }
+        var player = playerDetector.DetectedPlayer;
+        if (Vector3.Distance(this.transform.position, player.transform.position) < 5.0F)
+        {
+            var combatPlayer = player.GetComponent<CombatParticipant>();
+            combatPlayer.TakeDamage(this.combat);
+        }
+    }
+
+    private void handleHealth()
+    {
+        float deadRatio = (stats.CurrentHealth + 1) / stats.maxHealth;
+        deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1);
         if (inverse)
         {
-            deadRatio = 2/ (deadRatio+1);
+            deadRatio = 2 / (deadRatio + 1);
+            deadRatio = Mathf.Clamp(deadRatio, 1, 1.5f);
         }
         var newScale = new Vector3(100f * deadRatio, 100f * deadRatio, 100f * deadRatio);
-    
-        transform.localScale = newScale;
-        distance = Vector3.Distance(transform.position, player.transform.position);
+
+        this.transform.localScale = newScale;
+    }
+
+    private void SearchAndFollowPlayer()
+    {
+        if (playerDetector.DetectedPlayer == null) {
+            return; 
+        }
+        var player = playerDetector.DetectedPlayer;
+       
+        distance = Vector3.Distance(transform.position, player.position);
 
         isFollowing = false;
         if (distance > maxFollowDistance) { return; }
+        
         if (distance < minFollowDistance) { return; }
         isFollowing = true;
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime * Speed);
-
-
-        //transform.position = Vector3.Lerp(transform.position, player.position, Time.deltaTime/10);
+        var finalPos = player.position;
+        finalPos.y += 2;
+        var smooth = Vector3.zero;
+        transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
     }
 }
