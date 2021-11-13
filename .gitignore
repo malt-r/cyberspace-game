@@ -95,3 +95,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+#IntelliJ/Rider
+.idea/
+/Assembly-CSharp.csproj.DotSettings
