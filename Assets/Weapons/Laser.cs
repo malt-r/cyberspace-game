@@ -23,8 +23,7 @@ public class Laser : BaseWeapon
     public float cooldownRate = 10f;
     public float cooldownTime = 5;
 
-    private float deltaTime = 0f;
-
+    private float deltaTime;
     
     void Awake()
     {
@@ -33,8 +32,7 @@ public class Laser : BaseWeapon
         overheatParticleSystem = GetComponentInChildren<ParticleSystem>();
         overheatParticleSystem.Stop();
         Type = WeaponType.LASER;
-        useCooldown = 1f;
-        damage = 10f;
+        deltaTime = useCooldown+1;
     }
     
     void UpdateRoute()
