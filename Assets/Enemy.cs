@@ -7,12 +7,15 @@ public class Enemy : MonoBehaviour
     public float Speed = 1f;
     public float minFollowDistance = 5f;
     public float maxFollowDistance = 10f;
+    //Used for debugging
     [SerializeField]
     private bool isFollowing = false;
     public float distance;
     private ActorStats stats;
     private PlayerDetector playerDetector;
     private CombatParticipant combat;
+    private WeaponControl weaponControl;
+    public ParticleSystem ParticleSystem;
 
     [SerializeField]
     private float rotationSpeed = 0.5f;
@@ -24,6 +27,8 @@ public class Enemy : MonoBehaviour
         stats = GetComponent<ActorStats>();
         playerDetector = GetComponentInChildren<PlayerDetector>();
         combat = GetComponent<CombatParticipant>();
+        weaponControl = GetComponent<WeaponControl>();
+        ParticleSystem.Stop();
     }
 
     // Update is called once per frame
@@ -32,12 +37,13 @@ public class Enemy : MonoBehaviour
         HandleCombat();
         SearchAndFollowPlayer();
         transform.Rotate(0, rotationSpeed, 0);
-        
+
     }
 
     private void HandleCombat()
     {
         handleHealth();
+        if (!weaponControl) { return; }
         if (playerDetector.DetectedPlayer == null)
         {
             return;
@@ -45,8 +51,7 @@ public class Enemy : MonoBehaviour
         var player = playerDetector.DetectedPlayer;
         if (Vector3.Distance(this.transform.position, player.transform.position) < 5.0F)
         {
-            var combatPlayer = player.GetComponent<CombatParticipant>();
-            combatPlayer.TakeDamage(this.combat);
+            weaponControl.UseWeapon();
         }
     }
 
@@ -66,11 +71,13 @@ public class Enemy : MonoBehaviour
 
     private void SearchAndFollowPlayer()
     {
+      
         if (playerDetector.DetectedPlayer == null) {
+            ParticleSystem.Stop();
             return; 
         }
         var player = playerDetector.DetectedPlayer;
-       
+        ParticleSystem.Play();
         distance = Vector3.Distance(transform.position, player.position);
 
         isFollowing = false;
@@ -78,6 +85,7 @@ public class Enemy : MonoBehaviour
         
         if (distance < minFollowDistance) { return; }
         isFollowing = true;
+
         var finalPos = player.position;
         finalPos.y += 2;
         var smooth = Vector3.zero;
