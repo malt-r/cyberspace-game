@@ -1,34 +1,56 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Weapons;
 using UnityEngine;
 
-public class MeleeWeapon : MonoBehaviour, Weapon
+public class MeleeWeapon : BaseWeapon
 {
     public WeaponType Type { get; private set; }
-    [SerializeField]
-    private float damage =10f;
-    public float Damage => damage;
-    
-    [SerializeField]
-    private float useCoolDown =2f;
-    public float UseCooldown { get; }
 
+    private float deltaTime;
+    [SerializeField]
+    private int maxEnemies = 1;
+
+    [SerializeField] 
+    private float attackRadius = 5f;
     // Start is called before the first frame update
+
+    public  LayerMask lm;
     void Start()
     {
         Type = WeaponType.MELEE;
+        deltaTime = useCooldown+1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        deltaTime += Time.deltaTime;
     }
 
 
-    public void Use()
+    public override void Use()
     {
-        Debug.Log("Melee is used");
+        if (!(deltaTime > useCooldown)) return;
+        deltaTime = 0f;
+        //TODO: Work with layers to get enemies more performant
+        Collider[] hitColliders = new Collider[maxEnemies];
+        int foundColliders = Physics.OverlapSphereNonAlloc(this.transform.position, attackRadius, hitColliders,lm);
+        for (int i = 0; i < foundColliders; i++)
+        {
+           
+            var enemy = hitColliders[i].GetComponent<CombatParticipant>();
+            var self = transform.root.GetComponent<CombatParticipant>();
+            if (enemy == null || self ==  null || enemy == self) continue;
+            enemy.TakeDamage(self);
+            Debug.Log($" Attack , {hitColliders[i].name}");
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1f, 0.11f, 0.85f);
+        Gizmos.DrawWireSphere(this.transform.position,attackRadius);
     }
 }
