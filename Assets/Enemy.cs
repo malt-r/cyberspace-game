@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour
             return;
         }
         var player = playerDetector.DetectedPlayer;
-        if (Vector3.Distance(this.transform.position, player.transform.position) < 5.0F)
+        if (Vector3.Distance(this.transform.position, player.transform.position) < 20.0F)
         {
             weaponControl.UseWeapon();
         }
@@ -58,11 +58,12 @@ public class Enemy : MonoBehaviour
     private void handleHealth()
     {
         float deadRatio = (stats.CurrentHealth + 1) / stats.maxHealth;
-        deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1);
+        deadRatio = Mathf.Clamp(deadRatio, 1f, 2f);
         if (inverse)
         {
             deadRatio = 2 / (deadRatio + 1);
             deadRatio = Mathf.Clamp(deadRatio, 1, 1.5f);
+            deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1);
         }
         var newScale = new Vector3(100f * deadRatio, 100f * deadRatio, 100f * deadRatio);
 
@@ -86,9 +87,11 @@ public class Enemy : MonoBehaviour
         if (distance < minFollowDistance) { return; }
         isFollowing = true;
 
-        var finalPos = player.position;
+        var playerPosition = player.position;
+        var finalPos = playerPosition;
         finalPos.y += 2;
         var smooth = Vector3.zero;
         transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
+        transform.LookAt(playerPosition);
     }
 }
