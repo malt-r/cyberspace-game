@@ -58,12 +58,11 @@ public class Enemy : MonoBehaviour
     private void handleHealth()
     {
         float deadRatio = (stats.CurrentHealth + 1) / stats.maxHealth;
-        deadRatio = Mathf.Clamp(deadRatio, 1f, 2f);
+        deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1f);
         if (inverse)
         {
             deadRatio = 2 / (deadRatio + 1);
-            deadRatio = Mathf.Clamp(deadRatio, 1, 1.5f);
-            deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1);
+            deadRatio = Mathf.Clamp(deadRatio, 1f, 2);
         }
         var newScale = new Vector3(100f * deadRatio, 100f * deadRatio, 100f * deadRatio);
 

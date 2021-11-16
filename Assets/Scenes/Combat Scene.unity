@@ -5961,6 +5961,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 89059479}
     - target: {fileID: 1550680614, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: inverse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1550680614, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: rotationSpeed
       value: 0
       objectReference: {fileID: 0}
