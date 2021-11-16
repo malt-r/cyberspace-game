@@ -8,6 +8,8 @@ public class BulletWeapon : BaseWeapon
 {
     [SerializeField]
     private Transform bulletPrefab;
+
+    [SerializeField] private Transform firePoint;
     private float deltaTime;
     // Start is called before the first frame update
     void Start()
@@ -25,7 +27,7 @@ public class BulletWeapon : BaseWeapon
     {
         if (!(deltaTime > useCooldown)) return;
         deltaTime = 0f;
-        var bullet = Instantiate(bulletPrefab, transform.position, Quaternion.LookRotation(transform.root.forward,Vector3.up)).GetComponentInChildren<Bullet>();
+        var bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(transform.root.forward,Vector3.up)).GetComponentInChildren<Bullet>();
         
         bullet.Ignite(transform.root.forward);
 

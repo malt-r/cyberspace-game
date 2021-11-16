@@ -6,7 +6,8 @@ public class WeaponControl : MonoBehaviour
 {
     public Weapon CurrentWeapon { get; set; }
     public Transform WeaponHolder;
-
+    [SerializeField]
+    private int weaponIndex;
     public bool Use { get; set; }
 
     public float Damage => CurrentWeapon.Damage;
@@ -15,7 +16,6 @@ public class WeaponControl : MonoBehaviour
     private void Awake()
     {
         Debug.Log("Awake");
-        CurrentWeapon = WeaponHolder.GetChild(0).GetComponent<Weapon>();
         if (CurrentWeapon == null)
         {
             Debug.LogWarning("Weapon null");
@@ -25,7 +25,7 @@ public class WeaponControl : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        //CurrentWeapon.using = Use;
+        CurrentWeapon = WeaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
     }
 
     public void UseWeapon()

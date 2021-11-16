@@ -33,4 +33,9 @@ public class CombatParticipant : MonoBehaviour
         stats.TakeDamage(enemy.weaponControl.Damage);
     }
 
+    public void TakeDamage(float amount)
+    {
+        stats.TakeDamage(amount);
+    }
+
 }
