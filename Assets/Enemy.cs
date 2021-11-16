@@ -16,6 +16,8 @@ public class Enemy : MonoBehaviour
     private CombatParticipant combat;
     private WeaponControl weaponControl;
     public ParticleSystem ParticleSystem;
+    [SerializeField]
+    private Transform model;
 
     [SerializeField]
     private float rotationSpeed = 0.5f;
@@ -36,7 +38,7 @@ public class Enemy : MonoBehaviour
     {
         HandleCombat();
         SearchAndFollowPlayer();
-        transform.Rotate(0, rotationSpeed, 0);
+        model.transform.Rotate(0, rotationSpeed, 0);
 
     }
 

@@ -178,6 +178,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 1209039303}
+    - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: rotationSpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 420751267569082094, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_Name
       value: virus (1)
@@ -188,6 +196,16 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ff188f58422043f489060e28a5e4e0c0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+--- !u!4 &1209039303 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 170141114185451145, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+  m_PrefabInstance: {fileID: 298691527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1506191866 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 170141114185451145, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+  m_PrefabInstance: {fileID: 420751267493484242}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1522681914
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -484,6 +502,14 @@ PrefabInstance:
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: model
+      value: 
+      objectReference: {fileID: 1506191866}
+    - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: rotationSpeed
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082094, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_Name
