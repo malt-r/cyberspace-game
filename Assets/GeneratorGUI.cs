@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR_WIN
 namespace Assets
 {
     [CustomEditor(typeof(DungeonGenerator))]
@@ -42,7 +43,7 @@ namespace Assets
 
             if (GUILayout.Button("Create Context Graph"))
             {
-                gen.CreateContextGraph();
+                gen.FindPaths();
             }
 
             if (GUILayout.Button("Place Corridors..."))
@@ -61,6 +62,14 @@ namespace Assets
             {
                 gen.Cleanup();
             }
+
+            GUILayout.Label("The Whole Operation, tries configured max dungeon tries");
+            if (GUILayout.Button("Generate Dungeon"))
+            {
+                gen.GenerateDungeon();
+            }
         }
     }
+
 }
+#endif

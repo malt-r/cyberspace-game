@@ -51,6 +51,7 @@ public class StoryMarker : MonoBehaviour
         return transform.forward;
     }
 
+#if UNITY_EDITOR_WIN
     private void OnDrawGizmosSelected()
     {
         var _style = new GUIStyle();
@@ -75,4 +76,5 @@ public class StoryMarker : MonoBehaviour
             Handles.DrawBezier(p1,p2,p1,p2, Color.green, null, thickness);
         }
     }
+#endif
 }

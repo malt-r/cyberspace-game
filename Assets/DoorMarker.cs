@@ -51,6 +51,7 @@ public class DoorMarker : MonoBehaviour
         return false;
     }
 
+#if UNITY_EDITOR_WIN
     private void OnDrawGizmosSelected()
     {
         // draw thicc line to indicate direction of door marker
@@ -69,4 +70,5 @@ public class DoorMarker : MonoBehaviour
             Handles.DrawBezier(p1,p2,p1,p2, Color.red, null, thickness);
         }
     }
+#endif
 }
