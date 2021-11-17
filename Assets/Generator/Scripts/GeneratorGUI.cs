@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR_WIN
 namespace Assets
 {
     [CustomEditor(typeof(DungeonGenerator))]
@@ -18,11 +19,10 @@ namespace Assets
 
             GUILayout.Space(20);
             GUILayout.Label("Generator controls");
-            GUILayout.Label("First press this:");
+            GUILayout.Label("First press this (will cleanup, create grid and read rooms):");
             if (GUILayout.Button("Setup"))
             {
-                gen.CreateGrid();
-                gen.ReadRooms();
+                gen.Setup();
             }
 
             //if (GUILayout.Button("Place Room"))
@@ -31,16 +31,45 @@ namespace Assets
             //}
 
             GUILayout.Label("Then press this:");
-            if (GUILayout.Button("Place all Rooms"))
+            //if (GUILayout.Button("Place all Rooms (try once)"))
+            //{
+            //    gen.PlaceRooms();
+            //}
+
+            if (GUILayout.Button("sudo Place all Rooms"))
             {
-                gen.PlaceRooms();
+                gen.SudoPlaceRooms();
             }
+
+            if (GUILayout.Button("Create Context Graph"))
+            {
+                gen.FindPaths();
+            }
+
+            if (GUILayout.Button("Place Corridors..."))
+            {
+                gen.PlaceCorridors();
+            }
+
+            if (GUILayout.Button("Instantiate Player"))
+            {
+                gen.InstantiatePlayer();
+            }
+
 
             GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))
             {
                 gen.Cleanup();
             }
+
+            GUILayout.Label("The Whole Operation, tries configured max dungeon tries");
+            if (GUILayout.Button("Generate Dungeon"))
+            {
+                gen.GenerateDungeon();
+            }
         }
     }
+
 }
+#endif

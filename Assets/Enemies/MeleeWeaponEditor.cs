@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 namespace Assets.Enemies
 {
-
+#if UNITY_EDITOR_WIN
     [CustomEditor(typeof(MeleeWeapon))]
     class WeaponGUI : Editor
     {
@@ -19,9 +19,7 @@ namespace Assets.Enemies
             {
                 if (weapon != null) weapon.Use();
             }
-
-
         }
-
     }
+#endif
 }
