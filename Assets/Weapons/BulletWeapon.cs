@@ -29,7 +29,7 @@ public class BulletWeapon : BaseWeapon
         deltaTime = 0f;
         var bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(transform.root.forward,Vector3.up)).GetComponentInChildren<Bullet>();
         
-        bullet.Ignite(transform.root.forward);
+        bullet.Ignite(transform.root.forward, transform.root.gameObject.GetInstanceID());
 
     }
 }

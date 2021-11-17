@@ -184,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 1209039303}
     - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: rotationSpeed
-      value: 2
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082094, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_Name
@@ -200,6 +200,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 170141114185451145, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
   m_PrefabInstance: {fileID: 298691527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1288414365 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+  m_PrefabInstance: {fileID: 420751267493484242}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1506191866 stripped
 Transform:
@@ -459,6 +464,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 420751265687685235, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: firePoint
+      value: 
+      objectReference: {fileID: 1288414365}
+    - target: {fileID: 420751267012920987, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -509,7 +522,7 @@ PrefabInstance:
       objectReference: {fileID: 1506191866}
     - target: {fileID: 420751267569082093, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: rotationSpeed
-      value: 1
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082094, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_Name
