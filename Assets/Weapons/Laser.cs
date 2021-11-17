@@ -37,7 +37,7 @@ public class Laser : BaseWeapon
     
     void UpdateRoute()
     {
-        if (!shooted){
+        if (!shooted || overHeated){
             lineRenderer.enabled = false;
             return; 
         }
@@ -45,7 +45,6 @@ public class Laser : BaseWeapon
         shooted = false;
         lineRenderer.enabled = true; 
         lineRenderer.SetPosition(0, firepoint.position);
-        Heat();
         if (Physics.Raycast(firepoint.position, firepoint.forward, out var hit))
         {
             lineRenderer.SetPosition(1, hit.point);
@@ -76,9 +75,10 @@ public class Laser : BaseWeapon
         deltaTime += Time.deltaTime;
         UpdateRoute();
         DrawParticleSystem();
+        handleHeatingAndCooling();
     }
     
-    private void Heat()
+    private void handleHeatingAndCooling()
     {
         if (shooted && !overHeated)
         {

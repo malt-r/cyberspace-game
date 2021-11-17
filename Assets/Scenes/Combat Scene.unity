@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalPosition.x
@@ -275,6 +275,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 151351657, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
+      propertyPath: heatRate
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 151351657, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
+      propertyPath: condition
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 151351657, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
+      propertyPath: cooldownRate
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 151351657, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
+      propertyPath: cooldownTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8446778818680392781, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
       propertyPath: m_Name
       value: PlayerCapsule
@@ -419,7 +435,7 @@ Transform:
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949446349
 GameObject:
