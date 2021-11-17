@@ -47,11 +47,15 @@ public class Enemy : MonoBehaviour
         handleHealth();
         if (!weaponControl) { return; }
         if (playerDetector.DetectedPlayer == null)
-        {
-            return;
-        }
+        { return; }
         var player = playerDetector.DetectedPlayer;
-        if (Vector3.Distance(this.transform.position, player.transform.position) < 20.0F)
+        
+        var targetVec = player.transform.position - transform.position;
+        var angle = Vector3.Angle(targetVec, transform.forward);
+
+        Debug.Log(angle);
+        if (angle > 15) { return;}
+        if (Vector3.Distance(transform.position, player.transform.position) < 20.0F)
         {
             weaponControl.UseWeapon();
         }
