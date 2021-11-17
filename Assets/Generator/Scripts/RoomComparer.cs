@@ -15,8 +15,8 @@ public partial class DungeonGenerator
                 return 0;
             }
 
-            var xMarker = x.GetStoryMarker();
-            var yMarker = y.GetStoryMarker();
+            var xMarker = x.GetFirstStoryMarker();
+            var yMarker = y.GetFirstStoryMarker();
 
             // null checks
             if (null == xMarker && null != yMarker)

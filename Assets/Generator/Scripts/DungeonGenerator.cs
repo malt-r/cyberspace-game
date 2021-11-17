@@ -189,7 +189,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     [Tooltip("Fixed seed to use for random room placement")]
     [SerializeField]
-    int RandomSeed;
+    long RandomSeed;
 
     [Tooltip("Use externally generated seed for room placement")]
     [SerializeField]
@@ -296,7 +296,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     public void InstantiatePlayer()
     {
-        var rooms = _instantiatedRooms.Where(room => room.GetStoryMarker().IndexInStory == 0);
+        var rooms = _instantiatedRooms.Where(room => room.GetFirstStoryMarker().IndexInStory == 0);
         var startRoom = rooms.First();
         Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
     }
@@ -395,15 +395,15 @@ public partial class DungeonGenerator : MonoBehaviour
         List<Partition> partitions = new List<Partition>();
         int i = 1;
 
-        bool prevRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetStoryMarker());
+        bool prevRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetFirstStoryMarker());
 
-        bool firstRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetStoryMarker());
+        bool firstRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetFirstStoryMarker());
         if (!firstRoomStoryRelevant)
         {
             for (; i < _instantiatedRooms.Count; i++) // find first, that is relevant for story
             {
                 Room room = _instantiatedRooms[i];
-                if (IsMarkerRelevantForStory(room.GetStoryMarker()))
+                if (IsMarkerRelevantForStory(room.GetFirstStoryMarker()))
                 {
                     partitions.Add(new Partition(0, i, false));
                     break;
@@ -657,7 +657,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     List<Vector3Int> GetDoorsOnSideOfBarrier(Room room, bool beforeBarrier)
     {
-        var barrierMarker = room.GetStoryMarker();
+        var barrierMarker = room.GetFirstStoryMarker();
         var barrierDir = barrierMarker.GetBarrierDirection();
         var barrierLoc = barrierMarker.transform.position;
         List<Vector3Int> doorCellsOnSide = new List<Vector3Int>();
@@ -1073,7 +1073,7 @@ public partial class DungeonGenerator : MonoBehaviour
         }
         else 
         {
-            Random.InitState(RandomSeed);
+            Random.InitState((int)RandomSeed);
         }
 
         int i;

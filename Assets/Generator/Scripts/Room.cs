@@ -45,9 +45,15 @@ public partial class DungeonGenerator
             return markers.Where(marker => marker.IsBarrier).Any();
         }
 
-        public StoryMarker GetStoryMarker()
+        public StoryMarker[] GetStoryMarkers()
         {
-            return GameObject.GetComponentInChildren<StoryMarker>();
+            return GameObject.GetComponentsInChildren<StoryMarker>();
+        }
+
+        public StoryMarker GetFirstStoryMarker()
+        {
+            var markers = GameObject.GetComponentsInChildren<StoryMarker>();
+            return markers.OrderBy(marker => marker.IndexInStory).First();
         }
 
         public DoorMarker[] GetDoorMarkers()
