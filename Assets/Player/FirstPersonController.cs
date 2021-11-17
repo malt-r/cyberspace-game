@@ -48,9 +48,8 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
-		[Header("Cinemachine")]
-		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-		public GameObject CinemachineCameraTarget;
+		[Header("Custom Cinemachine")]
+		public GameObject MainCamera;
 		[Tooltip("How far in degrees can you move the camera up")]
 		public float TopClamp = 90.0f;
 		[Tooltip("How far in degrees can you move the camera down")]
@@ -67,11 +66,11 @@ namespace StarterAssets
 		public bool canSprint = false;
 
 		// cinemachine
-		private float _cinemachineTargetPitch;
+		private float yRotationVelocity;
 
 		// player
 		private float _speed;
-		private float _rotationVelocity;
+		private float xRotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
 
@@ -114,6 +113,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
 		}
 
 		private void LateUpdate()
@@ -134,17 +134,15 @@ namespace StarterAssets
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
-				_cinemachineTargetPitch += _input.look.y * RotationSpeed * Time.deltaTime;
-				_rotationVelocity = _input.look.x * RotationSpeed * Time.deltaTime;
+				yRotationVelocity += _input.look.y * RotationSpeed * Time.deltaTime;
+				xRotationVelocity = _input.look.x * RotationSpeed * Time.deltaTime;
 
 				// clamp our pitch rotation
-				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-				// Update Cinemachine camera target pitch
-
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
+				yRotationVelocity = ClampAngle(yRotationVelocity, BottomClamp, TopClamp);
+				
 				// rotate the player left and right
-				transform.Rotate(Vector3.up * _rotationVelocity);
+				transform.Rotate(Vector3.up * xRotationVelocity);
+				MainCamera.transform.localRotation = Quaternion.Euler(yRotationVelocity, 0.0f, 0.0f);
 			}
 		}
 

@@ -1,0 +1,20 @@
+using UnityEngine;
+
+namespace Assets.Weapons
+{
+    public abstract class BaseWeapon: MonoBehaviour,Weapon
+    {
+        
+        public WeaponType Type { get; }
+        
+        [SerializeField]
+        protected float damage =10f;
+        public float Damage => damage;
+        
+        [SerializeField]
+        protected float useCooldown =10f;
+        public float UseCooldown => useCooldown;
+        
+        public abstract void Use();
+    }
+}
