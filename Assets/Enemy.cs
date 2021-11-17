@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour
     {
         HandleCombat();
         SearchAndFollowPlayer();
-        model.transform.Rotate(0, rotationSpeed, 0);
+        model.transform.Rotate(0, 0, rotationSpeed);
 
     }
 
