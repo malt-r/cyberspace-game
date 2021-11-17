@@ -438,7 +438,7 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             for (int j = 0; j < _partitions[0].EndIdxExclusive; j++)
             {
-                int partitionIdx = Mathf.RoundToInt(Random.Range(1f, _partitions.Count));
+                int partitionIdx = Mathf.RoundToInt(Random.Range(1f, _partitions.Count - 1));
                 if (!nonRelevantRooms.ContainsKey(partitionIdx))
                 {
                     nonRelevantRooms.Add(partitionIdx, new List<int>());
