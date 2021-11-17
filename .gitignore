@@ -99,3 +99,6 @@ $RECYCLE.BIN/
 #IntelliJ/Rider
 .idea/
 /Assembly-CSharp.csproj.DotSettings
+
+# stfu probuilder
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
