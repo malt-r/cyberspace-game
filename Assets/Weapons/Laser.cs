@@ -73,9 +73,10 @@ public class Laser : BaseWeapon
     public void LateUpdate()
     {
         deltaTime += Time.deltaTime;
+        handleHeatingAndCooling();
         UpdateRoute();
         DrawParticleSystem();
-        handleHeatingAndCooling();
+      
     }
     
     private void handleHeatingAndCooling()
