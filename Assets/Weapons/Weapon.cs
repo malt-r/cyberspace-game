@@ -1,4 +1,5 @@
 using Assets.Weapons;
+using UnityEngine;
 
 public interface Weapon
 {
@@ -6,5 +7,6 @@ public interface Weapon
     float Damage { get; }
     float UseCooldown { get; }
     void Use();
+    Transform Owner { get; }
 
 }

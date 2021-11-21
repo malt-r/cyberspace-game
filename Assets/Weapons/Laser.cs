@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class Laser : BaseWeapon
 {
-    public Transform firepoint;
+    [SerializeField]
+    private Transform firepoint;
     public float range = 500;
     public WeaponType Type { get; private set; }
 
     public bool shooted = false;
     private LineRenderer lineRenderer;
-    private CombatParticipant owner;
 
     private ParticleSystem overheatParticleSystem;
 
@@ -28,7 +28,6 @@ public class Laser : BaseWeapon
     void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        owner = transform.parent.parent.GetComponent<CombatParticipant>();
         overheatParticleSystem = GetComponentInChildren<ParticleSystem>();
         overheatParticleSystem.Stop();
         Type = WeaponType.LASER;
@@ -51,7 +50,7 @@ public class Laser : BaseWeapon
             
             var enemy = hit.collider.gameObject.GetComponent<CombatParticipant>();
             if (!enemy) { return; }
-            var parent = transform.root.GetComponent<CombatParticipant>();
+            var parent = Owner.GetComponent<CombatParticipant>();
             
             if (!(deltaTime > useCooldown)) return;
             deltaTime = 0f;
@@ -118,6 +117,7 @@ public class Laser : BaseWeapon
 
     IEnumerator StartWeaponCooldown()
     {
+        shooted = false;
         yield return new WaitForSeconds(cooldownTime); 
         overHeated = false;
     }

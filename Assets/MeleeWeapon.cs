@@ -7,7 +7,7 @@ using UnityEngine;
 public class MeleeWeapon : BaseWeapon
 {
     public WeaponType Type { get; private set; }
-
+    
     private float deltaTime;
     [SerializeField]
     private int maxEnemies = 1;
@@ -41,8 +41,8 @@ public class MeleeWeapon : BaseWeapon
         {
            
             var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-            var self = transform.root.GetComponent<CombatParticipant>();
-            if (enemy == null || self ==  null || enemy == self) continue;
+            var self = Owner.GetComponent<CombatParticipant>();
+            if (enemy == null || Owner ==  null || enemy == self) continue;
             enemy.TakeDamage(self);
             Debug.Log($" Attack , {hitColliders[i].name}");
         }
