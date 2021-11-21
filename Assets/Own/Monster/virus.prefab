@@ -105,8 +105,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   useCooldown: 2
+  owner: {fileID: 420751267569082092}
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
-  firePoint: {fileID: 420751267012920984}
+  firePoint: {fileID: 420751267569082092}
 --- !u!1 &420751266543916570
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 15
   useCooldown: 2
+  owner: {fileID: 420751267569082092}
   maxEnemies: 8
   attackRadius: 10
   lm:
@@ -5010,7 +5012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &420751267012920984
 Transform:
   m_ObjectHideFlags: 0
@@ -5055,7 +5057,7 @@ Transform:
   m_GameObject: {fileID: 420751267569082094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.793106, y: 3.3000002, z: 0.51}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children:
   - {fileID: 420751265672024477}
   - {fileID: 420751266543916571}
@@ -5090,6 +5092,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponHolder: {fileID: 420751266543916571}
+  weaponIndex: 0
 --- !u!114 &420751267569082003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5134,7 +5137,8 @@ MonoBehaviour:
   isFollowing: 0
   distance: 0
   ParticleSystem: {fileID: 420751267007239902}
-  rotationSpeed: 0
+  model: {fileID: 170141114185451145}
+  rotationSpeed: 0.25
   inverse: 1
 --- !u!1001 &420751267230114146
 PrefabInstance:
