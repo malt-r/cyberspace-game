@@ -53,8 +53,8 @@ public class Enemy : MonoBehaviour
         var targetVec = player.transform.position - transform.position;
         var angle = Vector3.Angle(targetVec, transform.forward);
 
-        Debug.Log(angle);
-        if (angle > 15) { return;}
+
+        if (angle > 15 || angle < -15) { return;}
         if (Vector3.Distance(transform.position, player.transform.position) < 20.0F)
         {
             weaponControl.UseWeapon();
@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
             deadRatio = 2 / (deadRatio + 1);
             deadRatio = Mathf.Clamp(deadRatio, 1f, 2);
         }
-        var newScale = new Vector3(100f * deadRatio, 100f * deadRatio, 100f * deadRatio);
+        var newScale = new Vector3(50f * deadRatio, 50f * deadRatio, 50f * deadRatio);
 
         this.transform.localScale = newScale;
     }
