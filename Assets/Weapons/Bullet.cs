@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -13,11 +9,11 @@ public class Bullet : MonoBehaviour
 
     private int ownerId;
 
-    public void Ignite(Vector3 direction, int ownerId)
+    public void Ignite(int ownerId)
     {
         this.ownerId = ownerId;
         var rigidBody = GetComponent<Rigidbody>();
-        rigidBody.velocity =direction.normalized*velocity;
+        rigidBody.velocity =transform.forward.normalized*velocity;
         Destroy(gameObject,500f);
     }
 
