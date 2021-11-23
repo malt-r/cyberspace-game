@@ -60,25 +60,26 @@ public partial class DungeonGenerator : MonoBehaviour
         public int partitionIdx;
     }
 
-    public enum CorridorType
+    public enum NeighborPattern
     {
-        None,
-        Straight,
-        Turn,
-        Crossing,
-        TCrossSplit
+        None,               // none of them
+        AboveBelow,         // neighbor above and below
+        LeftBelow,          // neighbor below and left
+        AllSides,           // neighbor on all sides
+        BelowBothSides,     // neighbor below and to the sides
+        OneSide             // without rotation applied, this is the cell below
     }
 
     public struct CellPathData
     {
         // use flags
-        public PathDirection incomingDirections;
+        public Direction incomingDirections;
         public bool doorDock;
-        public CorridorType type;
+        public NeighborPattern type;
         public float rotationInDeg;
     }
 
-    public enum PathDirection
+    public enum Direction
     {
         None    = 0x0000,
         Up      = 0x0001,
@@ -239,10 +240,32 @@ public partial class DungeonGenerator : MonoBehaviour
 
     [Header("Minimap Creation")]
     [SerializeField]
-    GameObject TilePrefab;
+    GameObject MinimapModelOrigin;
+
+    [Header("Minimap Tileprefabs")]
+    [SerializeField]
+    GameObject TilePrefabStandard;
 
     [SerializeField]
-    GameObject MinimapModelOrigin;
+    GameObject TilePrefabLTurn;
+
+    [SerializeField]
+    GameObject TilePrefabStraight;
+
+    [SerializeField]
+    GameObject TilePrefabTCross;
+
+    [SerializeField]
+    GameObject TilePrefabCrossing;
+
+    [SerializeField]
+    GameObject TilePrefabRoomLowerLeftCorner;
+
+    [SerializeField]
+    GameObject TilePrefabRoomUShape;
+
+    [SerializeField]
+    GameObject TilePrefabRoomOneSide;
 
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
@@ -268,6 +291,8 @@ public partial class DungeonGenerator : MonoBehaviour
     List<List<Prim.Edge>> _msts = new List<List<Prim.Edge>>();
 
     List<List<Path>> _partitionedPaths = new List<List<Path>>();
+
+    CellPathData[,] _cellPathData;
 
     GameObject _playerInstance;
 
@@ -700,52 +725,52 @@ public partial class DungeonGenerator : MonoBehaviour
     #region corridor placement
 
     // dir must be an adjacent cell
-    private PathDirection GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
+    private Direction GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
     {
         if (relativeTo.x < other.x)
         {
-            return PathDirection.Right;
+            return Direction.Right;
         }
         if (relativeTo.x > other.x)
         {
-            return PathDirection.Left;
+            return Direction.Left;
         }
         if (relativeTo.y < other.y)
         {
-            return PathDirection.Up;
+            return Direction.Up;
         }
         if (relativeTo.y > other.y)
         {
-            return PathDirection.Down;
+            return Direction.Down;
         }
         // same?
-        return PathDirection.None;
+        return Direction.None;
     }
 
-    private PathDirection InvertDirection(PathDirection dir)
+    private Direction InvertDirection(Direction dir)
     {
-        if (dir.HasFlag(PathDirection.Right))
+        if (dir.HasFlag(Direction.Right))
         {
-            return PathDirection.Left;
+            return Direction.Left;
         }
-        if (dir.HasFlag(PathDirection.Left))
+        if (dir.HasFlag(Direction.Left))
         {
-            return PathDirection.Right;
+            return Direction.Right;
         }
-        if (dir.HasFlag(PathDirection.Up))
+        if (dir.HasFlag(Direction.Up))
         {
-            return PathDirection.Down;
+            return Direction.Down;
         }
-        if (dir.HasFlag(PathDirection.Down))
+        if (dir.HasFlag(Direction.Down))
         {
-            return PathDirection.Up;
+            return Direction.Up;
         }
-        return PathDirection.None;
+        return Direction.None;
     }
 
     public void PlaceCorridors()
     {
-        CellPathData[,] cellData = new CellPathData[GridDimensions.x, GridDimensions.z];
+        _cellPathData = new CellPathData[GridDimensions.x, GridDimensions.z];
         Vector2Int previousCell;
         foreach (var pathsOfPartition in _partitionedPaths)
         {
@@ -756,8 +781,8 @@ public partial class DungeonGenerator : MonoBehaviour
                 var door = _grid[startDoorDock.x, 0, startDoorDock.y].doorCellOfDoorDock;
                 var door2Int = new Vector2Int(door.x, door.z);
 
-                cellData[startDoorDock.x, startDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(startDoorDock, door2Int);
-                cellData[startDoorDock.x, startDoorDock.y].doorDock = true;
+                _cellPathData[startDoorDock.x, startDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(startDoorDock, door2Int);
+                _cellPathData[startDoorDock.x, startDoorDock.y].doorDock = true;
 
                 previousCell = startDoorDock;
                 for (int i = 1; i < path.cells.Count; i++)
@@ -766,11 +791,11 @@ public partial class DungeonGenerator : MonoBehaviour
 
                     // where do we come from, where is the previous cell located relative to current cell?
                     var direction = GetDirectionRelativeToCell(cell, previousCell); 
-                    cellData[cell.x, cell.y].incomingDirections |= direction;
+                    _cellPathData[cell.x, cell.y].incomingDirections |= direction;
 
                     // set outgoing direction of previous cell (incoming direction of this cell is the inverse of the outgoing
                     // of the last one)
-                    cellData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
+                    _cellPathData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
 
                     previousCell = cell;
                 }
@@ -780,8 +805,8 @@ public partial class DungeonGenerator : MonoBehaviour
                 door = _grid[endDoorDock.x, 0, endDoorDock.y].doorCellOfDoorDock;
                 door2Int = new Vector2Int(door.x, door.z);
 
-                cellData[endDoorDock.x, endDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(endDoorDock, door2Int);
-                cellData[endDoorDock.x, endDoorDock.y].doorDock = true;
+                _cellPathData[endDoorDock.x, endDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(endDoorDock, door2Int);
+                _cellPathData[endDoorDock.x, endDoorDock.y].doorDock = true;
             }
         }
 
@@ -791,87 +816,157 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             for (int z = 0; z < GridDimensions.z; z++)
             {
-                var cell = cellData[x, z];
-                var directions = cell.incomingDirections;
-                switch (directions)
+                switch (_cellPathData[x,z].incomingDirections)
                 {
-                    case PathDirection.None:
+                    case Direction.None:
                         break;
-                    case PathDirection.Up | PathDirection.Down:
-                        cell.type = CorridorType.Straight;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Up | Direction.Down:
+                        _cellPathData[x, z].type = NeighborPattern.AboveBelow;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.Straight;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.AboveBelow;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left | PathDirection.Up:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Down | Direction.Left | Direction.Up:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 180.0f;
+                    case Direction.Up | Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 180.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Right | PathDirection.Down:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 270.0f;
+                    case Direction.Up | Direction.Right | Direction.Down:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 270.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Left:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Up | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Right:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 180.0f;
+                    case Direction.Up | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 180.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Right:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 270.0f;
+                    case Direction.Down | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 270.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Up | PathDirection.Right | PathDirection.Left:
-                        cell.type = CorridorType.Crossing;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Up | Direction.Right | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.AllSides;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
                     default:
                         break;
                 }
+                var cell = _cellPathData[x, z];
                 InstantiateCorridorTile(new Vector2Int(x,z), cell.type, cell.rotationInDeg);
             }
         }
-        //InstantiateCorridorTile(new Vector2Int(0,0), CorridorType.Straight, 0.0f);
     }
 
-    private void InstantiateCorridorTile(Vector2Int cell, CorridorType type, float rotationInDeg)
+    private void DirectionsToNeighborPattern(Direction direction, out NeighborPattern type, out float rotationInDeg)
+    {
+        type = NeighborPattern.None;
+        rotationInDeg = 0.0f;
+        switch (direction)
+        {
+            case Direction.None:
+                break;
+            case Direction.Up | Direction.Down:
+                 type = NeighborPattern.AboveBelow;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Left | Direction.Right:
+                 type = NeighborPattern.AboveBelow;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Down | Direction.Left | Direction.Right:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Down | Direction.Left | Direction.Up:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Up | Direction.Left | Direction.Right:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 180.0f;
+                break;
+            case Direction.Up | Direction.Right | Direction.Down:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 270.0f;
+                break;
+            case Direction.Down | Direction.Left:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Up | Direction.Left:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Up | Direction.Right:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 180.0f;
+                break;
+            case Direction.Down | Direction.Right:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 270.0f;
+                break;
+            case Direction.Down | Direction.Up | Direction.Right | Direction.Left:
+                 type = NeighborPattern.AllSides;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Down:
+                type = NeighborPattern.OneSide;
+                break;
+            case Direction.Left:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 90.0f;
+                break;
+            case Direction.Up:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 180.0f;
+                break;
+            case Direction.Right:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 270.0f;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void InstantiateCorridorTile(Vector2Int cell, NeighborPattern type, float rotationInDeg)
     {
         var placementCell = new Vector3Int(cell.x, 0, cell.y);
-        var rotationOffset = GetRotationRelatedCellOffset(new Vector3(0, rotationInDeg, 0));
+        var rotationOffset = GetRotationRelatedCellOffset(rotationInDeg);
 
         var location = (placementCell + rotationOffset) * CellSize;
 
         GameObject corridorTemplate = null;
         switch (type)
         {
-            case CorridorType.None:
+            case NeighborPattern.None:
                 return;
-            case CorridorType.Straight:
+            case NeighborPattern.AboveBelow:
                 corridorTemplate = StraigtCorridor;
                 break;
-            case CorridorType.Turn:
+            case NeighborPattern.LeftBelow:
                 corridorTemplate = LeftTurnCorridor;
                 break;
-            case CorridorType.Crossing:
+            case NeighborPattern.AllSides:
                 corridorTemplate = CrossCorridor;
                 break;
-            case CorridorType.TCrossSplit:
+            case NeighborPattern.BelowBothSides:
                 corridorTemplate = TCrossCorridor;
                 break;
         }
@@ -1224,7 +1319,7 @@ public partial class DungeonGenerator : MonoBehaviour
             // because the rotation should be applied cell-wise and not coninously
             // an offset is required for the non-0 deg rotations
             // got no time to be smart, hard code
-            Vector3Int offset = GetRotationRelatedCellOffset(placementCandidate.Rotation);
+            Vector3Int offset = GetRotationRelatedCellOffset(placementCandidate.Rotation.y);
             offset = offset * CellSize;
 
             var go = Instantiate(
@@ -1279,12 +1374,6 @@ public partial class DungeonGenerator : MonoBehaviour
     #region minimap generation
     public void CreateMinimap()
     {
-        if (null == TilePrefab)
-        {
-            Debug.Log("TilePrefab for minimap is null");
-            return;
-        }
-
         if (null == MinimapModelOrigin)
         {
             Debug.Log("Origin for minimap model is null");
@@ -1299,13 +1388,12 @@ public partial class DungeonGenerator : MonoBehaviour
                 switch (cellType)
                 {
                     case CellType.Room:
-                    case CellType.Hallway:
                     case CellType.Door:
+                        PlaceMinimapTileRoom(new Vector3Int(x, 0, z));
+                        break;
+                    case CellType.Hallway:
                     case CellType.DoorDock:
-                        {
-                            // place tile
-                            PlaceMinimapTile(new Vector3Int(x, 0, z));
-                        }
+                        PlaceMinimapTileHallway(new Vector3Int(x, 0, z));
                         break;
                     case CellType.Bufferzone:
                     case CellType.Free:
@@ -1320,11 +1408,91 @@ public partial class DungeonGenerator : MonoBehaviour
         follower.ToFollow = _playerInstance;
     }
 
+    private void PlaceMinimapTileRoom(Vector3Int cell)
+    {
+        // we know, that this is a room..
+        // check, if straight neighbors are buffer zone or free
+
+        Vector2Int cell2Int = new Vector2Int(cell.x, cell.z);
+
+        // get the direction, in which lay the free neighbor-cells
+        Direction freeNeighbors = Direction.None;
+        for (int i = 0; i < 4; i++)
+        {
+            Vector3Int direction = _gridDirections[i];
+            Vector3Int neighborCell = cell + direction;
+
+            Direction dirRelToCell = GetDirectionRelativeToCell(cell2Int, new Vector2Int(neighborCell.x, neighborCell.z));
+
+            if (_grid[neighborCell].type != CellType.Room &&
+                _grid[neighborCell].type != CellType.Door &&
+                _grid[neighborCell].type != CellType.DoorDock 
+                )
+            {
+                freeNeighbors |= dirRelToCell;
+            }
+        }
+
+        // neighbor pattern indicates location of free cells -> needed to use correct
+        // tile prefab with correct border
+        DirectionsToNeighborPattern(freeNeighbors, out NeighborPattern pattern, out float rotation);
+
+        GameObject prefabToInstance = TilePrefabStandard;
+        switch (pattern)
+        {
+            case NeighborPattern.None: // no free neighbors, use completely filled tile
+                break;
+            case NeighborPattern.AboveBelow: // use tile with borders on top an bottom (flip straight corridor tile by 90 deg)
+                prefabToInstance = TilePrefabStraight;
+                rotation += 90.0f;
+                break;
+            case NeighborPattern.LeftBelow: 
+                prefabToInstance = TilePrefabRoomLowerLeftCorner;
+                break;
+            case NeighborPattern.BelowBothSides:
+                prefabToInstance = TilePrefabRoomUShape;
+                break;
+            case NeighborPattern.OneSide:
+                prefabToInstance = TilePrefabRoomOneSide;
+                break;
+            case NeighborPattern.AllSides: // this should not be a thing
+                break;
+        }
+
+        var rotationOffset = GetRotationRelatedCellOffset(rotation);
+
+        var placementPosition = MinimapModelOrigin.transform.position + cell + rotationOffset;
+        Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), MinimapModelOrigin.transform);
+    }
+
     // TODO: setup association between 'real' cell in level and the cell in the minimap
     // TODO: Create real minimap-class, which holds this data (and a reference to the grid?)
-    public void PlaceMinimapTile(Vector3Int cell)
+    public void PlaceMinimapTileHallway(Vector3Int cell)
     {
-        Instantiate(TilePrefab, MinimapModelOrigin.transform.position + cell, Quaternion.Euler(Vector3.zero), MinimapModelOrigin.transform);
+        var rotation = _cellPathData[cell.x, cell.z].rotationInDeg;
+        var rotationOffset = GetRotationRelatedCellOffset(rotation);
+        GameObject prefabToInstance = TilePrefabStandard;
+        var type = _cellPathData[cell.x, cell.z].type;
+        switch (type)
+        {
+            case NeighborPattern.None:
+                break;
+            case NeighborPattern.AboveBelow:
+                prefabToInstance = TilePrefabStraight;
+                break;
+            case NeighborPattern.LeftBelow:
+                prefabToInstance = TilePrefabLTurn;
+                break;
+            case NeighborPattern.AllSides:
+                prefabToInstance = TilePrefabCrossing;
+                break;
+            case NeighborPattern.BelowBothSides:
+                prefabToInstance = TilePrefabTCross;
+                break;
+        }
+
+        var placementPosition = MinimapModelOrigin.transform.position + cell + rotationOffset;
+        Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), MinimapModelOrigin.transform);
     }
     #endregion
 
@@ -1536,9 +1704,9 @@ public partial class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    private Vector3Int GetRotationRelatedCellOffset(Vector3 rotation)
+    private Vector3Int GetRotationRelatedCellOffset(float rotation)
     {
-        int rot = Mathf.RoundToInt(rotation.y);
+        int rot = Mathf.RoundToInt(rotation);
         int rotMod = rot % 360;
 
         Vector3Int offset = new Vector3Int(0,0,0);
