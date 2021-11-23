@@ -240,32 +240,8 @@ public partial class DungeonGenerator : MonoBehaviour
 
     [Header("Minimap Creation")]
     [SerializeField]
-    GameObject MinimapModelOrigin;
+    Minimap Minimap;
 
-    [Header("Minimap Tileprefabs")]
-    [SerializeField]
-    GameObject TilePrefabStandard;
-
-    [SerializeField]
-    GameObject TilePrefabLTurn;
-
-    [SerializeField]
-    GameObject TilePrefabStraight;
-
-    [SerializeField]
-    GameObject TilePrefabTCross;
-
-    [SerializeField]
-    GameObject TilePrefabCrossing;
-
-    [SerializeField]
-    GameObject TilePrefabRoomLowerLeftCorner;
-
-    [SerializeField]
-    GameObject TilePrefabRoomUShape;
-
-    [SerializeField]
-    GameObject TilePrefabRoomOneSide;
 
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
@@ -311,7 +287,7 @@ public partial class DungeonGenerator : MonoBehaviour
         rightbelow = 7
     };
 
-    Vector3Int[] _gridDirections = new Vector3Int[]
+    public readonly static Vector3Int[] GridDirections = new Vector3Int[]
     {
         new Vector3Int(-1, 0,  0), // left
         new Vector3Int( 0, 0,  1), // above
@@ -325,7 +301,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     private Vector3Int GetNeighborDir(NeighborDirection dir)
     {
-        return _gridDirections[((int)dir)];
+        return GridDirections[((int)dir)];
     }
 
     [SerializeField]
@@ -725,7 +701,7 @@ public partial class DungeonGenerator : MonoBehaviour
     #region corridor placement
 
     // dir must be an adjacent cell
-    private Direction GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
+    public static Direction GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
     {
         if (relativeTo.x < other.x)
         {
@@ -873,7 +849,7 @@ public partial class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void DirectionsToNeighborPattern(Direction direction, out NeighborPattern type, out float rotationInDeg)
+    public static void DirectionsToNeighborPattern(Direction direction, out NeighborPattern type, out float rotationInDeg)
     {
         type = NeighborPattern.None;
         rotationInDeg = 0.0f;
@@ -1051,6 +1027,16 @@ public partial class DungeonGenerator : MonoBehaviour
             Debug.LogWarning("Found " + _roomTemplates.Count.ToString() + " rooms in roomfinder");
         }
     }
+
+    public void CreateMinimap()
+    {
+        if (Minimap == null)
+        {
+            Debug.Log("No minimap");
+            return;
+        }
+        Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData);
+    }
     #endregion
 
     #region cleanup
@@ -1069,6 +1055,10 @@ public partial class DungeonGenerator : MonoBehaviour
         _msts = new List<List<Prim.Edge>>();
         _partitionedPaths = new List<List<Path>>();
         DestroyPlayer();
+        if (Minimap != null)
+        {
+            Minimap.Cleanup();
+        }
     }
 
     private void DestroyPlayer()
@@ -1287,7 +1277,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 {
                     currentCell = markedCells[checkedCellIdx];
                     // check for each cell around, if a room, and if not, set to bufferzone
-                    foreach (var direction in _gridDirections)
+                    foreach (var direction in GridDirections)
                     {
                         var neighborCell = currentCell + direction;
                         if (_grid[neighborCell].type != CellType.Room && 
@@ -1361,138 +1351,20 @@ public partial class DungeonGenerator : MonoBehaviour
 
             PlaceCorridors();
             InstantiatePlayer();
-            CreateMinimap();
+            if (Minimap == null)
+            {
+                Debug.LogError("Minimap object is null");
+            } 
+            else
+            {
+                Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData);
+            }
             success = true;
         }
         if (currentTries >= MaxDungeonTries)
         {
             Debug.LogError("Could not place the rooms, maybe the grid should be expanded");
         }
-    }
-    #endregion
-
-    #region minimap generation
-    public void CreateMinimap()
-    {
-        if (null == MinimapModelOrigin)
-        {
-            Debug.Log("Origin for minimap model is null");
-            return;
-        }
-
-        for (int x = 0; x < GridDimensions.x; x++)
-        {
-            for (int z = 0; z < GridDimensions.z; z++)
-            {
-                var cellType = _grid[x, 0, z].type;
-                switch (cellType)
-                {
-                    case CellType.Room:
-                    case CellType.Door:
-                        PlaceMinimapTileRoom(new Vector3Int(x, 0, z));
-                        break;
-                    case CellType.Hallway:
-                    case CellType.DoorDock:
-                        PlaceMinimapTileHallway(new Vector3Int(x, 0, z));
-                        break;
-                    case CellType.Bufferzone:
-                    case CellType.Free:
-                        break;
-                }
-            }
-        }
-
-        var follower = MinimapModelOrigin.GetComponent<MinimapPlayerFollower>();
-
-        follower.FollowDeltaScaling = 1 / (float)CellSize;
-        follower.ToFollow = _playerInstance;
-    }
-
-    private void PlaceMinimapTileRoom(Vector3Int cell)
-    {
-        // we know, that this is a room..
-        // check, if straight neighbors are buffer zone or free
-
-        Vector2Int cell2Int = new Vector2Int(cell.x, cell.z);
-
-        // get the direction, in which lay the free neighbor-cells
-        Direction freeNeighbors = Direction.None;
-        for (int i = 0; i < 4; i++)
-        {
-            Vector3Int direction = _gridDirections[i];
-            Vector3Int neighborCell = cell + direction;
-
-            Direction dirRelToCell = GetDirectionRelativeToCell(cell2Int, new Vector2Int(neighborCell.x, neighborCell.z));
-
-            if (_grid[neighborCell].type != CellType.Room &&
-                _grid[neighborCell].type != CellType.Door &&
-                _grid[neighborCell].type != CellType.DoorDock 
-                )
-            {
-                freeNeighbors |= dirRelToCell;
-            }
-        }
-
-        // neighbor pattern indicates location of free cells -> needed to use correct
-        // tile prefab with correct border
-        DirectionsToNeighborPattern(freeNeighbors, out NeighborPattern pattern, out float rotation);
-
-        GameObject prefabToInstance = TilePrefabStandard;
-        switch (pattern)
-        {
-            case NeighborPattern.None: // no free neighbors, use completely filled tile
-                break;
-            case NeighborPattern.AboveBelow: // use tile with borders on top an bottom (flip straight corridor tile by 90 deg)
-                prefabToInstance = TilePrefabStraight;
-                rotation += 90.0f;
-                break;
-            case NeighborPattern.LeftBelow: 
-                prefabToInstance = TilePrefabRoomLowerLeftCorner;
-                break;
-            case NeighborPattern.BelowBothSides:
-                prefabToInstance = TilePrefabRoomUShape;
-                break;
-            case NeighborPattern.OneSide:
-                prefabToInstance = TilePrefabRoomOneSide;
-                break;
-            case NeighborPattern.AllSides: // this should not be a thing
-                break;
-        }
-
-        var rotationOffset = GetRotationRelatedCellOffset(rotation);
-
-        var placementPosition = MinimapModelOrigin.transform.position + cell + rotationOffset;
-        Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), MinimapModelOrigin.transform);
-    }
-
-    // TODO: setup association between 'real' cell in level and the cell in the minimap
-    // TODO: Create real minimap-class, which holds this data (and a reference to the grid?)
-    public void PlaceMinimapTileHallway(Vector3Int cell)
-    {
-        var rotation = _cellPathData[cell.x, cell.z].rotationInDeg;
-        var rotationOffset = GetRotationRelatedCellOffset(rotation);
-        GameObject prefabToInstance = TilePrefabStandard;
-        var type = _cellPathData[cell.x, cell.z].type;
-        switch (type)
-        {
-            case NeighborPattern.None:
-                break;
-            case NeighborPattern.AboveBelow:
-                prefabToInstance = TilePrefabStraight;
-                break;
-            case NeighborPattern.LeftBelow:
-                prefabToInstance = TilePrefabLTurn;
-                break;
-            case NeighborPattern.AllSides:
-                prefabToInstance = TilePrefabCrossing;
-                break;
-            case NeighborPattern.BelowBothSides:
-                prefabToInstance = TilePrefabTCross;
-                break;
-        }
-
-        var placementPosition = MinimapModelOrigin.transform.position + cell + rotationOffset;
-        Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), MinimapModelOrigin.transform);
     }
     #endregion
 
@@ -1585,7 +1457,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[gridCell].type != CellType.Door)
             {
                 // if it is not, select nearest room-cell
-                foreach (var dir in _gridDirections)
+                foreach (var dir in GridDirections)
                 {
                     if (_grid[gridCell + dir].type == CellType.Room ||
                         _grid[gridCell + dir].type == CellType.Door)
@@ -1637,7 +1509,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[gridCell].type != CellType.Door)
             {
                 // if it is not, select nearest room-cell
-                foreach (var dir in _gridDirections)
+                foreach (var dir in GridDirections)
                 {
                     if (_grid[gridCell + dir].type == CellType.Room ||
                         _grid[gridCell + dir].type == CellType.Door)
@@ -1704,7 +1576,7 @@ public partial class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    private Vector3Int GetRotationRelatedCellOffset(float rotation)
+    public static Vector3Int GetRotationRelatedCellOffset(float rotation)
     {
         int rot = Mathf.RoundToInt(rotation);
         int rotMod = rot % 360;

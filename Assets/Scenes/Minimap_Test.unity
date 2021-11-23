@@ -905,6 +905,7 @@ GameObject:
   m_Component:
   - component: {fileID: 290943061}
   - component: {fileID: 290943062}
+  - component: {fileID: 290943063}
   m_Layer: 0
   m_Name: MinimapModel
   m_TagString: Untagged
@@ -947,6 +948,26 @@ MonoBehaviour:
   playerMarker: {fileID: 428377904}
   playerMarkerScale: 1.6
   cameraProjectionSize: 6.5
+--- !u!114 &290943063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 290943060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d809b255a8386154a96945b8c17df693, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TilePrefabStandard: {fileID: 6191027702522863804, guid: 4e82edb484645344bbaf96bf54be2c10, type: 3}
+  TilePrefabLTurn: {fileID: 6610978940910924021, guid: c563eacd208c2e1409c81fcb4c1739cc, type: 3}
+  TilePrefabStraight: {fileID: 3343147955499631927, guid: 04eccd3c4e0a42845836db5cf390bb06, type: 3}
+  TilePrefabTCross: {fileID: 4259410517621169642, guid: 1f76e2dbb90d4c04fb030f79a877f829, type: 3}
+  TilePrefabCrossing: {fileID: 6947332696517346539, guid: 067a551e88664b348aa471d165947164, type: 3}
+  TilePrefabRoomLowerLeftCorner: {fileID: 8599137918983226352, guid: 471f4e41c9dbf654eb9d6576e56336a1, type: 3}
+  TilePrefabRoomUShape: {fileID: 4574406479897329212, guid: 57123664bfdf4d441ae552b3c5608b56, type: 3}
+  TilePrefabRoomOneSide: {fileID: 5401925883774717226, guid: 7f259d924c92cb24e9c446379b01a965, type: 3}
 --- !u!43 &299888658
 Mesh:
   m_ObjectHideFlags: 0
@@ -7731,15 +7752,7 @@ MonoBehaviour:
   CrossCorridor: {fileID: 5701411627865229041, guid: ed84d069429f79b4b979330917e8f40e, type: 3}
   MaxDungeonTries: 100
   CreateDungeonOnStart: 1
-  MinimapModelOrigin: {fileID: 290943060}
-  TilePrefabStandard: {fileID: 6191027702522863804, guid: 4e82edb484645344bbaf96bf54be2c10, type: 3}
-  TilePrefabLTurn: {fileID: 6610978940910924021, guid: c563eacd208c2e1409c81fcb4c1739cc, type: 3}
-  TilePrefabStraight: {fileID: 3343147955499631927, guid: 04eccd3c4e0a42845836db5cf390bb06, type: 3}
-  TilePrefabTCross: {fileID: 4259410517621169642, guid: 1f76e2dbb90d4c04fb030f79a877f829, type: 3}
-  TilePrefabCrossing: {fileID: 6947332696517346539, guid: 067a551e88664b348aa471d165947164, type: 3}
-  TilePrefabRoomLowerLeftCorner: {fileID: 8599137918983226352, guid: 471f4e41c9dbf654eb9d6576e56336a1, type: 3}
-  TilePrefabRoomUShape: {fileID: 4574406479897329212, guid: 57123664bfdf4d441ae552b3c5608b56, type: 3}
-  TilePrefabRoomOneSide: {fileID: 5401925883774717226, guid: 7f259d924c92cb24e9c446379b01a965, type: 3}
+  Minimap: {fileID: 290943063}
   playerPrefab: {fileID: 8446778818680392781, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
 --- !u!4 &1748895736
 Transform:
