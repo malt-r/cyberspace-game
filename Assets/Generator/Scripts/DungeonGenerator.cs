@@ -234,6 +234,16 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int MaxDungeonTries = 20;
 
+    [SerializeField]
+    bool CreateDungeonOnStart = true;
+
+    [Header("Minimap Creation")]
+    [SerializeField]
+    GameObject TilePrefab;
+
+    [SerializeField]
+    GameObject MinimapModelOrigin;
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
@@ -258,6 +268,8 @@ public partial class DungeonGenerator : MonoBehaviour
     List<List<Prim.Edge>> _msts = new List<List<Prim.Edge>>();
 
     List<List<Path>> _partitionedPaths = new List<List<Path>>();
+
+    GameObject _playerInstance;
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -298,13 +310,16 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         var rooms = _instantiatedRooms.Where(room => room.GetFirstStoryMarker().IndexInStory == 0);
         var startRoom = rooms.First();
-        Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+        _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        GenerateDungeon();
+        if (CreateDungeonOnStart)
+        {
+            GenerateDungeon();
+        }
     }
 
     // Update is called once per frame
@@ -868,6 +883,10 @@ public partial class DungeonGenerator : MonoBehaviour
             this.transform
             );
         _instantiatedCorridors.Add(go);
+        if (_grid[placementCell].type != CellType.DoorDock)
+        {
+            _grid[placementCell].type = CellType.Hallway;
+        }
     }
 
     #endregion
@@ -954,34 +973,21 @@ public partial class DungeonGenerator : MonoBehaviour
         _doorPartitions = new List<List<Vector3Int>>();
         _msts = new List<List<Prim.Edge>>();
         _partitionedPaths = new List<List<Path>>();
+        DestroyPlayer();
     }
 
-    public void GenerateDungeon()
+    private void DestroyPlayer()
     {
-        bool success = false;
-        int currentTries = 0;
-        ReadRooms();
-        while (!success && currentTries < MaxDungeonTries)
+        if (null != _playerInstance)
         {
-            Cleanup(cleanupRoomTemplates: false);
-            if (!SudoPlaceRooms())
+            if (Application.isEditor)
             {
-                currentTries++;
-                continue;
-            }
-            if (!FindPaths())
+                DestroyImmediate(_playerInstance);
+            } 
+            else
             {
-                currentTries++;
-                continue;
+                Destroy(_playerInstance);
             }
-
-            PlaceCorridors();
-            InstantiatePlayer();
-            success = true;
-        }
-        if (currentTries >= MaxDungeonTries)
-        {
-            Debug.LogError("Could not place the rooms, maybe the grid should be expanded");
         }
     }
 
@@ -991,7 +997,6 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             foreach (var corridor in _instantiatedCorridors)
             {
-                corridor.SetActive(false);
                 if (Application.isEditor)
                 {
                     DestroyImmediate(corridor);
@@ -1011,7 +1016,6 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             foreach (var room in _instantiatedRooms)
             {
-                room.GameObject.SetActive(false);
                 if (Application.isEditor)
                 {
                     DestroyImmediate(room.GameObject);
@@ -1239,6 +1243,88 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[occupiedCell].roomIdx = _instantiatedRooms.Count - 1;
             }
         }
+    }
+
+    public void GenerateDungeon()
+    {
+        bool success = false;
+        int currentTries = 0;
+        ReadRooms();
+        while (!success && currentTries < MaxDungeonTries)
+        {
+            Cleanup(cleanupRoomTemplates: false);
+            if (!SudoPlaceRooms())
+            {
+                currentTries++;
+                continue;
+            }
+            if (!FindPaths())
+            {
+                currentTries++;
+                continue;
+            }
+
+            PlaceCorridors();
+            InstantiatePlayer();
+            CreateMinimap();
+            success = true;
+        }
+        if (currentTries >= MaxDungeonTries)
+        {
+            Debug.LogError("Could not place the rooms, maybe the grid should be expanded");
+        }
+    }
+    #endregion
+
+    #region minimap generation
+    public void CreateMinimap()
+    {
+        if (null == TilePrefab)
+        {
+            Debug.Log("TilePrefab for minimap is null");
+            return;
+        }
+
+        if (null == MinimapModelOrigin)
+        {
+            Debug.Log("Origin for minimap model is null");
+            return;
+        }
+
+        for (int x = 0; x < GridDimensions.x; x++)
+        {
+            for (int z = 0; z < GridDimensions.z; z++)
+            {
+                var cellType = _grid[x, 0, z].type;
+                switch (cellType)
+                {
+                    case CellType.Room:
+                    case CellType.Hallway:
+                    case CellType.Door:
+                    case CellType.DoorDock:
+                        {
+                            // place tile
+                            PlaceMinimapTile(new Vector3Int(x, 0, z));
+                        }
+                        break;
+                    case CellType.Bufferzone:
+                    case CellType.Free:
+                        break;
+                }
+            }
+        }
+
+        var follower = MinimapModelOrigin.GetComponent<MinimapPlayerFollower>();
+
+        follower.FollowDeltaScaling = 1 / (float)CellSize;
+        follower.ToFollow = _playerInstance;
+    }
+
+    // TODO: setup association between 'real' cell in level and the cell in the minimap
+    // TODO: Create real minimap-class, which holds this data (and a reference to the grid?)
+    public void PlaceMinimapTile(Vector3Int cell)
+    {
+        Instantiate(TilePrefab, MinimapModelOrigin.transform.position + cell, Quaternion.Euler(Vector3.zero), MinimapModelOrigin.transform);
     }
     #endregion
 
