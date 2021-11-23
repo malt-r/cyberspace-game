@@ -33,7 +33,16 @@ public class Minimap : MonoBehaviour
     GameObject _toFollow;
     DungeonGrid<Cell> _dungeonGrid;
     CellPathData[,] _cellPathData;
-    List<GameObject> _instantiatedTiles;
+
+    // this needs to be enhanced.. or converted to array with the same dimensions as the grid..
+    GameObject[,] _instantiatedTiles;
+    int _cellSize;
+
+    int _prevRoomIdx = -1;
+
+    HashSet<int> _seenRooms;
+
+    DungeonGenerator _generator;
 
     // Start is called before the first frame update
     void Start()
@@ -44,7 +53,84 @@ public class Minimap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateVisibility();
+    }
+
+    public void UpdateVisibility()
+    {
+        if (_toFollow == null) return;
+        if (_generator == null) return;
+
         // check, which parts of the minimap to uncover based on player location
+        var pos = _toFollow.transform.position;
+        var cellIdx = DungeonGenerator.GlobalToCellIdx(pos, _cellSize);
+
+        // DEBUG code
+        //if (prevPlayerCell != currentPlayerCell)
+        //{
+        //    var tile = _instantiatedTiles[prevPlayerCell.x, prevPlayerCell.z];
+        //    if (tile != null)
+        //    {
+        //        var meshRenderer = tile.GetComponent<MeshRenderer>();
+        //        if (meshRenderer != null)
+        //        {
+        //            if (meshRenderer.materials.Length > 1)
+        //            {
+        //                var mat = meshRenderer.materials[1];
+        //                mat.color = Color.white;
+        //            } 
+        //            else
+        //            {
+        //                var mat = meshRenderer.materials[0];
+        //                mat.color = Color.white;
+        //            }
+        //        }
+        //    }
+        //    tile = _instantiatedTiles[currentPlayerCell.x, currentPlayerCell.z];
+        //    if (tile != null)
+        //    {
+        //        var meshRenderer = tile.GetComponent<MeshRenderer>();
+        //        if (meshRenderer != null)
+        //        {
+        //            if (meshRenderer.materials.Length > 1)
+        //            {
+        //                meshRenderer.materials[1].color = Color.red;
+        //            }
+        //            else
+        //            {
+        //                meshRenderer.materials[0].color = Color.red;
+        //            }
+        //        }
+        //        prevPlayerCell = currentPlayerCell;
+        //    }
+        //}
+
+        var roomIdx = _dungeonGrid[cellIdx].roomIdx;
+        if (roomIdx == -1 || _dungeonGrid[cellIdx].type == CellType.DoorDock)
+        {
+            if (_instantiatedTiles[cellIdx.x, cellIdx.z] != null)
+            {
+                _instantiatedTiles[cellIdx.x, cellIdx.z].gameObject.SetActive(true);
+            }
+        }
+        else if (roomIdx != _prevRoomIdx && _dungeonGrid[cellIdx].type != CellType.DoorDock)
+        {
+            if (!_seenRooms.Contains(roomIdx))
+            {
+                // activate all tiles associated with room
+
+                var cells = _generator.GetAssociatedCellsOfRoom(roomIdx);
+                foreach (var cell in cells)
+                {
+                    _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
+                }
+                _seenRooms.Add(roomIdx);
+            }
+
+            _prevRoomIdx = roomIdx;
+            Debug.LogWarning("player is now in room with idx: " + roomIdx);
+        }
+
     }
 
     public void Cleanup()
@@ -63,16 +149,20 @@ public class Minimap : MonoBehaviour
                 }
             }
         }
+        _seenRooms = new HashSet<int>();
     }
 
     #region minimap generation
-    public void CreateMinimap(DungeonGrid<Cell> dungeonGrid, Vector3Int GridDimensions, GameObject toFollow, int CellSize, CellPathData[,] cellPathData)
+    public void CreateMinimap(DungeonGrid<Cell> dungeonGrid, Vector3Int GridDimensions, GameObject toFollow, int CellSize, CellPathData[,] cellPathData, DungeonGenerator generator)
     {
         Cleanup();
-        _instantiatedTiles = new List<GameObject>();
+
+        _instantiatedTiles = new GameObject[GridDimensions.x, GridDimensions.z];
         _toFollow = toFollow;
         _dungeonGrid = dungeonGrid;
         _cellPathData = cellPathData;
+        _cellSize = CellSize;
+        _generator = generator;
 
         for (int x = 0; x < GridDimensions.x; x++)
         {
@@ -156,7 +246,9 @@ public class Minimap : MonoBehaviour
         var rotationOffset = GetRotationRelatedCellOffset(rotation);
 
         var placementPosition = this.transform.position + cell + rotationOffset;
-        _instantiatedTiles.Add(Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
+        var go = (Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
+        go.SetActive(false);
+        _instantiatedTiles[cell.x, cell.z] = go;
     }
 
     // TODO: setup association between 'real' cell in level and the cell in the minimap
@@ -186,8 +278,13 @@ public class Minimap : MonoBehaviour
         }
 
         var placementPosition = this.transform.position + cell + rotationOffset;
-        _instantiatedTiles.Add(Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
+        var go = (Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
+        go.SetActive(false);
+        _instantiatedTiles[cell.x, cell.z] = go;
     }
     #endregion
 
+    private void OnDrawGizmos()
+    {
+    }
 }

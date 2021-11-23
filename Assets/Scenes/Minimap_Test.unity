@@ -7732,19 +7732,19 @@ MonoBehaviour:
   CellSize: 5
   OuterBufferZone: 2
   RoomBufferZone: 2
-  ShowGrid: 1
+  ShowGrid: 0
   RoomFinder: {fileID: 1242939327}
   MaxPlacementTriesPerRoom: 10
   MaxTotalPlacementTries: 10
   AllowRoomRotation: 1
-  RandomSeed: 103930715008144
+  RandomSeed: 139760426336736
   UseExternalEntropy: 1
   ShowDelauney: 0
   ShowPartition: 1
   PartitionIdxToShow: 0
   ShowDoorPartition: 1
   DoorPartitionIdxToShow: 1
-  ShowMST: 0
+  ShowMST: 1
   ShowPaths: 1
   StraigtCorridor: {fileID: 9169248327581834788, guid: b9d1acb9181bfa04091d0e3c401f8c4c, type: 3}
   LeftTurnCorridor: {fileID: 1119869145351196408, guid: 00f0192f1cf8911439d34e343c0f4ab9, type: 3}

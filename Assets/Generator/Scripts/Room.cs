@@ -10,10 +10,13 @@ public partial class DungeonGenerator
         public GameObject GameObject { get; private set; }
         public List<Vector3Int> DoorCells { get; }
 
+        public List<Vector3Int> AssociatedCells { get; }
+
         public Room(GameObject go)
         {
             GameObject = go;
             DoorCells = new List<Vector3Int>();
+            AssociatedCells = new List<Vector3Int>();
         }
 
         public void AddDoorCell(Vector3Int cell)
@@ -21,8 +24,18 @@ public partial class DungeonGenerator
             if (!DoorCells.Contains(cell))
             {
                 DoorCells.Add(cell);
+                AssociatedCells.Add(cell);
             }
         }
+
+        public void AddAssociatedCell(Vector3Int notADoorCell)
+        {
+            if (!AssociatedCells.Contains(notADoorCell))
+            {
+                AssociatedCells.Add(notADoorCell);
+            }
+        }
+
 
         public Vector3 MeshExtents()
         {

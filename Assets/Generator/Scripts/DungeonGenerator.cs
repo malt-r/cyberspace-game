@@ -52,6 +52,7 @@ public partial class DungeonGenerator : MonoBehaviour
         public List<DoorMarker> doorMarkers;
         public Path path;
         public Vector3Int doorCellOfDoorDock;
+        public bool doorDockConnected;
     }
 
     public struct Path
@@ -373,7 +374,7 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             //var meshCenter = room.GetMeshCenter();
             // TODO: check, conversions... maybe, this could be done completely with cells
-            var doorCell = GlobalToCellIdx(marker.transform.position);
+            var doorCell = GlobalToCellIdx(marker.transform.position, CellSize);
 
             var position = new Vector2(doorCell.x, doorCell.z);
             vertices.Add(new Vertex<Vector3Int>(position, doorCell));
@@ -645,10 +646,6 @@ public partial class DungeonGenerator : MonoBehaviour
                         Debug.LogError("Path contained crossing of partitions, redoing the whole operation");
                         return false;
                     }
-                    if (pathCost > 100000)
-                    {
-                        Debug.LogError("Pathcost exceeds 100000, the pathfinder created a crossing of partitions!");
-                    }
 
                     Path newPath = new Path();
                     newPath.partitionIdx = pathPartitionIdx;
@@ -661,12 +658,28 @@ public partial class DungeonGenerator : MonoBehaviour
                         if (pseudoGrid[cell.x, 0, cell.y].type != CellType.DoorDock) // don't convert door-dock to hallway
                         {
                             pseudoGrid[cell.x, 0, cell.y].type = CellType.Hallway;
+                        } 
+                        else
+                        {
+                            pseudoGrid[cell.x, 0, cell.y].doorDockConnected = true;
                         }
                     }
                 }
             }
+            // check, that all door docks are connected
+            // TODO: should investigate, why this happens sometimes
+            foreach (var door in doorPartition)
+            {
+                if (!pseudoGrid[door].doorDockConnected)
+                {
+                    Debug.LogError("Could not connect all door docks!");
+                    return false;
+                }
+            }
+
             pathPartitionIdx++;
         }
+
 
         return true;
     }
@@ -993,6 +1006,14 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
 
+        for (int x = 0; x < _grid.Size.x; x++)
+        {
+            for (int z = 0; z < _grid.Size.z; z++)
+            {
+                _grid[x, 0, z].roomIdx = -1;
+            }
+        }
+
         _triedCells = new HashSet<Vector2Int>();
     }
 
@@ -1035,7 +1056,7 @@ public partial class DungeonGenerator : MonoBehaviour
             Debug.Log("No minimap");
             return;
         }
-        Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData);
+        Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData, this);
     }
     #endregion
 
@@ -1239,7 +1260,7 @@ public partial class DungeonGenerator : MonoBehaviour
     private bool PlaceRoom(int roomIdx, Vector2Int cell, Vector3 rotation) // cell: Zellenkoordinaten
     { 
         var room = _roomTemplates[roomIdx];
-        var occupiedCells = GetOccupiedCells(room, cell, rotation);
+        var occupiedCells = CalculateOccupiedCells(room, cell, rotation);
 
         if (AreCellsFree(occupiedCells))
         {
@@ -1325,7 +1346,9 @@ public partial class DungeonGenerator : MonoBehaviour
             foreach (var occupiedCell in placementCandidate.OccupiedCells)
             {
                 // TODO: I think this is really brittle and needs to be improved
-                _grid[occupiedCell].roomIdx = _instantiatedRooms.Count - 1;
+                var idx = _instantiatedRooms.Count - 1;
+                _grid[occupiedCell].roomIdx = idx;
+                _instantiatedRooms[idx].AssociatedCells.Add(occupiedCell);
             }
         }
     }
@@ -1357,13 +1380,13 @@ public partial class DungeonGenerator : MonoBehaviour
             } 
             else
             {
-                Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData);
+                Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData, this);
             }
             success = true;
         }
         if (currentTries >= MaxDungeonTries)
         {
-            Debug.LogError("Could not place the rooms, maybe the grid should be expanded");
+            Debug.LogError("Could not generate dungeon, maybe the grid should be expanded");
         }
     }
     #endregion
@@ -1376,7 +1399,7 @@ public partial class DungeonGenerator : MonoBehaviour
     // but if all rooms adhere to the gridsize, this should match up
     //
     // The cells in the returned list will be laid out in z-columns in ascending order.
-    List<Vector3Int> GetOccupiedCells
+    List<Vector3Int> CalculateOccupiedCells
         (
         Room room,
         Vector2 placementCell,
@@ -1432,6 +1455,17 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
         return overlappingCells;
+    }
+
+    public List<Vector3Int> GetAssociatedCellsOfRoom(int roomIdx)
+    {
+        if (roomIdx > _instantiatedRooms.Count)
+        {
+            Debug.Log("roomIdx is bigger than room count");
+            return new List<Vector3Int>();
+        }
+
+        return _instantiatedRooms[roomIdx].AssociatedCells;
     }
 
     // this should be called, when the rooms were placed
@@ -1612,10 +1646,11 @@ public partial class DungeonGenerator : MonoBehaviour
         return now.ToBinary() ^ notNow.ToBinary();
     }
 
-    public Vector3Int GlobalToCellIdx(Vector3 globalCoord)
+    public static Vector3Int GlobalToCellIdx(Vector3 globalCoord, int CellSize)
     {
         var downScaled = globalCoord / CellSize;
-        return Vector3Int.RoundToInt(downScaled);
+        //return Vector3Int.RoundToInt(downScaled);
+        return Vector3Int.FloorToInt(downScaled);
     }
 
     // calculate the center of the cell
