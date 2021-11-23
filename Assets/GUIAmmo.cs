@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using Assets.Weapons;
 using UnityEngine;
@@ -10,14 +8,13 @@ public class GUIAmmo : MonoBehaviour
     private Text text;
     [SerializeField]
     private WeaponControl weaponControl;
-    // Start is called before the first frame update
+
     void Start()
     {
         text = GetComponent<Text>();
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    void LateUpdate()
     {
         if(weaponControl.CurrentWeapon.Type == WeaponType.LASER)
         {
@@ -34,8 +31,9 @@ public class GUIAmmo : MonoBehaviour
             text.text = "###";
             return;
         }
-        var prefix = laser.condition < 15 ? "‼ " : "";
-        text.text = prefix+"¤" +laser.condition.ToString(CultureInfo.InvariantCulture);
+        var prefix = laser.condition < 15 ? "‼" : "";
+        var laserCondition = Mathf.Floor(laser.condition).ToString(CultureInfo.InvariantCulture);
+        text.text = prefix + "¤" + laserCondition;
         
     }
 }
