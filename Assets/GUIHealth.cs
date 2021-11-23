@@ -17,6 +17,6 @@ public class GUIHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = playerStats.CurrentHealth.ToString(CultureInfo.InvariantCulture)+"♥🔫";
+        text.text = "♥" + playerStats.CurrentHealth.ToString(CultureInfo.InvariantCulture);
     }
 }
