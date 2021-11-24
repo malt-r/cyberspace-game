@@ -52,6 +52,7 @@ public partial class DungeonGenerator : MonoBehaviour
         public List<DoorMarker> doorMarkers;
         public Path path;
         public Vector3Int doorCellOfDoorDock;
+        public bool doorDockConnected;
     }
 
     public struct Path
@@ -60,25 +61,26 @@ public partial class DungeonGenerator : MonoBehaviour
         public int partitionIdx;
     }
 
-    public enum CorridorType
+    public enum NeighborPattern
     {
-        None,
-        Straight,
-        Turn,
-        Crossing,
-        TCrossSplit
+        None,               // none of them
+        AboveBelow,         // neighbor above and below
+        LeftBelow,          // neighbor below and left
+        AllSides,           // neighbor on all sides
+        BelowBothSides,     // neighbor below and to the sides
+        OneSide             // without rotation applied, this is the cell below
     }
 
     public struct CellPathData
     {
         // use flags
-        public PathDirection incomingDirections;
+        public Direction incomingDirections;
         public bool doorDock;
-        public CorridorType type;
+        public NeighborPattern type;
         public float rotationInDeg;
     }
 
-    public enum PathDirection
+    public enum Direction
     {
         None    = 0x0000,
         Up      = 0x0001,
@@ -234,6 +236,14 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     int MaxDungeonTries = 20;
 
+    [SerializeField]
+    bool CreateDungeonOnStart = true;
+
+    [Header("Minimap Creation")]
+    [SerializeField]
+    Minimap Minimap;
+
+
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
     DungeonGrid<Cell> _grid;
@@ -259,6 +269,10 @@ public partial class DungeonGenerator : MonoBehaviour
 
     List<List<Path>> _partitionedPaths = new List<List<Path>>();
 
+    CellPathData[,] _cellPathData;
+
+    GameObject _playerInstance;
+
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
 
@@ -274,7 +288,7 @@ public partial class DungeonGenerator : MonoBehaviour
         rightbelow = 7
     };
 
-    Vector3Int[] _gridDirections = new Vector3Int[]
+    public readonly static Vector3Int[] GridDirections = new Vector3Int[]
     {
         new Vector3Int(-1, 0,  0), // left
         new Vector3Int( 0, 0,  1), // above
@@ -288,7 +302,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     private Vector3Int GetNeighborDir(NeighborDirection dir)
     {
-        return _gridDirections[((int)dir)];
+        return GridDirections[((int)dir)];
     }
 
     [SerializeField]
@@ -298,13 +312,16 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         var rooms = _instantiatedRooms.Where(room => room.GetFirstStoryMarker().IndexInStory == 0);
         var startRoom = rooms.First();
-        Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+        _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        GenerateDungeon();
+        if (CreateDungeonOnStart)
+        {
+            GenerateDungeon();
+        }
     }
 
     // Update is called once per frame
@@ -357,7 +374,7 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             //var meshCenter = room.GetMeshCenter();
             // TODO: check, conversions... maybe, this could be done completely with cells
-            var doorCell = GlobalToCellIdx(marker.transform.position);
+            var doorCell = GlobalToCellIdx(marker.transform.position, CellSize);
 
             var position = new Vector2(doorCell.x, doorCell.z);
             vertices.Add(new Vertex<Vector3Int>(position, doorCell));
@@ -629,10 +646,6 @@ public partial class DungeonGenerator : MonoBehaviour
                         Debug.LogError("Path contained crossing of partitions, redoing the whole operation");
                         return false;
                     }
-                    if (pathCost > 100000)
-                    {
-                        Debug.LogError("Pathcost exceeds 100000, the pathfinder created a crossing of partitions!");
-                    }
 
                     Path newPath = new Path();
                     newPath.partitionIdx = pathPartitionIdx;
@@ -645,12 +658,28 @@ public partial class DungeonGenerator : MonoBehaviour
                         if (pseudoGrid[cell.x, 0, cell.y].type != CellType.DoorDock) // don't convert door-dock to hallway
                         {
                             pseudoGrid[cell.x, 0, cell.y].type = CellType.Hallway;
+                        } 
+                        else
+                        {
+                            pseudoGrid[cell.x, 0, cell.y].doorDockConnected = true;
                         }
                     }
                 }
             }
+            // check, that all door docks are connected
+            // TODO: should investigate, why this happens sometimes
+            foreach (var door in doorPartition)
+            {
+                if (!pseudoGrid[door].doorDockConnected)
+                {
+                    Debug.LogError("Could not connect all door docks!");
+                    return false;
+                }
+            }
+
             pathPartitionIdx++;
         }
+
 
         return true;
     }
@@ -685,52 +714,52 @@ public partial class DungeonGenerator : MonoBehaviour
     #region corridor placement
 
     // dir must be an adjacent cell
-    private PathDirection GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
+    public static Direction GetDirectionRelativeToCell(Vector2Int relativeTo, Vector2Int other)
     {
         if (relativeTo.x < other.x)
         {
-            return PathDirection.Right;
+            return Direction.Right;
         }
         if (relativeTo.x > other.x)
         {
-            return PathDirection.Left;
+            return Direction.Left;
         }
         if (relativeTo.y < other.y)
         {
-            return PathDirection.Up;
+            return Direction.Up;
         }
         if (relativeTo.y > other.y)
         {
-            return PathDirection.Down;
+            return Direction.Down;
         }
         // same?
-        return PathDirection.None;
+        return Direction.None;
     }
 
-    private PathDirection InvertDirection(PathDirection dir)
+    private Direction InvertDirection(Direction dir)
     {
-        if (dir.HasFlag(PathDirection.Right))
+        if (dir.HasFlag(Direction.Right))
         {
-            return PathDirection.Left;
+            return Direction.Left;
         }
-        if (dir.HasFlag(PathDirection.Left))
+        if (dir.HasFlag(Direction.Left))
         {
-            return PathDirection.Right;
+            return Direction.Right;
         }
-        if (dir.HasFlag(PathDirection.Up))
+        if (dir.HasFlag(Direction.Up))
         {
-            return PathDirection.Down;
+            return Direction.Down;
         }
-        if (dir.HasFlag(PathDirection.Down))
+        if (dir.HasFlag(Direction.Down))
         {
-            return PathDirection.Up;
+            return Direction.Up;
         }
-        return PathDirection.None;
+        return Direction.None;
     }
 
     public void PlaceCorridors()
     {
-        CellPathData[,] cellData = new CellPathData[GridDimensions.x, GridDimensions.z];
+        _cellPathData = new CellPathData[GridDimensions.x, GridDimensions.z];
         Vector2Int previousCell;
         foreach (var pathsOfPartition in _partitionedPaths)
         {
@@ -741,8 +770,8 @@ public partial class DungeonGenerator : MonoBehaviour
                 var door = _grid[startDoorDock.x, 0, startDoorDock.y].doorCellOfDoorDock;
                 var door2Int = new Vector2Int(door.x, door.z);
 
-                cellData[startDoorDock.x, startDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(startDoorDock, door2Int);
-                cellData[startDoorDock.x, startDoorDock.y].doorDock = true;
+                _cellPathData[startDoorDock.x, startDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(startDoorDock, door2Int);
+                _cellPathData[startDoorDock.x, startDoorDock.y].doorDock = true;
 
                 previousCell = startDoorDock;
                 for (int i = 1; i < path.cells.Count; i++)
@@ -751,11 +780,11 @@ public partial class DungeonGenerator : MonoBehaviour
 
                     // where do we come from, where is the previous cell located relative to current cell?
                     var direction = GetDirectionRelativeToCell(cell, previousCell); 
-                    cellData[cell.x, cell.y].incomingDirections |= direction;
+                    _cellPathData[cell.x, cell.y].incomingDirections |= direction;
 
                     // set outgoing direction of previous cell (incoming direction of this cell is the inverse of the outgoing
                     // of the last one)
-                    cellData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
+                    _cellPathData[previousCell.x, previousCell.y].incomingDirections |= InvertDirection(direction);
 
                     previousCell = cell;
                 }
@@ -765,8 +794,8 @@ public partial class DungeonGenerator : MonoBehaviour
                 door = _grid[endDoorDock.x, 0, endDoorDock.y].doorCellOfDoorDock;
                 door2Int = new Vector2Int(door.x, door.z);
 
-                cellData[endDoorDock.x, endDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(endDoorDock, door2Int);
-                cellData[endDoorDock.x, endDoorDock.y].doorDock = true;
+                _cellPathData[endDoorDock.x, endDoorDock.y].incomingDirections |= GetDirectionRelativeToCell(endDoorDock, door2Int);
+                _cellPathData[endDoorDock.x, endDoorDock.y].doorDock = true;
             }
         }
 
@@ -776,87 +805,157 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             for (int z = 0; z < GridDimensions.z; z++)
             {
-                var cell = cellData[x, z];
-                var directions = cell.incomingDirections;
-                switch (directions)
+                switch (_cellPathData[x,z].incomingDirections)
                 {
-                    case PathDirection.None:
+                    case Direction.None:
                         break;
-                    case PathDirection.Up | PathDirection.Down:
-                        cell.type = CorridorType.Straight;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Up | Direction.Down:
+                        _cellPathData[x, z].type = NeighborPattern.AboveBelow;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.Straight;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.AboveBelow;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left | PathDirection.Up:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Down | Direction.Left | Direction.Up:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Left | PathDirection.Right:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 180.0f;
+                    case Direction.Up | Direction.Left | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 180.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Right | PathDirection.Down:
-                        cell.type = CorridorType.TCrossSplit;
-                        cell.rotationInDeg = 270.0f;
+                    case Direction.Up | Direction.Right | Direction.Down:
+                        _cellPathData[x, z].type = NeighborPattern.BelowBothSides;
+                        _cellPathData[x, z].rotationInDeg = 270.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Left:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Left:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 90.0f;
+                    case Direction.Up | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 90.0f;
                         break;
-                    case PathDirection.Up | PathDirection.Right:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 180.0f;
+                    case Direction.Up | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 180.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Right:
-                        cell.type = CorridorType.Turn;
-                        cell.rotationInDeg = 270.0f;
+                    case Direction.Down | Direction.Right:
+                        _cellPathData[x, z].type = NeighborPattern.LeftBelow;
+                        _cellPathData[x, z].rotationInDeg = 270.0f;
                         break;
-                    case PathDirection.Down | PathDirection.Up | PathDirection.Right | PathDirection.Left:
-                        cell.type = CorridorType.Crossing;
-                        cell.rotationInDeg = 0.0f;
+                    case Direction.Down | Direction.Up | Direction.Right | Direction.Left:
+                        _cellPathData[x, z].type = NeighborPattern.AllSides;
+                        _cellPathData[x, z].rotationInDeg = 0.0f;
                         break;
                     default:
                         break;
                 }
+                var cell = _cellPathData[x, z];
                 InstantiateCorridorTile(new Vector2Int(x,z), cell.type, cell.rotationInDeg);
             }
         }
-        //InstantiateCorridorTile(new Vector2Int(0,0), CorridorType.Straight, 0.0f);
     }
 
-    private void InstantiateCorridorTile(Vector2Int cell, CorridorType type, float rotationInDeg)
+    public static void DirectionsToNeighborPattern(Direction direction, out NeighborPattern type, out float rotationInDeg)
+    {
+        type = NeighborPattern.None;
+        rotationInDeg = 0.0f;
+        switch (direction)
+        {
+            case Direction.None:
+                break;
+            case Direction.Up | Direction.Down:
+                 type = NeighborPattern.AboveBelow;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Left | Direction.Right:
+                 type = NeighborPattern.AboveBelow;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Down | Direction.Left | Direction.Right:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Down | Direction.Left | Direction.Up:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Up | Direction.Left | Direction.Right:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 180.0f;
+                break;
+            case Direction.Up | Direction.Right | Direction.Down:
+                 type = NeighborPattern.BelowBothSides;
+                 rotationInDeg = 270.0f;
+                break;
+            case Direction.Down | Direction.Left:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Up | Direction.Left:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 90.0f;
+                break;
+            case Direction.Up | Direction.Right:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 180.0f;
+                break;
+            case Direction.Down | Direction.Right:
+                 type = NeighborPattern.LeftBelow;
+                 rotationInDeg = 270.0f;
+                break;
+            case Direction.Down | Direction.Up | Direction.Right | Direction.Left:
+                 type = NeighborPattern.AllSides;
+                 rotationInDeg = 0.0f;
+                break;
+            case Direction.Down:
+                type = NeighborPattern.OneSide;
+                break;
+            case Direction.Left:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 90.0f;
+                break;
+            case Direction.Up:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 180.0f;
+                break;
+            case Direction.Right:
+                type = NeighborPattern.OneSide;
+                rotationInDeg = 270.0f;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void InstantiateCorridorTile(Vector2Int cell, NeighborPattern type, float rotationInDeg)
     {
         var placementCell = new Vector3Int(cell.x, 0, cell.y);
-        var rotationOffset = GetRotationRelatedCellOffset(new Vector3(0, rotationInDeg, 0));
+        var rotationOffset = GetRotationRelatedCellOffset(rotationInDeg);
 
         var location = (placementCell + rotationOffset) * CellSize;
 
         GameObject corridorTemplate = null;
         switch (type)
         {
-            case CorridorType.None:
+            case NeighborPattern.None:
                 return;
-            case CorridorType.Straight:
+            case NeighborPattern.AboveBelow:
                 corridorTemplate = StraigtCorridor;
                 break;
-            case CorridorType.Turn:
+            case NeighborPattern.LeftBelow:
                 corridorTemplate = LeftTurnCorridor;
                 break;
-            case CorridorType.Crossing:
+            case NeighborPattern.AllSides:
                 corridorTemplate = CrossCorridor;
                 break;
-            case CorridorType.TCrossSplit:
+            case NeighborPattern.BelowBothSides:
                 corridorTemplate = TCrossCorridor;
                 break;
         }
@@ -868,6 +967,10 @@ public partial class DungeonGenerator : MonoBehaviour
             this.transform
             );
         _instantiatedCorridors.Add(go);
+        if (_grid[placementCell].type != CellType.DoorDock)
+        {
+            _grid[placementCell].type = CellType.Hallway;
+        }
     }
 
     #endregion
@@ -900,6 +1003,14 @@ public partial class DungeonGenerator : MonoBehaviour
                     _grid[x, 0, z].type = CellType.Bufferzone;
                     _grid[_grid.Size.x - x - 1, 0, _grid.Size.z - z - 1].type = CellType.Bufferzone;
                 }
+            }
+        }
+
+        for (int x = 0; x < _grid.Size.x; x++)
+        {
+            for (int z = 0; z < _grid.Size.z; z++)
+            {
+                _grid[x, 0, z].roomIdx = -1;
             }
         }
 
@@ -937,6 +1048,16 @@ public partial class DungeonGenerator : MonoBehaviour
             Debug.LogWarning("Found " + _roomTemplates.Count.ToString() + " rooms in roomfinder");
         }
     }
+
+    public void CreateMinimap()
+    {
+        if (Minimap == null)
+        {
+            Debug.Log("No minimap");
+            return;
+        }
+        Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData, this);
+    }
     #endregion
 
     #region cleanup
@@ -954,34 +1075,25 @@ public partial class DungeonGenerator : MonoBehaviour
         _doorPartitions = new List<List<Vector3Int>>();
         _msts = new List<List<Prim.Edge>>();
         _partitionedPaths = new List<List<Path>>();
+        DestroyPlayer();
+        if (Minimap != null)
+        {
+            Minimap.Cleanup();
+        }
     }
 
-    public void GenerateDungeon()
+    private void DestroyPlayer()
     {
-        bool success = false;
-        int currentTries = 0;
-        ReadRooms();
-        while (!success && currentTries < MaxDungeonTries)
+        if (null != _playerInstance)
         {
-            Cleanup(cleanupRoomTemplates: false);
-            if (!SudoPlaceRooms())
+            if (Application.isEditor)
             {
-                currentTries++;
-                continue;
-            }
-            if (!FindPaths())
+                DestroyImmediate(_playerInstance);
+            } 
+            else
             {
-                currentTries++;
-                continue;
+                Destroy(_playerInstance);
             }
-
-            PlaceCorridors();
-            InstantiatePlayer();
-            success = true;
-        }
-        if (currentTries >= MaxDungeonTries)
-        {
-            Debug.LogError("Could not place the rooms, maybe the grid should be expanded");
         }
     }
 
@@ -991,7 +1103,6 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             foreach (var corridor in _instantiatedCorridors)
             {
-                corridor.SetActive(false);
                 if (Application.isEditor)
                 {
                     DestroyImmediate(corridor);
@@ -1011,7 +1122,6 @@ public partial class DungeonGenerator : MonoBehaviour
         {
             foreach (var room in _instantiatedRooms)
             {
-                room.GameObject.SetActive(false);
                 if (Application.isEditor)
                 {
                     DestroyImmediate(room.GameObject);
@@ -1150,7 +1260,7 @@ public partial class DungeonGenerator : MonoBehaviour
     private bool PlaceRoom(int roomIdx, Vector2Int cell, Vector3 rotation) // cell: Zellenkoordinaten
     { 
         var room = _roomTemplates[roomIdx];
-        var occupiedCells = GetOccupiedCells(room, cell, rotation);
+        var occupiedCells = CalculateOccupiedCells(room, cell, rotation);
 
         if (AreCellsFree(occupiedCells))
         {
@@ -1188,7 +1298,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 {
                     currentCell = markedCells[checkedCellIdx];
                     // check for each cell around, if a room, and if not, set to bufferzone
-                    foreach (var direction in _gridDirections)
+                    foreach (var direction in GridDirections)
                     {
                         var neighborCell = currentCell + direction;
                         if (_grid[neighborCell].type != CellType.Room && 
@@ -1220,7 +1330,7 @@ public partial class DungeonGenerator : MonoBehaviour
             // because the rotation should be applied cell-wise and not coninously
             // an offset is required for the non-0 deg rotations
             // got no time to be smart, hard code
-            Vector3Int offset = GetRotationRelatedCellOffset(placementCandidate.Rotation);
+            Vector3Int offset = GetRotationRelatedCellOffset(placementCandidate.Rotation.y);
             offset = offset * CellSize;
 
             var go = Instantiate(
@@ -1236,8 +1346,47 @@ public partial class DungeonGenerator : MonoBehaviour
             foreach (var occupiedCell in placementCandidate.OccupiedCells)
             {
                 // TODO: I think this is really brittle and needs to be improved
-                _grid[occupiedCell].roomIdx = _instantiatedRooms.Count - 1;
+                var idx = _instantiatedRooms.Count - 1;
+                _grid[occupiedCell].roomIdx = idx;
+                _instantiatedRooms[idx].AssociatedCells.Add(occupiedCell);
             }
+        }
+    }
+
+    public void GenerateDungeon()
+    {
+        bool success = false;
+        int currentTries = 0;
+        ReadRooms();
+        while (!success && currentTries < MaxDungeonTries)
+        {
+            Cleanup(cleanupRoomTemplates: false);
+            if (!SudoPlaceRooms())
+            {
+                currentTries++;
+                continue;
+            }
+            if (!FindPaths())
+            {
+                currentTries++;
+                continue;
+            }
+
+            PlaceCorridors();
+            InstantiatePlayer();
+            if (Minimap == null)
+            {
+                Debug.LogError("Minimap object is null");
+            } 
+            else
+            {
+                Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData, this);
+            }
+            success = true;
+        }
+        if (currentTries >= MaxDungeonTries)
+        {
+            Debug.LogError("Could not generate dungeon, maybe the grid should be expanded");
         }
     }
     #endregion
@@ -1250,7 +1399,7 @@ public partial class DungeonGenerator : MonoBehaviour
     // but if all rooms adhere to the gridsize, this should match up
     //
     // The cells in the returned list will be laid out in z-columns in ascending order.
-    List<Vector3Int> GetOccupiedCells
+    List<Vector3Int> CalculateOccupiedCells
         (
         Room room,
         Vector2 placementCell,
@@ -1308,6 +1457,17 @@ public partial class DungeonGenerator : MonoBehaviour
         return overlappingCells;
     }
 
+    public List<Vector3Int> GetAssociatedCellsOfRoom(int roomIdx)
+    {
+        if (roomIdx > _instantiatedRooms.Count)
+        {
+            Debug.Log("roomIdx is bigger than room count");
+            return new List<Vector3Int>();
+        }
+
+        return _instantiatedRooms[roomIdx].AssociatedCells;
+    }
+
     // this should be called, when the rooms were placed
     private List<Vector3Int> GetDoorCellsOfPlacedRoom(Room room, bool overwriteCellType)
     {
@@ -1331,7 +1491,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[gridCell].type != CellType.Door)
             {
                 // if it is not, select nearest room-cell
-                foreach (var dir in _gridDirections)
+                foreach (var dir in GridDirections)
                 {
                     if (_grid[gridCell + dir].type == CellType.Room ||
                         _grid[gridCell + dir].type == CellType.Door)
@@ -1383,7 +1543,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[gridCell].type != CellType.Door)
             {
                 // if it is not, select nearest room-cell
-                foreach (var dir in _gridDirections)
+                foreach (var dir in GridDirections)
                 {
                     if (_grid[gridCell + dir].type == CellType.Room ||
                         _grid[gridCell + dir].type == CellType.Door)
@@ -1450,9 +1610,9 @@ public partial class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    private Vector3Int GetRotationRelatedCellOffset(Vector3 rotation)
+    public static Vector3Int GetRotationRelatedCellOffset(float rotation)
     {
-        int rot = Mathf.RoundToInt(rotation.y);
+        int rot = Mathf.RoundToInt(rotation);
         int rotMod = rot % 360;
 
         Vector3Int offset = new Vector3Int(0,0,0);
@@ -1486,10 +1646,11 @@ public partial class DungeonGenerator : MonoBehaviour
         return now.ToBinary() ^ notNow.ToBinary();
     }
 
-    public Vector3Int GlobalToCellIdx(Vector3 globalCoord)
+    public static Vector3Int GlobalToCellIdx(Vector3 globalCoord, int CellSize)
     {
         var downScaled = globalCoord / CellSize;
-        return Vector3Int.RoundToInt(downScaled);
+        //return Vector3Int.RoundToInt(downScaled);
+        return Vector3Int.FloorToInt(downScaled);
     }
 
     // calculate the center of the cell

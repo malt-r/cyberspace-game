@@ -56,6 +56,10 @@ namespace Assets
                 gen.InstantiatePlayer();
             }
 
+            if (GUILayout.Button("MINIMAP"))
+            {
+                gen.CreateMinimap();
+            }
 
             GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))
