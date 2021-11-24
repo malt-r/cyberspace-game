@@ -1,5 +1,6 @@
 using System.Collections;
 using Assets.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -44,7 +45,7 @@ public class Laser : BaseWeapon
         shooted = false;
         lineRenderer.enabled = true; 
         lineRenderer.SetPosition(0, firepoint.position);
-        if (Physics.Raycast(firepoint.position, firepoint.forward, out var hit))
+        if (Physics.Raycast(transform.parent.parent.position, transform.parent.parent.forward, out var hit))
         {
             lineRenderer.SetPosition(1, hit.point);
             
@@ -58,7 +59,7 @@ public class Laser : BaseWeapon
         }
         else
         {
-            lineRenderer.SetPosition(1, firepoint.forward * range);
+            lineRenderer.SetPosition(1,transform.parent.parent.forward * range);
         }
         
         
