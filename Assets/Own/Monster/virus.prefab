@@ -103,9 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba3cdb6cade49a4d984f777b3d82428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 420751267569082092}
   damage: 10
   useCooldown: 2
-  owner: {fileID: 420751267569082092}
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
   firePoint: {fileID: 420751267569082092}
 --- !u!1 &420751266543916570
@@ -183,9 +183,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0081d15d39ac6d447bd285c72969207f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 420751267569082092}
   damage: 15
   useCooldown: 2
-  owner: {fileID: 420751267569082092}
   maxEnemies: 8
   attackRadius: 10
   lm:
@@ -5140,6 +5140,9 @@ MonoBehaviour:
   model: {fileID: 170141114185451145}
   rotationSpeed: 0.25
   inverse: 1
+  dropableItems:
+  - {fileID: 3769561608051111895, guid: 00af52215fed7d14f9dc45f8dc906d54, type: 3}
+  - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
 --- !u!1001 &420751267230114146
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CombatParticipant))]
@@ -23,6 +24,9 @@ public class Enemy : MonoBehaviour
     private float rotationSpeed = 0.5f;
 
     public bool inverse = true;
+
+    [SerializeField]
+    private List<Transform> dropableItems;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +35,16 @@ public class Enemy : MonoBehaviour
         combat = GetComponent<CombatParticipant>();
         weaponControl = GetComponent<WeaponControl>();
         ParticleSystem.Stop();
+        stats.OnHealthReachedZero += dropItems;
+    }
+
+    private void dropItems()
+    {
+        foreach(var item in dropableItems)
+        {
+            Instantiate(item,transform.position,Quaternion.identity);
+        }
+        
     }
 
     // Update is called once per frame
