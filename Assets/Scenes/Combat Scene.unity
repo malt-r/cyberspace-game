@@ -1378,10 +1378,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: virus blue melee
       objectReference: {fileID: 0}
-    - target: {fileID: 6352733569575658217, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6352733569575658219, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
       propertyPath: m_RootOrder
       value: 5

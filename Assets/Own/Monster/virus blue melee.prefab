@@ -103,11 +103,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba3cdb6cade49a4d984f777b3d82428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 6352733569575658219}
+  useCost: 0
   damage: 10
-  useCooldown: 2
+  atackSpeed: 10
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
-  firePoint: {fileID: 6352733569575658219}
 --- !u!1 &6352733568382593565
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,9 +182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0081d15d39ac6d447bd285c72969207f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 6352733569575658219}
+  useCost: 0
   damage: 15
-  useCooldown: 2
+  atackSpeed: 10
   maxEnemies: 8
   attackRadius: 10
   lm:
@@ -5093,6 +5092,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponHolder: {fileID: 6352733568382593564}
   weaponIndex: 1
+  Camera: {fileID: 6352733569575658219}
+  Owner: {fileID: 6352733569575658219}
+  Firepoint: {fileID: 6352733569575658219}
 --- !u!114 &6352733569575658132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5140,6 +5142,7 @@ MonoBehaviour:
   model: {fileID: 6891572825064684174}
   rotationSpeed: 0.25
   inverse: 1
+  dropableItems: []
 --- !u!1001 &6352733569102273893
 PrefabInstance:
   m_ObjectHideFlags: 0
