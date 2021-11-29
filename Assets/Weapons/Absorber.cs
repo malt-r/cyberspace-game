@@ -1,5 +1,4 @@
 using Assets.Weapons;
-using DefaultNamespace;
 using UnityEngine;
 
 
