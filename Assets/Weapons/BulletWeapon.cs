@@ -6,7 +6,6 @@ public class BulletWeapon : BaseWeapon
     [SerializeField]
     private Transform bulletPrefab;
     
-    [SerializeField] private Transform firePoint;
     private float deltaTime;
 
     void Update()
@@ -16,9 +15,9 @@ public class BulletWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!(deltaTime > useCooldown)) return;
+        if (!(deltaTime > atackSpeed)) return;
         deltaTime = 0f;
-        var bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(Owner.forward,Vector3.up)).GetComponentInChildren<Bullet>();
+        var bullet = Instantiate(bulletPrefab, Firepoint.position, Quaternion.LookRotation(transform.forward,Vector3.up)).GetComponentInChildren<Bullet>();
         
         bullet.Ignite(Owner.gameObject.GetInstanceID());
 

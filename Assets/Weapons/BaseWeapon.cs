@@ -5,19 +5,34 @@ namespace Assets.Weapons
     public abstract class BaseWeapon: MonoBehaviour,Weapon
     {
         public WeaponType Type { get; }
-        
-        public Transform Owner { get => owner; protected set => owner = value; }
+
+        public Transform Owner { get; protected set; }
+        public Transform Firepoint { get;protected set; }
+        public Transform Camera { get; protected set;}
+
         [SerializeField]
-        private Transform owner;
+        private float useCost;
+        public float UseCost { get=>useCost; set=>useCost=value; }
+
+
 
         [SerializeField]
         protected float damage =10f;
         public float Damage => damage;
         
         [SerializeField]
-        protected float useCooldown =10f;
-        public float UseCooldown => useCooldown;
+        protected float atackSpeed =10f;
+        public float AttackSpeed => atackSpeed;
+
+        protected float timeSinceLastAttack;
         
         public abstract void Use();
+
+        public virtual void InitWeapon(Transform owner, Transform camera, Transform firepoint)
+        {
+            Owner = owner;
+            Camera = camera;
+            Firepoint = firepoint;
+        }
     }
 }

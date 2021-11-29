@@ -2,9 +2,11 @@
 {
     public enum WeaponType
     {
+        SCANNER,
         LASER,
+        ABSORBER,
         MELEE,
         BULLET,
-        BOMB
+        BOMBTHROWER
     }
 }

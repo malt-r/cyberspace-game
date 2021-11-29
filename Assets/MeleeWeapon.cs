@@ -20,7 +20,7 @@ public class MeleeWeapon : BaseWeapon
     void Start()
     {
         Type = WeaponType.MELEE;
-        deltaTime = useCooldown+1;
+        deltaTime = atackSpeed+1;
     }
 
     // Update is called once per frame
@@ -32,7 +32,7 @@ public class MeleeWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!(deltaTime > useCooldown)) return;
+        if (!(deltaTime > atackSpeed)) return;
         deltaTime = 0f;
         //TODO: Work with layers to get enemies more performant
         Collider[] hitColliders = new Collider[maxEnemies];

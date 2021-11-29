@@ -5,8 +5,9 @@ public interface Weapon
 {
     WeaponType Type { get; }
     float Damage { get; }
-    float UseCooldown { get; }
+    float AttackSpeed { get; }
     void Use();
     Transform Owner { get; }
 
+    float UseCost { get; }
 }
