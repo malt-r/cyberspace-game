@@ -17,7 +17,7 @@ public class BulletWeapon : BaseWeapon
     {
         if (!(deltaTime > atackSpeed)) return;
         deltaTime = 0f;
-        var bullet = Instantiate(bulletPrefab, Firepoint.position, Quaternion.LookRotation(transform.forward,Vector3.up)).GetComponentInChildren<Bullet>();
+        var bullet = Instantiate(bulletPrefab, Firepoint.position, Quaternion.LookRotation(Camera.forward,Vector3.up)).GetComponentInChildren<Bullet>();
         
         bullet.Ignite(Owner.gameObject.GetInstanceID());
 
