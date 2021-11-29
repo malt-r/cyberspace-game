@@ -86,8 +86,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 420751267012920984}
+  m_Children: []
   m_Father: {fileID: 420751266543916571}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -103,11 +102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba3cdb6cade49a4d984f777b3d82428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 420751267569082092}
+  useCost: 0
   damage: 10
-  useCooldown: 2
+  atackSpeed: 1
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
-  firePoint: {fileID: 420751267569082092}
 --- !u!1 &420751266543916570
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,9 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0081d15d39ac6d447bd285c72969207f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 420751267569082092}
+  useCost: 0
   damage: 15
-  useCooldown: 2
+  atackSpeed: 10
   maxEnemies: 8
   attackRadius: 10
   lm:
@@ -4997,36 +4995,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!1 &420751267012920987
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 420751267012920984}
-  m_Layer: 0
-  m_Name: Firepoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &420751267012920984
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420751267012920987}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.000154}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.009999998}
-  m_Children: []
-  m_Father: {fileID: 420751265687685234}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420751267569082094
 GameObject:
   m_ObjectHideFlags: 0
@@ -5093,6 +5061,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponHolder: {fileID: 420751266543916571}
   weaponIndex: 0
+  Camera: {fileID: 420751267569082092}
+  Owner: {fileID: 420751267569082092}
+  Firepoint: {fileID: 420751267569082092}
 --- !u!114 &420751267569082003
 MonoBehaviour:
   m_ObjectHideFlags: 0
