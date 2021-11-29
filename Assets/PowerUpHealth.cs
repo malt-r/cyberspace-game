@@ -1,25 +1,21 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerUpHealth : MonoBehaviour
+public class PowerUpHealth : BaseItem
 {
     [SerializeField] 
     private String targetTag ="Player";
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField]
+    private float healAmount = 10;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag.Equals(targetTag)) ;
+        if (other.gameObject.tag.Equals(targetTag))
+        {
+            var stats = other.gameObject.GetComponent<ActorStats>();
+            stats.Heal(healAmount);
+            Destroy(gameObject);
+        }
     }
 }
