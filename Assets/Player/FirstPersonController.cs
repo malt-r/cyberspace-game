@@ -117,9 +117,7 @@ namespace StarterAssets
 
 			Move();
 			JumpAndGravity();
-			Move();
 			GroundedCheck();
-			Move();
 
 		}
 
