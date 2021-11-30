@@ -184,7 +184,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCost: 0
   damage: 15
-  atackSpeed: 10
+  atackSpeed: 1
   maxEnemies: 8
   attackRadius: 10
   lm:
@@ -5073,7 +5073,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6352733569575658217}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.01
