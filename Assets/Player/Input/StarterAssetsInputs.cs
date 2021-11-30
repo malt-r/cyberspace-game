@@ -13,6 +13,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool shoot;
+		public Vector2 weaponSwitch;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -51,6 +52,11 @@ namespace StarterAssets
         {
 			ShootInput(value.isPressed);
         }
+		
+		public void OnWeaponSwitching(InputValue value)
+		{
+			WeaponSwitchingInput(value.Get<Vector2>());
+		}
 #else
 	// old input sys if we do decide to have it (most likely wont)...
 #endif
@@ -80,6 +86,11 @@ namespace StarterAssets
         {
 			shoot = newShootInput;
         }
+        
+		public void WeaponSwitchingInput(Vector2 newWeaponSwitchingInput)
+		{
+			weaponSwitch = newWeaponSwitchingInput;
+		}
 
 #if !UNITY_IOS || !UNITY_ANDROID
 

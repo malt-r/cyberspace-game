@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "WeaponSwitching",
+                    "type": "Value",
+                    "id": "6680aabf-c8e0-492b-ac3f-8b3784f3472a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -253,6 +261,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1ae193d-c16f-4544-bfbd-2ca41ca72ea2",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "NormalizeVector2",
+                    "groups": "KeyboardMouse",
+                    "action": "WeaponSwitching",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

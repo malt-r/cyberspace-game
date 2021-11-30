@@ -109,10 +109,15 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (_input.weaponSwitch.y != 0)
+			{
+				//_input.weaponSwitch.y = 0;
+				Debug.Log("Switch");
+			}
 
+			Move();
 			JumpAndGravity();
 			GroundedCheck();
-			Move();
 
 		}
 

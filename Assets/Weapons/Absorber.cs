@@ -2,22 +2,19 @@ using Assets.Weapons;
 using UnityEngine;
 
 
-public class Laser : BaseWeapon
+public class Absorber : BaseWeapon
 {
-    
     public float range = 500;
     public bool shooted = false;
     public bool overHeated = false;
     private LineRenderer lineRenderer;
     public float deltaTime;
-
+    
     void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
         deltaTime = atackSpeed+1;
-        
     }
-    
     public void UpdateRoute()
     {
         if (!shooted || overHeated){
@@ -31,20 +28,27 @@ public class Laser : BaseWeapon
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {
             lineRenderer.SetPosition(1, hit.point);
-            var enemy = hit.collider.gameObject.GetComponent<CombatParticipant>();
-            if (!enemy) { return; }
-            var parent = Owner.GetComponent<CombatParticipant>();
             
-            if (!(deltaTime > atackSpeed)) return;
-            deltaTime = 0f;
-            enemy.TakeDamage(parent);
+            var item = hit.collider.GetComponent<BaseItem>();
+
+            if (item != null)
+            {
+                handleItem(item);
+                return;
+            }
         }
         else
         {
             lineRenderer.SetPosition(1,Camera.forward * range);
         }
     }
-    
+
+    private void handleItem(BaseItem item)
+    {
+        var smooth = Vector3.zero;
+        var Speed = 0.1f;
+        item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
+    }
     public override void Use()
     {
         shooted = true;

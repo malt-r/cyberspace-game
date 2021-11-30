@@ -15,17 +15,13 @@ public class GUIAmmo : MonoBehaviour
     }
     
     void LateUpdate()
-    {
-        if(weaponControl.CurrentWeapon.Type == WeaponType.LASER)
-        {
-            handleLaser();
-        }
-        
+    { 
+        updateProperties();
     }
 
-    private void handleLaser()
+    private void updateProperties()
     {
-        var laser = (Laser) weaponControl.CurrentWeapon;
+        var laser = (Scanner) weaponControl.CurrentWeapon;
         if (laser.overHeated)
         {
             text.text = "###";

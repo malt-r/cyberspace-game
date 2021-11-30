@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CombatParticipant))]
@@ -23,6 +24,9 @@ public class Enemy : MonoBehaviour
     private float rotationSpeed = 0.5f;
 
     public bool inverse = true;
+
+    [SerializeField]
+    private List<Transform> dropableItems;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,13 +35,23 @@ public class Enemy : MonoBehaviour
         combat = GetComponent<CombatParticipant>();
         weaponControl = GetComponent<WeaponControl>();
         ParticleSystem.Stop();
+        stats.OnHealthReachedZero += dropItems;
+    }
+
+    private void dropItems()
+    {
+        foreach(var item in dropableItems)
+        {
+            Instantiate(item,transform.position,Quaternion.identity);
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleCombat();
         SearchAndFollowPlayer();
+        HandleCombat();
         model.transform.Rotate(0, 0, rotationSpeed);
 
     }
@@ -88,15 +102,16 @@ public class Enemy : MonoBehaviour
 
         isFollowing = false;
         if (distance > maxFollowDistance) { return; }
-        
+        var playerPosition = player.position;
+        transform.LookAt(playerPosition);
         if (distance < minFollowDistance) { return; }
         isFollowing = true;
 
-        var playerPosition = player.position;
+        
         var finalPos = playerPosition;
         finalPos.y += 2;
         var smooth = Vector3.zero;
         transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
-        transform.LookAt(playerPosition);
+        
     }
 }
