@@ -130,8 +130,8 @@ namespace Assets.Weapons
         {
             weapon.InitWeapon(Owner,Camera,Firepoint);
             weapon.transform.parent = modesTransform;
+            weapon.enabled = true;
             modes.Add(weapon);
-            
         }
     }
 }
