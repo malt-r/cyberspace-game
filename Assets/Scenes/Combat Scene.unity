@@ -725,10 +725,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2800512722918460188, guid: c9d9f027848105f408c80cad902bb4a0, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 58ddd6173786b644d93a25122c411681, type: 2}
     - target: {fileID: 2800512722918460190, guid: c9d9f027848105f408c80cad902bb4a0, type: 3}
       propertyPath: m_Name
       value: LaserMode
