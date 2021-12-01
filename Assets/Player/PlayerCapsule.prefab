@@ -5489,7 +5489,7 @@ PrefabInstance:
     - target: {fileID: 7202271454713460447, guid: f058d41f8f12e434ba921806519633a7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ed428191faebd974a9a7afbd246e9fc4, type: 2}
+      objectReference: {fileID: 2100000, guid: 1320d573eb622404e9b7b696e68f7c01, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f058d41f8f12e434ba921806519633a7, type: 3}
 --- !u!1 &919132149350279385 stripped
@@ -5520,6 +5520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCost: 0
+  Material: {fileID: 0}
   damage: 10
   atackSpeed: 0
   modes:
@@ -5592,6 +5593,10 @@ PrefabInstance:
       propertyPath: useCost
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4205211748122512756, guid: 67f3dafcaeeb5514ebf1de24eff4f092, type: 3}
+      propertyPath: Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 1320d573eb622404e9b7b696e68f7c01, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67f3dafcaeeb5514ebf1de24eff4f092, type: 3}
 --- !u!4 &4205211748785427977 stripped
