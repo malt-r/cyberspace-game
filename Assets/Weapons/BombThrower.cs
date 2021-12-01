@@ -1,47 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using Assets.Weapons;
 using UnityEngine;
 
-
 public class BombThrower : BaseWeapon
 {
-    public float range = 500;
-    public WeaponType Type { get; private set; }
+    [SerializeField]
+    private Transform bombPrefab;
 
-    public bool shooted = false;
-    public float condition = 100f;
-    public float maxCondition = 100f;
-    public bool overHeated = false;
-
-    public float heatRate = 25f;
-    public float cooldownRate = 10f;
-    public float cooldownTime = 5;
-
+    [SerializeField] 
+    private float throwingForceMultiplier;
     private float deltaTime;
 
-    
-    void Awake()
+    void Update()
     {
-        Type = WeaponType.BOMBTHROWER;
-        deltaTime = atackSpeed+1;
+        deltaTime += Time.deltaTime; 
     }
 
     public override void Use()
     {
-        shooted = true;
-    }
+        if (!(deltaTime > atackSpeed)) return;
+        deltaTime = 0f;
+        var forward = Camera.forward;
+        var bomb = Instantiate(bombPrefab, Firepoint.position, Quaternion.LookRotation(forward,Vector3.up)).GetComponentInChildren<Bomb>();
+        bomb.GetComponent<Rigidbody>().AddForce(forward*throwingForceMultiplier,ForceMode.Impulse);
+        bomb.Ignite();
 
-    public void LateUpdate()
-    {
-
-      
-    }
-    
-    IEnumerator StartWeaponCooldown()
-    {
-        shooted = false;
-        yield return new WaitForSeconds(cooldownTime); 
-        overHeated = false;
     }
 }
