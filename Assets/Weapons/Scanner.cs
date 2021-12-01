@@ -44,7 +44,7 @@ namespace Assets.Weapons
                 currentMode = modes.Count - 1;
             }
 
-            modeIndicator.GetComponent<Renderer>().material = modes[currentMode].GetComponent<Renderer>().material;
+            modeIndicator.GetComponent<Renderer>().material = modes[currentMode].GetComponent<BaseWeapon>().Material;
         }
         
         private void handleHeatingAndCooling()
