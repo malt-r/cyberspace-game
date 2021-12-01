@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCost: 0
+  Material: {fileID: 0}
   damage: 10
   atackSpeed: 10
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
@@ -183,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCost: 0
+  Material: {fileID: 0}
   damage: 15
   atackSpeed: 1
   maxEnemies: 8
@@ -5142,7 +5144,9 @@ MonoBehaviour:
   model: {fileID: 6891572825064684174}
   rotationSpeed: 0.25
   inverse: 1
-  dropableItems: []
+  dropableItems:
+  - {fileID: 4401327599903897349, guid: faa4273689d3d614b8aa203f72c16b0d, type: 3}
+  - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
 --- !u!1001 &6352733569102273893
 PrefabInstance:
   m_ObjectHideFlags: 0
