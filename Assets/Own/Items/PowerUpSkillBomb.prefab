@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dad37b3e8d9ab474b84864a6d06e1607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useCost: 10
+  useCost: 1000
   Material: {fileID: 2100000, guid: 7dcb42abed6852945ba41af63543b8e8, type: 2}
   damage: 10
   atackSpeed: 1

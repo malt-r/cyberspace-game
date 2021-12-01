@@ -109,7 +109,7 @@ namespace Assets.Weapons
         {
             deltaTime += Time.deltaTime;
             handleHeatingAndCooling();
-            if (shooted )
+            if (shooted)
             {
                 shooted = false;
                 if(!overHeated){
