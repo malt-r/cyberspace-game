@@ -14,7 +14,8 @@ namespace Assets.Weapons
         private float useCost;
         public float UseCost { get=>useCost; set=>useCost=value; }
 
-
+        [SerializeField]
+        public Material Material;
 
         [SerializeField]
         protected float damage =10f;
@@ -23,8 +24,6 @@ namespace Assets.Weapons
         [SerializeField]
         protected float atackSpeed =10f;
         public float AttackSpeed => atackSpeed;
-
-        protected float timeSinceLastAttack;
         
         public abstract void Use();
 
