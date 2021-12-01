@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Weapons
@@ -128,6 +129,9 @@ namespace Assets.Weapons
 
         public void AddSkill(BaseWeapon weapon)
         {
+            
+            var alreadyExists= modes.Any(item => item.Type == weapon.Type);
+            if (alreadyExists) { return;}
             weapon.InitWeapon(Owner,Camera,Firepoint);
             weapon.transform.parent = modesTransform;
             weapon.enabled = true;
