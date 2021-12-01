@@ -4,7 +4,7 @@ namespace Assets.Weapons
 {
     public abstract class BaseWeapon: MonoBehaviour,Weapon
     {
-        public WeaponType Type { get; }
+        public WeaponType Type { protected set; get; }
 
         public Transform Owner { get; protected set; }
         public Transform Firepoint { get;protected set; }

@@ -12,6 +12,7 @@ public class Absorber : BaseWeapon
     
     void Awake()
     {
+        Type = WeaponType.ABSORBER;
         lineRenderer = GetComponent<LineRenderer>();
         deltaTime = atackSpeed+1;
     }

@@ -8,6 +8,10 @@ public class BulletWeapon : BaseWeapon
     
     private float deltaTime;
 
+    void Awake()
+    {
+        Type = WeaponType.BULLET;
+    }
     void Update()
     {
         deltaTime += Time.deltaTime;

@@ -10,6 +10,10 @@ public class BombThrower : BaseWeapon
     private float throwingForceMultiplier;
     private float deltaTime;
 
+    void Awake()
+    {
+        Type = WeaponType.BOMBTHROWER;
+    }
     void Update()
     {
         deltaTime += Time.deltaTime; 

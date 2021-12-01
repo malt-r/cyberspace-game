@@ -15,7 +15,8 @@ public class Laser : BaseWeapon
     {
         lineRenderer = GetComponent<LineRenderer>();
         deltaTime = atackSpeed+1;
-        
+        Type = WeaponType.LASER;
+
     }
     
     public void UpdateRoute()
