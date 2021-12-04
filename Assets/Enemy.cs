@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(CombatParticipant))]
 public class Enemy : MonoBehaviour
@@ -27,9 +28,13 @@ public class Enemy : MonoBehaviour
 
     [SerializeField]
     private List<Transform> dropableItems;
+
+
+    private NavMeshAgent navMeshAgent;
     // Start is called before the first frame update
     void Start()
     {
+        navMeshAgent = GetComponent<NavMeshAgent>();
         stats = GetComponent<ActorStats>();
         playerDetector = GetComponentInChildren<PlayerDetector>();
         combat = GetComponent<CombatParticipant>();
@@ -108,10 +113,12 @@ public class Enemy : MonoBehaviour
         isFollowing = true;
 
         
-        var finalPos = playerPosition;
-        finalPos.y += 2;
-        var smooth = Vector3.zero;
-        transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
-        
+        // var finalPos = playerPosition;
+        // finalPos.y += 2;
+        // var smooth = Vector3.zero;
+        // transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
+
+        navMeshAgent.SetDestination(playerPosition);
+
     }
 }
