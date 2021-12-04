@@ -111,14 +111,6 @@ public class Enemy : MonoBehaviour
         transform.LookAt(playerPosition);
         if (distance < minFollowDistance) { return; }
         isFollowing = true;
-
-        
-        // var finalPos = playerPosition;
-        // finalPos.y += 2;
-        // var smooth = Vector3.zero;
-        // transform.position = Vector3.SmoothDamp(transform.position, finalPos, ref smooth, Speed*Time.deltaTime);
-
         navMeshAgent.SetDestination(playerPosition);
-
     }
 }
