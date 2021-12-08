@@ -4,7 +4,7 @@ namespace Assets.Weapons
 {
     public abstract class BaseWeapon: MonoBehaviour,Weapon
     {
-        public WeaponType Type { get; }
+        public WeaponType Type { protected set; get; }
 
         public Transform Owner { get; protected set; }
         public Transform Firepoint { get;protected set; }
@@ -14,7 +14,8 @@ namespace Assets.Weapons
         private float useCost;
         public float UseCost { get=>useCost; set=>useCost=value; }
 
-
+        [SerializeField]
+        public Material Material;
 
         [SerializeField]
         protected float damage =10f;
@@ -23,8 +24,6 @@ namespace Assets.Weapons
         [SerializeField]
         protected float atackSpeed =10f;
         public float AttackSpeed => atackSpeed;
-
-        protected float timeSinceLastAttack;
         
         public abstract void Use();
 

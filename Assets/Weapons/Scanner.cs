@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Weapons
@@ -44,7 +45,7 @@ namespace Assets.Weapons
                 currentMode = modes.Count - 1;
             }
 
-            modeIndicator.GetComponent<Renderer>().material = modes[currentMode].GetComponent<Renderer>().material;
+            modeIndicator.GetComponent<Renderer>().material = modes[currentMode].GetComponent<BaseWeapon>().Material;
         }
         
         private void handleHeatingAndCooling()
@@ -108,7 +109,7 @@ namespace Assets.Weapons
         {
             deltaTime += Time.deltaTime;
             handleHeatingAndCooling();
-            if (shooted )
+            if (shooted)
             {
                 shooted = false;
                 if(!overHeated){
@@ -128,6 +129,9 @@ namespace Assets.Weapons
 
         public void AddSkill(BaseWeapon weapon)
         {
+            
+            var alreadyExists= modes.Any(item => item.Type == weapon.Type);
+            if (alreadyExists) { return;}
             weapon.InitWeapon(Owner,Camera,Firepoint);
             weapon.transform.parent = modesTransform;
             weapon.enabled = true;
