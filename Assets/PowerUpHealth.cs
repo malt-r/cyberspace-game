@@ -15,6 +15,7 @@ public class PowerUpHealth : BaseItem
         var stats = player.gameObject.GetComponent<ActorStats>();
         stats.Heal(healAmount);
         SoundManager.PlaySound(Sound.ItemPickup);
+        OnPickup();
         Destroy(gameObject);
     }
 }

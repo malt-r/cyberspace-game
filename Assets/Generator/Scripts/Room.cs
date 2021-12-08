@@ -11,12 +11,22 @@ public partial class DungeonGenerator
         public List<Vector3Int> DoorCells { get; }
 
         public List<Vector3Int> AssociatedCells { get; }
+        public int InstantiationIdx { get; }
 
         public Room(GameObject go)
         {
             GameObject = go;
             DoorCells = new List<Vector3Int>();
             AssociatedCells = new List<Vector3Int>();
+            InstantiationIdx = -1;
+        }
+
+        public Room(GameObject go, int instantiationIdx)
+        {
+            GameObject = go;
+            DoorCells = new List<Vector3Int>();
+            AssociatedCells = new List<Vector3Int>();
+            InstantiationIdx = instantiationIdx;
         }
 
         public void AddDoorCell(Vector3Int cell)

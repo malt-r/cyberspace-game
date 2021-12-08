@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class LeavingTutorialRoom : MonoBehaviour
+public class LeavingTrigger : StoryTrigger
 {
     BoxCollider _collider;
 
@@ -43,6 +41,7 @@ public class LeavingTutorialRoom : MonoBehaviour
             if (dot > 0)
             {
                 Debug.Log("Player exitted in exit dir");
+                Activate();
             } 
             else
             {
