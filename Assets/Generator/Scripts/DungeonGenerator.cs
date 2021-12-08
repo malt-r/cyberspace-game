@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.AI;
 
 
 // Note (Malte Reinsch, 2021/11/10):
@@ -39,8 +39,14 @@ using UnityEngine;
 //  progressively bigger, if taking to much time)
 //  - Test generation in running game mode
 
+
+
 public partial class DungeonGenerator : MonoBehaviour
 {
+    
+    [SerializeField]
+    NavMeshSurface navmesh;
+    
     // coord-systems:
     // - cell-coordinates (without consideration of cellsize)
     // - grid-coordinates (with consideration of cellsize)
@@ -321,7 +327,9 @@ public partial class DungeonGenerator : MonoBehaviour
         if (CreateDungeonOnStart)
         {
             GenerateDungeon();
+            
         }
+        navmesh.BuildNavMesh();
     }
 
     // Update is called once per frame
