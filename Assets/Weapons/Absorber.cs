@@ -52,7 +52,7 @@ public class Absorber : BaseWeapon
     private void handleItem(BaseItem item)
     {
         var smooth = Vector3.zero;
-        var Speed = 0.1f;
+        var Speed = 0.2f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
     }
     public override void Use()
