@@ -20,11 +20,16 @@ public class Absorber : BaseWeapon
     {
         if (!shooted || overHeated){
             lineRenderer.enabled = false;
+            audioSource.volume = 0;
             return; 
         }
 
         shooted = false;
         lineRenderer.enabled = true; 
+        if(!audioSource.isPlaying){
+            audioSource.volume=0.5f;
+            audioSource.PlayOneShot(audioSource.clip);
+        }
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {

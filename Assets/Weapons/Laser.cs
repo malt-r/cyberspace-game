@@ -23,9 +23,13 @@ public class Laser : BaseWeapon
     {
         if (!shooted || overHeated){
             lineRenderer.enabled = false;
+            audioSource.volume = 0;
             return; 
         }
-
+        if(!audioSource.isPlaying){
+            audioSource.volume=0.5f;
+            audioSource.PlayOneShot(audioSource.clip);
+        }
         shooted = false;
         lineRenderer.enabled = true; 
         lineRenderer.SetPosition(0, Firepoint.position);
