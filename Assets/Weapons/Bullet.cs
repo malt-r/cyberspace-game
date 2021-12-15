@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -19,12 +20,29 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer != LayerMask.NameToLayer("Combat")){ return; }
+       handleCollision(other);
+    }
 
-        if (other.gameObject.GetInstanceID().Equals(this.ownerId))
-        { return; }
+    private void handleCollision(Collider other)
+    {
+        
+        
+        var otherIsWall = other.gameObject.layer == LayerMask.NameToLayer("Default");
+        if (otherIsWall)
+        {
+           // Destroy(gameObject);
+            return;
+        }
+        
+        var otherIsInCombatLayer = other.gameObject.layer == LayerMask.NameToLayer("Combat");
+        if (!otherIsInCombatLayer){ return; }
+
+        var otherIsBulletOwner = other.gameObject.GetInstanceID().Equals(this.ownerId);
+        if (otherIsBulletOwner) { return; }
+        
         var target = other.GetComponent<CombatParticipant>();
         target.TakeDamage(this.damage);
+        
         gameObject.GetInstanceID();
     }
 }
