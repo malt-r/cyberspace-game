@@ -54,6 +54,11 @@ public class Absorber : BaseWeapon
         var smooth = Vector3.zero;
         var Speed = 0.2f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
+        
+        var distance = Vector3.Distance(transform.position, item.transform.position);
+        if(distance <2){
+            item.Visit(Owner);
+        }
     }
     public override void Use()
     {

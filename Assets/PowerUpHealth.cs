@@ -9,14 +9,12 @@ public class PowerUpHealth : BaseItem
     [SerializeField]
     private float healAmount = 10;
 
-    private void OnTriggerEnter(Collider other)
+
+    public override void Visit(Transform player)
     {
-        if (other.gameObject.tag.Equals(targetTag))
-        {
-            var stats = other.gameObject.GetComponent<ActorStats>();
-            stats.Heal(healAmount);
-            SoundManager.PlaySound(Sound.ItemPickup);
-            Destroy(gameObject);
-        }
+        var stats = player.gameObject.GetComponent<ActorStats>();
+        stats.Heal(healAmount);
+        SoundManager.PlaySound(Sound.ItemPickup);
+        Destroy(gameObject);
     }
 }
