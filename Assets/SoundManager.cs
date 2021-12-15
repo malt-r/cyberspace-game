@@ -22,7 +22,7 @@ public class SoundManager : MonoBehaviour
   private void Awake()
   {
     audioSource = GetComponent<AudioSource>();
-    SetBackgroundMusic("Menue");
+    SetBackgroundMusic("Game");
     if (_instance != null && _instance != this) 
     { 
       Destroy(this.gameObject);
