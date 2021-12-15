@@ -14,6 +14,7 @@ public class PowerUpWeapon : BaseItem
         {
             var player = other.gameObject.GetComponent<Player>();
             player.AddWeapon(weapon);
+            SoundManager.PlaySound(Sound.ItemPickup);
             Destroy(gameObject);
         }
     }
