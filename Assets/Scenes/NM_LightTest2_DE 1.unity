@@ -2980,7 +2980,6 @@ GameObject:
   - component: {fileID: 555576593}
   - component: {fileID: 555576592}
   - component: {fileID: 555576591}
-  - component: {fileID: 555576598}
   - component: {fileID: 555576597}
   - component: {fileID: 555576596}
   m_Layer: 6
@@ -3109,23 +3108,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 10
---- !u!114 &555576598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 555576590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d0a9202b2ad5624690ebceb1a97de85, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  WeaponHolder: {fileID: 0}
-  weaponIndex: 0
-  Camera: {fileID: 0}
-  Owner: {fileID: 0}
-  Firepoint: {fileID: 0}
 --- !u!43 &560633699
 Mesh:
   m_ObjectHideFlags: 0
