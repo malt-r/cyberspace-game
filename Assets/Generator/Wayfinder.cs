@@ -6,7 +6,7 @@ using UnityEngine;
 using BlueRaja;
 using static DungeonGenerator;
 
-public class Helper : MonoBehaviour
+public class Wayfinder : MonoBehaviour
 {
     [SerializeField]
     int roomInstantiationIdx = 0;
@@ -16,119 +16,16 @@ public class Helper : MonoBehaviour
 
     internal void FindWay()
     {
-        FindWay(roomInstantiationIdx, targetIdx);
+        FindWay(targetIdx);
     }
-
-    // TODO:
-    // - use simple node-structure for roomgraph (could also be created in Dictionary to List of int (Index into instantiated Rooms)
-    // - implement needed interfaces for usage of roomgraph with astar-algo
-    //   - implement heuristic
-    //   - implement neighbor -> should probably just be kids of node
-    //   - implement cost -> just return already calculated path cost, if there is one, or return invalid value
-
-    public class RoomGraph : WeightedGraph<int>
-    {
-        #region data
-        Dictionary<int, List<Tuple<int, float>>> _roomGraph = new Dictionary<int, List<Tuple<int, float>>>();
-        #endregion data
-
-        public float Cost(int a, int b)
-        {
-            var paths = _roomGraph[a].Where(path => path.Item1 == b).OrderBy(path => path.Item2).ToList();
-            if (!paths.Any())
-            {
-                return float.MaxValue;
-            } 
-            else
-            {
-                return paths.First().Item2;
-            }
-        }
-
-        public IEnumerable<int> Neighbors(int id)
-        {
-            return _roomGraph[id].Select(p => p.Item1);
-        }
-
-        public RoomGraph(Dictionary<int, List<Tuple<int, float>>> data)
-        {
-            _roomGraph = data;
-        }
-    }
-
-    // A* needs only a WeightedGraph and a location type L, and does *not*
-    // have to be a grid. However, in the example code I am using a grid.
-    public interface WeightedGraph<L>
-    {
-        float Cost(L a, L b);
-        IEnumerable<L> Neighbors(L id);
-    }
-
-    public class AStarSearch
-    {
-        // TODO: modify
-        public Dictionary<int, int> cameFrom
-            = new Dictionary<int, int>();
-        // TODO: modify
-        public Dictionary<int, float> costSoFar
-            = new Dictionary<int, float>();
-
-        // Note: a generic version of A* would abstract over Location and
-        // also Heuristic
-        // TODO: generify
-        static public double Heuristic(int a, int b)
-        {
-            //return Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y);
-            return 1.0;
-        }
-
-        public AStarSearch(WeightedGraph<int> graph, int start, int goal)
-        {
-            var frontier = new SimplePriorityQueue<int>();
-            frontier.Enqueue(start, 0);
-
-            cameFrom[start] = start;
-            costSoFar[start] = 0;
-
-            while (frontier.Count > 0)
-            {
-                var current = frontier.Dequeue();
-
-                if (current.Equals(goal))
-                {
-                    break;
-                }
-
-                foreach (var next in graph.Neighbors(current))
-                {
-                    float newCost = (float)costSoFar[current]
-                        + graph.Cost(current, next);
-                    if (!costSoFar.ContainsKey(next)
-                        || newCost < costSoFar[next])
-                    {
-                        costSoFar[next] = newCost;
-                        float priority = (float)newCost + (float)Heuristic(next, goal);
-                        frontier.Enqueue(next, priority);
-                        cameFrom[next] = current;
-                    }
-                }
-            }
-        }
-    }
-
-    RoomGraph _roomGraph;
 
     DungeonGenerator _gen;
     Player _player;
     bool _gotDataFromGen = false;
-    private List<List<DungeonGenerator.Path>> _paths;
-    private DungeonGenerator.CellPathData[,] _cellPathData;
     private DungeonGrid<DungeonGenerator.Cell> _grid;
     private List<DungeonGenerator.Room> _rooms;
 
-
     private Dictionary<int, List<DungeonGenerator.Room>> _orderedRoomsByStoryIdx = new Dictionary<int, List<DungeonGenerator.Room>>();
-    private AStarSearch _astar;
     private Path _foundPath;
 
     // Start is called before the first frame update
@@ -141,56 +38,19 @@ public class Helper : MonoBehaviour
     {
         if (!_gotDataFromGen && _gen.FinishedGenerating)
         {
-            _paths = _gen.PartitionedPaths;
-            _cellPathData = _gen.CellPathDatas;
             _grid = _gen.Grid;
             _rooms = _gen.InstantiatedRooms;
             _player = FindObjectOfType<Player>();
             _gotDataFromGen = true;
 
             OrderRooms();
-            CreateRoomGraph();
+            //CreateRoomGraph();
         }
         else if (!_gen.FinishedGenerating)
         {
             Debug.Log("Generator is not finished");
             return;
         }
-    }
-
-    // this removes the information about the room partitions!
-    // but is this really relevant? the player should not be able to reach a story index greater than the one
-    // in the current partition...
-    private void CreateRoomGraph()
-    {
-        // dictionary about neighbors of rooms and the associated path cost
-        Dictionary<int, List<Tuple<int, float>>> roomGraphData = new Dictionary<int, List<Tuple<int, float>>>();
-
-        // construct a vertex for each room
-        int idx = 0;
-        foreach (var room in _rooms)
-        {
-            //_roomVertices.Add(new Graphs.Vertex<int>(room.InstantiationIdx));
-            //_roomInstantiationIdxToGraphIdx.Add(room.InstantiationIdx, idx);
-            //idx++;
-            roomGraphData.Add(room.InstantiationIdx, new List<Tuple<int, float>>());
-        }
-
-        foreach (var partition in _paths)
-        {
-            foreach (var path in partition)
-            {
-                var startIdx = path.startRoomIdx;
-                var endIdx = path.endRoomIdx;
-                //// not good, should use simple node structure..
-                //_roomGraph.Add(new Graphs.Edge(startRoomVertex, endRoomVertex));
-
-                roomGraphData[startIdx].Add(new Tuple<int, float>(endIdx, path.cost));
-                roomGraphData[endIdx].Add(new Tuple<int, float>(startIdx, path.cost));
-            }
-        }
-
-        _roomGraph = new RoomGraph(roomGraphData);
     }
 
     private void OrderRooms()
@@ -214,7 +74,7 @@ public class Helper : MonoBehaviour
         }
     }
 
-    public void FindWay(int currentRoomInstantiationIdx, int targetStoryIdx)
+    public Path FindWay(int targetStoryIdx)
     {
         // TODO: start timer to update the direction, in which to point, when cell of player changes
         // Visuals:
@@ -233,8 +93,10 @@ public class Helper : MonoBehaviour
 
         var startCell = _gen.GlobalToCellIdx(pos);
         var startCellVec2 = new Vector2Int(startCell.x, startCell.z);
+
         var firstRoomWithTargetIdx = _orderedRoomsByStoryIdx[targetStoryIdx].First();
         var storyMarkerPosition = firstRoomWithTargetIdx.GetStoryMarkers().Where(marker => marker.IndexInStory == targetStoryIdx).First().gameObject.transform.position;
+
         var endCell = _gen.GlobalToCellIdx(storyMarkerPosition);
         var endCellVec2 = new Vector2Int(endCell.x, endCell.z);
 
@@ -246,46 +108,47 @@ public class Helper : MonoBehaviour
             pathCost.cost = 1;
 
             var test = new Vector2Int(21, 14);
-            var typeA = _grid[aPosVec3].type;
-            var typeB = _grid[bPosVec3].type;
             if (a.Position == test || b.Position == test)
             {
                 bool bBreak = true;
             }
 
-
             pathCost.traversable = true;
+
+            var aCellType = _grid[aPosVec3].type;
+            var bCellType = _grid[bPosVec3].type;
+
             // TODO: prevent from walking directly through walls
-            if (_grid[bPosVec3].type == CellType.Bufferzone ||
-                _grid[bPosVec3].type == CellType.Free)
+            if (bCellType == CellType.Bufferzone ||
+                bCellType == CellType.Free)
             {
                 // don't go there
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
             }
-            else if (_grid[aPosVec3].type == CellType.Room &&
-                     _grid[bPosVec3].type == CellType.Hallway)
+            else if (aCellType == CellType.Room &&
+                     bCellType == CellType.Hallway)
             {
                 // don't go through walls
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
             }
-            else if (_grid[bPosVec3].type == CellType.Room &&
-                     _grid[aPosVec3].type == CellType.Hallway)
+            else if (bCellType == CellType.Room &&
+                     aCellType == CellType.Hallway)
             {
                 // don't go through walls
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
             }
-            else if (_grid[bPosVec3].type == CellType.Door && // door is in room
-                     _grid[aPosVec3].type == CellType.Hallway)
+            else if (bCellType == CellType.Door && // door is in room
+                     aCellType == CellType.Hallway)
             {
                 // don't go through walls
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
             }
-            else if (_grid[aPosVec3].type == CellType.Door && // door is in room
-                     _grid[bPosVec3].type == CellType.Hallway)
+            else if (aCellType == CellType.Door && // door is in room
+                     bCellType == CellType.Hallway)
             {
                 // don't go through walls
                 pathCost.cost += 100000;
@@ -307,6 +170,7 @@ public class Helper : MonoBehaviour
         newPath.startRoomIdx = startIdx;
         newPath.endRoomIdx = endIdx;
         _foundPath = newPath;
+        return _foundPath;
     }
 
     // Update is called once per frame

@@ -1420,6 +1420,8 @@ public partial class DungeonGenerator : MonoBehaviour
 
             PlaceCorridors();
             InstantiatePlayer();
+            _generationSuccessfull = true;
+            
             if (Minimap == null)
             {
                 Debug.LogError("Minimap object is null");
@@ -1429,7 +1431,6 @@ public partial class DungeonGenerator : MonoBehaviour
                 Minimap.CreateMinimap(_grid, GridDimensions, _playerInstance, CellSize, _cellPathData, this);
             }
             success = true;
-            _generationSuccessfull = true;
         }
         if (currentTries >= MaxDungeonTries)
         {

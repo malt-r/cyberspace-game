@@ -30,6 +30,8 @@ public class Minimap : MonoBehaviour
     [SerializeField]
     GameObject TilePrefabRoomOneSide;
 
+    [Header("Options")] [SerializeField] bool enableWayfinding;
+
     GameObject _toFollow;
     DungeonGrid<Cell> _dungeonGrid;
     CellPathData[,] _cellPathData;
@@ -44,68 +46,68 @@ public class Minimap : MonoBehaviour
 
     DungeonGenerator _generator;
 
+    private Wayfinder _wayfinder;
+    private LineRenderer _lineRenderer;
+
+
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateVisibility();
+        GetCurrentLocation(out var roomIdx, out var cellIdx);
+        UpdateVisibility(roomIdx, cellIdx);
+        if (enableWayfinding)
+        {
+            // TODO: this needs reference to storymanager to get the next story marker
+            int storyMarkerTargetIdx = 8;
+            UpdateWayToTarget(roomIdx, storyMarkerTargetIdx);
+        }
+        _prevRoomIdx = roomIdx;
+    }
+    
+    private void UpdateWayToTarget(int roomIdx, int storyMarkerTargetIdx)
+    {
+        if (_wayfinder == null) return;
+        if (_lineRenderer == null) return;
+        var path = _wayfinder.FindWay(storyMarkerTargetIdx);
+        
+        if (path.cells.Count > 0)
+        {
+            _lineRenderer.positionCount = path.cells.Count;
+            Vector3 pos;
+            for (int i = 0; i < path.cells.Count; i++)
+            {
+                // TODO: offset to minimap
+                pos = new Vector3(path.cells[i].x, 0, path.cells[i].y) + new Vector3(1,1,1) / 2;
+                pos += transform.position;
+                _lineRenderer.SetPosition(i, pos);
+            }
+        }
     }
 
-    public void UpdateVisibility()
+    private void GetCurrentLocation(out int roomIdx, out Vector3Int cellIdx)
     {
+        cellIdx = Vector3Int.zero;
+        roomIdx = -1;
         if (_toFollow == null) return;
         if (_generator == null) return;
 
         // check, which parts of the minimap to uncover based on player location
         var pos = _toFollow.transform.position;
-        var cellIdx = DungeonGenerator.GlobalToCellIdx(pos, _cellSize);
+        cellIdx = GlobalToCellIdx(pos, _cellSize);
 
-        // DEBUG code
-        //if (prevPlayerCell != currentPlayerCell)
-        //{
-        //    var tile = _instantiatedTiles[prevPlayerCell.x, prevPlayerCell.z];
-        //    if (tile != null)
-        //    {
-        //        var meshRenderer = tile.GetComponent<MeshRenderer>();
-        //        if (meshRenderer != null)
-        //        {
-        //            if (meshRenderer.materials.Length > 1)
-        //            {
-        //                var mat = meshRenderer.materials[1];
-        //                mat.color = Color.white;
-        //            } 
-        //            else
-        //            {
-        //                var mat = meshRenderer.materials[0];
-        //                mat.color = Color.white;
-        //            }
-        //        }
-        //    }
-        //    tile = _instantiatedTiles[currentPlayerCell.x, currentPlayerCell.z];
-        //    if (tile != null)
-        //    {
-        //        var meshRenderer = tile.GetComponent<MeshRenderer>();
-        //        if (meshRenderer != null)
-        //        {
-        //            if (meshRenderer.materials.Length > 1)
-        //            {
-        //                meshRenderer.materials[1].color = Color.red;
-        //            }
-        //            else
-        //            {
-        //                meshRenderer.materials[0].color = Color.red;
-        //            }
-        //        }
-        //        prevPlayerCell = currentPlayerCell;
-        //    }
-        //}
+        roomIdx = _dungeonGrid[cellIdx].roomIdx;
+    }
 
-        var roomIdx = _dungeonGrid[cellIdx].roomIdx;
+    public void UpdateVisibility(int roomIdx, Vector3Int cellIdx)
+    {
+        if (_prevRoomIdx == roomIdx) return;
+        
         if (roomIdx == -1 || _dungeonGrid[cellIdx].type == CellType.DoorDock)
         {
             if (_instantiatedTiles[cellIdx.x, cellIdx.z] != null)
@@ -113,7 +115,7 @@ public class Minimap : MonoBehaviour
                 _instantiatedTiles[cellIdx.x, cellIdx.z].gameObject.SetActive(true);
             }
         }
-        else if (roomIdx != _prevRoomIdx && _dungeonGrid[cellIdx].type != CellType.DoorDock)
+        else if (_dungeonGrid[cellIdx].type != CellType.DoorDock)
         {
             if (!_seenRooms.Contains(roomIdx))
             {
@@ -126,11 +128,8 @@ public class Minimap : MonoBehaviour
                 }
                 _seenRooms.Add(roomIdx);
             }
-
-            _prevRoomIdx = roomIdx;
             Debug.LogWarning("player is now in room with idx: " + roomIdx);
         }
-
     }
 
     public void Cleanup()
@@ -190,6 +189,12 @@ public class Minimap : MonoBehaviour
 
         follower.FollowDeltaScaling = 1 / (float)CellSize;
         follower.ToFollow = _toFollow;
+        
+        
+        _wayfinder = GetComponent<Wayfinder>();
+        _wayfinder.Init();
+
+        _lineRenderer = GetComponent<LineRenderer>();
     }
 
     private void PlaceMinimapTileRoom(Vector3Int cell)

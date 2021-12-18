@@ -9,13 +9,13 @@ using UnityEngine;
 #if UNITY_EDITOR_WIN
 namespace Assets
 {
-    [CustomEditor(typeof(Helper))]
-    class HelperGUI : Editor
+    [CustomEditor(typeof(Wayfinder))]
+    class WayfinderGUI : Editor
     {
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            Helper helper = target as Helper;
+            Wayfinder helper = target as Wayfinder;
 
             if (GUILayout.Button("Init"))
             {
