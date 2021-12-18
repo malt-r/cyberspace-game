@@ -106,8 +106,6 @@ public class Minimap : MonoBehaviour
 
     public void UpdateVisibility(int roomIdx, Vector3Int cellIdx)
     {
-        if (_prevRoomIdx == roomIdx) return;
-        
         if (roomIdx == -1 || _dungeonGrid[cellIdx].type == CellType.DoorDock)
         {
             if (_instantiatedTiles[cellIdx.x, cellIdx.z] != null)
