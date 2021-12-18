@@ -48,6 +48,7 @@ public class Minimap : MonoBehaviour
 
     private Wayfinder _wayfinder;
     private LineRenderer _lineRenderer;
+    private StoryManager _storyManager;
 
 
     // Start is called before the first frame update
@@ -63,14 +64,17 @@ public class Minimap : MonoBehaviour
         UpdateVisibility(roomIdx, cellIdx);
         if (enableWayfinding)
         {
-            // TODO: this needs reference to storymanager to get the next story marker
-            int storyMarkerTargetIdx = 8;
-            UpdateWayToTarget(roomIdx, storyMarkerTargetIdx);
+            int storyMarkerTargetIdx = _storyManager.CurrentStoryMarker.IndexInStory;
+            UpdateWayToTarget(storyMarkerTargetIdx);
+        }
+        else if (_lineRenderer.positionCount > 0)
+        {
+            _lineRenderer.positionCount = 0;
         }
         _prevRoomIdx = roomIdx;
     }
     
-    private void UpdateWayToTarget(int roomIdx, int storyMarkerTargetIdx)
+    private void UpdateWayToTarget(int storyMarkerTargetIdx)
     {
         if (_wayfinder == null) return;
         if (_lineRenderer == null) return;
@@ -126,6 +130,10 @@ public class Minimap : MonoBehaviour
                 }
                 _seenRooms.Add(roomIdx);
             }
+        }
+
+        if (_prevRoomIdx != roomIdx)
+        {
             Debug.LogWarning("player is now in room with idx: " + roomIdx);
         }
     }
@@ -188,11 +196,11 @@ public class Minimap : MonoBehaviour
         follower.FollowDeltaScaling = 1 / (float)CellSize;
         follower.ToFollow = _toFollow;
         
-        
         _wayfinder = GetComponent<Wayfinder>();
         _wayfinder.Init();
 
         _lineRenderer = GetComponent<LineRenderer>();
+        _storyManager = FindObjectOfType<StoryManager>();
     }
 
     private void PlaceMinimapTileRoom(Vector3Int cell)

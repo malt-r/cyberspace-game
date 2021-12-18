@@ -49,7 +49,6 @@ public class Wayfinder : MonoBehaviour
         else if (!_gen.FinishedGenerating)
         {
             Debug.Log("Generator is not finished");
-            return;
         }
     }
 
@@ -86,7 +85,6 @@ public class Wayfinder : MonoBehaviour
         // - draw "line in the sand" on the ground..
 
         var pos = _player.transform.position;
-        var cellIdx = _gen.GlobalToCellIdx(pos);
 
         // just use existing grid and crank the cost for the free tiles way up
         DungeonPathfinder2D pathFinder = new DungeonPathfinder2D(new Vector2Int(_grid.Size.x, _grid.Size.z));
@@ -154,8 +152,6 @@ public class Wayfinder : MonoBehaviour
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
             }
-
-
             return pathCost;
         });
 
