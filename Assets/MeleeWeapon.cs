@@ -18,7 +18,6 @@ public class MeleeWeapon : BaseWeapon
     void Start()
     {
         Type = WeaponType.MELEE;
-        deltaTime = atackSpeed+1;
     }
 
     // Update is called once per frame
@@ -30,7 +29,7 @@ public class MeleeWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!(deltaTime > atackSpeed)) return;
+        if ((deltaTime < atackSpeed)) return;
         deltaTime = 0f;
         //TODO: Work with layers to get enemies more performant
         Collider[] hitColliders = new Collider[maxEnemies];
@@ -42,6 +41,7 @@ public class MeleeWeapon : BaseWeapon
             var self = Owner.GetComponent<CombatParticipant>();
             if (enemy == null || Owner ==  null || enemy == self) continue;
             enemy.TakeDamage(self);
+            PlayUseSound();
             Debug.Log($" Attack , {hitColliders[i].name}");
         }
     }
