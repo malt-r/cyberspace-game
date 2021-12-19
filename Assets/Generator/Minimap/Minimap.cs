@@ -46,6 +46,8 @@ public class Minimap : MonoBehaviour
 
     DungeonGenerator _generator;
 
+    private bool _initialized;
+
     private Wayfinder _wayfinder;
     private LineRenderer _lineRenderer;
     private StoryManager _storyManager;
@@ -60,18 +62,21 @@ public class Minimap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetCurrentLocation(out var roomIdx, out var cellIdx);
-        UpdateVisibility(roomIdx, cellIdx);
-        if (enableWayfinding)
+        if (_initialized)
         {
-            int storyMarkerTargetIdx = _storyManager.CurrentStoryMarker.IndexInStory;
-            UpdateWayToTarget(storyMarkerTargetIdx);
+            GetCurrentLocation(out var roomIdx, out var cellIdx);
+            UpdateVisibility(roomIdx, cellIdx);
+            if (enableWayfinding)
+            {
+                int storyMarkerTargetIdx = _storyManager.CurrentStoryMarker.IndexInStory;
+                UpdateWayToTarget(storyMarkerTargetIdx);
+            }
+            else if (_lineRenderer.positionCount > 0)
+            {
+                _lineRenderer.positionCount = 0;
+            }
+            _prevRoomIdx = roomIdx;
         }
-        else if (_lineRenderer.positionCount > 0)
-        {
-            _lineRenderer.positionCount = 0;
-        }
-        _prevRoomIdx = roomIdx;
     }
     
     private void UpdateWayToTarget(int storyMarkerTargetIdx)
@@ -201,6 +206,8 @@ public class Minimap : MonoBehaviour
 
         _lineRenderer = GetComponent<LineRenderer>();
         _storyManager = FindObjectOfType<StoryManager>();
+
+        _initialized = true;
     }
 
     private void PlaceMinimapTileRoom(Vector3Int cell)
