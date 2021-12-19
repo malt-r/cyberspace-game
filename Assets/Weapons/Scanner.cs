@@ -9,9 +9,7 @@ namespace Assets.Weapons
     {
         [SerializeField]
         private List<BaseWeapon> modes;
-        
-        public WeaponType Type { get; private set; }
-        
+
         private ParticleSystem overheatParticleSystem;
         
         public float condition = 100f;

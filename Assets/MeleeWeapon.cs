@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class MeleeWeapon : BaseWeapon
 {
-    public WeaponType Type { get; private set; }
-    
     private float deltaTime;
     [SerializeField]
     private int maxEnemies = 1;
