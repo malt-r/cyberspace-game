@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
         this.ownerId = ownerId;
         var rigidBody = GetComponent<Rigidbody>();
         rigidBody.velocity =transform.forward.normalized*velocity;
-        Destroy(gameObject,500f);
+        Destroy(gameObject,5);
     }
 
     private void OnTriggerEnter(Collider other)
