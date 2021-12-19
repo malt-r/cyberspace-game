@@ -27,8 +27,7 @@ public class Absorber : BaseWeapon
         shooted = false;
         lineRenderer.enabled = true; 
         if(!audioSource.isPlaying){
-            audioSource.volume=0.5f;
-            audioSource.PlayOneShot(audioSource.clip);
+           PlayUseSound();
         }
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))

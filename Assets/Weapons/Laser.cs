@@ -27,8 +27,7 @@ public class Laser : BaseWeapon
             return; 
         }
         if(!audioSource.isPlaying){
-            audioSource.volume=0.5f;
-            audioSource.PlayOneShot(audioSource.clip);
+            PlayUseSound();
         }
         shooted = false;
         lineRenderer.enabled = true; 
