@@ -204,6 +204,8 @@ public class Wayfinder : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (_foundPath.cells == null) return;
+        
         // just set it..
         int CellSize = 5;
         if (_foundPath.cells.Count > 0)

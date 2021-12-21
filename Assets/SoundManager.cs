@@ -53,13 +53,17 @@ public class SoundManager : MonoBehaviour
   
   public static void PlaySound(Sound sound)
   {
+    if (sound == null) return;
     var soundGameObject = new GameObject(sound.ToString());
     var audioSource = soundGameObject.AddComponent<AudioSource>();
+    var audioClip = GetAudioClip(sound);
+    if (audioClip == null) return;
     audioSource.PlayOneShot(GetAudioClip(sound));
   }
 
   private static AudioClip GetAudioClip(Sound sound)
   {
+    if (Instance == null) return null;
     foreach (var soundAudioclip in Instance.audioClips)
     {
       if (soundAudioclip.sound == sound)
