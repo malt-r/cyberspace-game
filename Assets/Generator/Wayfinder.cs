@@ -116,7 +116,7 @@ public class Wayfinder : MonoBehaviour
             var aCellType = _grid[aPosVec3].type;
             var bCellType = _grid[bPosVec3].type;
 
-            // TODO: prevent from walking directly through walls
+            // TODO: prevent from walking directly through walls (from corridor to corridor)
             if (bCellType == CellType.Bufferzone ||
                 bCellType == CellType.Free)
             {
