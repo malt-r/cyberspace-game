@@ -14,13 +14,16 @@ namespace StarterAssets
 		public bool sprint;
 		public bool shoot;
 		public Vector2 weaponSwitch;
+		public bool interact;
+		public bool escape;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
 
+
 #if !UNITY_IOS || !UNITY_ANDROID
 		[Header("Mouse Cursor Settings")]
-		public bool cursorLocked = true;
+		public bool cursorLocked = false;
 		public bool cursorInputForLook = true;
 #endif
 
@@ -57,6 +60,17 @@ namespace StarterAssets
 		{
 			WeaponSwitchingInput(value.Get<Vector2>());
 		}
+
+		public void OnInteract(InputValue value)
+		{
+			InteractInput(value.isPressed);
+		}
+
+		public void OnExit(InputValue value)
+		{
+			ExitInput(value.isPressed);
+		}
+
 #else
 	// old input sys if we do decide to have it (most likely wont)...
 #endif
@@ -90,6 +104,16 @@ namespace StarterAssets
 		public void WeaponSwitchingInput(Vector2 newWeaponSwitchingInput)
 		{
 			weaponSwitch = newWeaponSwitchingInput;
+		}
+
+		public void InteractInput(bool newInteractState)
+		{
+			interact = newInteractState;
+		}
+
+		public void ExitInput(bool newEscapeInput)
+		{
+			escape = newEscapeInput;
 		}
 
 #if !UNITY_IOS || !UNITY_ANDROID
