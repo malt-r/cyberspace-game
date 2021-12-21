@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -202,10 +203,30 @@ public class Minimap : MonoBehaviour
         follower.ToFollow = _toFollow;
         
         _wayfinder = GetComponent<Wayfinder>();
-        _wayfinder.Init();
+        if (_wayfinder == null)
+        {
+            Console.WriteLine("Did not find Wayfinder");
+            return;
+        }
+        else
+        {
+            _wayfinder.Init();
+        }
 
         _lineRenderer = GetComponent<LineRenderer>();
         _storyManager = FindObjectOfType<StoryManager>();
+
+        if (_lineRenderer == null)
+        {
+            Console.WriteLine("Did not find LineRenderer");
+            return;
+        }
+
+        if (_storyManager == null)
+        {
+            Console.WriteLine("Did not find StoryManager");
+            return;
+        }
 
         _initialized = true;
     }

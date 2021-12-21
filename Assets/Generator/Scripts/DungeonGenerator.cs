@@ -60,6 +60,7 @@ public partial class DungeonGenerator : MonoBehaviour
         public int pathPartitionIdx;
         public Vector3Int doorCellOfDoorDock;
         public bool doorDockConnected;
+        public HashSet<Vector3Int> neighborsInPaths;
     }
 
     public struct Path
@@ -254,6 +255,11 @@ public partial class DungeonGenerator : MonoBehaviour
     [SerializeField]
     Minimap Minimap;
 
+    [SerializeField] 
+    bool ShowGridNeighbors = false;
+
+    [SerializeField] 
+    Vector2Int GridCoordsForNeighbor = Vector2Int.zero;
 
     // grid coordinates will start at local (0,0,0) and extend in positive x and
     // y coordinates
@@ -692,23 +698,26 @@ public partial class DungeonGenerator : MonoBehaviour
                     {
                         var cellIdx = new Vector3Int(cell.x, 0, cell.y);
                         pseudoGrid[cellIdx].pathPartitionIdx = pathPartitionIdx;
-                        if( pseudoGrid[cellIdx].paths == null)
+                        if (pseudoGrid[cellIdx].paths == null)
                         {
                             pseudoGrid[cellIdx].paths = new List<Path>();
                         }
+
                         pseudoGrid[cellIdx].paths.Add(newPath);
 
                         if (pseudoGrid[cellIdx].type != CellType.DoorDock) // don't convert door-dock to hallway
                         {
                             pseudoGrid[cellIdx].type = CellType.Hallway;
-                        } 
+                        }
                         else
                         {
                             pseudoGrid[cellIdx].doorDockConnected = true;
                         }
                     }
+
                 }
             }
+            
             // check, that all door docks are connected
             // TODO: should investigate, why this happens sometimes
             foreach (var door in doorPartition)
@@ -723,6 +732,42 @@ public partial class DungeonGenerator : MonoBehaviour
             pathPartitionIdx++;
         }
 
+        foreach (var partition in _partitionedPaths)
+        {
+            foreach (var path in partition)
+            {
+                // set neighbors in path
+                for (int j = 0; j < path.cells.Count; j++)
+                {
+                    var currentCell = path.cells[j];
+                    if (_grid[currentCell.x, 0, currentCell.y].neighborsInPaths == null)
+                    {
+                        _grid[currentCell.x, 0, currentCell.y].neighborsInPaths = new HashSet<Vector3Int>();
+                    }
+                    if (j > 0)
+                    {
+                        var previousCell = path.cells[j - 1];
+                        _grid[currentCell.x, 0, currentCell.y].neighborsInPaths
+                            .Add(new Vector3Int(previousCell.x, 0, previousCell.y));
+                        _grid[previousCell.x, 0, previousCell.y].neighborsInPaths
+                            .Add(new Vector3Int(currentCell.x, 0, currentCell.y));
+                    }
+
+                    if (j < path.cells.Count - 1)
+                    {
+                        var nextCell = path.cells[j + 1];
+                        if (_grid[nextCell.x, 0, nextCell.y].neighborsInPaths == null)
+                        {
+                            _grid[nextCell.x, 0, nextCell.y].neighborsInPaths = new HashSet<Vector3Int>();
+                        }
+                        _grid[currentCell.x, 0, currentCell.y].neighborsInPaths
+                            .Add(new Vector3Int(nextCell.x, 0, nextCell.y));
+                        _grid[nextCell.x, 0, nextCell.y].neighborsInPaths
+                            .Add(new Vector3Int(currentCell.x, 0, currentCell.y));
+                    }
+                }
+            }
+        }
 
         return true;
     }
@@ -1720,34 +1765,55 @@ public partial class DungeonGenerator : MonoBehaviour
 
     #region Visualization
 
-    private void DrawCellMarking(Cell cell, Vector3 cellLocation)
+    private void DrawCellMarking(Vector3 cellLocation, Color color)
     {
         var lowerCorner = cellLocation * CellSize;
         var upperCorner = (cellLocation + new Vector3(1, 0, 1)) * CellSize;
+        Debug.DrawLine(lowerCorner, upperCorner, color);
+    }
+    
+    private void DrawCellMarking(Cell cell, Vector3 cellLocation)
+    {
         if (CellType.Room == cell.type)
         {
-            Debug.DrawLine(lowerCorner, upperCorner, Color.red);
+            DrawCellMarking(cellLocation, Color.red);
         } 
         else if (CellType.Bufferzone == cell.type)
         {
-            Debug.DrawLine(lowerCorner, upperCorner, Color.blue);
+            DrawCellMarking(cellLocation, Color.blue);
         }
         else if (CellType.Door == cell.type)
         {
-            Debug.DrawLine(lowerCorner, upperCorner, Color.cyan);
+            DrawCellMarking(cellLocation, Color.cyan);
         }
         else if (CellType.Hallway == cell.type)
         {
-            Debug.DrawLine(lowerCorner, upperCorner, Color.green);
+            DrawCellMarking(cellLocation, Color.green);
         }
         else if (CellType.DoorDock == cell.type)
         {
-            Debug.DrawLine(lowerCorner, upperCorner, Color.magenta);
+            DrawCellMarking(cellLocation, Color.magenta);
         }
     }
 
     private void OnDrawGizmos()
     {
+        if (null != _grid && ShowGridNeighbors)
+        {
+            if (GridCoordsForNeighbor.x < GridDimensions.x && GridCoordsForNeighbor.y < GridDimensions.z)
+            {
+                DrawCellMarking(new Vector3(GridCoordsForNeighbor.x, 0, GridCoordsForNeighbor.y), Color.magenta);
+                var neighbors = _grid[GridCoordsForNeighbor.x, 0, GridCoordsForNeighbor.y].neighborsInPaths;
+                if (neighbors != null)
+                {
+                    foreach (var cell in neighbors)
+                    {
+                        DrawCellMarking(cell, Color.blue);
+                    }
+                }
+            }
+        }
+        
         // draw grid
         if (null != _grid && ShowGrid)
         {

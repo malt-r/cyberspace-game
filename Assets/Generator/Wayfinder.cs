@@ -14,6 +14,9 @@ public class Wayfinder : MonoBehaviour
     [SerializeField]
     int targetIdx = 8;
 
+    [SerializeField] 
+    bool overrideTargetIdx = false;
+
     internal void FindWay()
     {
         FindWay(targetIdx);
@@ -75,6 +78,10 @@ public class Wayfinder : MonoBehaviour
 
     public Path FindWay(int targetStoryIdx)
     {
+        if (overrideTargetIdx)
+        {
+            targetStoryIdx = targetIdx;
+        }
         // TODO: start timer to update the direction, in which to point, when cell of player changes
         // Visuals:
         // - arrow pointing in direction of next tiles (or direclty to the story marker, if player is in same room)
@@ -151,6 +158,26 @@ public class Wayfinder : MonoBehaviour
                 // don't go through walls
                 pathCost.cost += 100000;
                 pathCost.traversable = false;
+            }
+            else if (aCellType == CellType.Hallway &&
+                     bCellType == CellType.Hallway || 
+                     aCellType == CellType.DoorDock && 
+                     bCellType == CellType.Hallway ||
+                     aCellType == CellType.Hallway && 
+                     bCellType == CellType.DoorDock)
+            {
+                if (_grid[aPosVec3].neighborsInPaths == null)
+                {
+                    return pathCost;
+                }
+                var neighborsA = _grid[aPosVec3].neighborsInPaths;
+                bool areNeighbors = neighborsA.Contains(bPosVec3);
+                if (!areNeighbors)
+                {
+                    // don't go through walls
+                    pathCost.cost += 100000;
+                    pathCost.traversable = false;
+                }
             }
             return pathCost;
         });
