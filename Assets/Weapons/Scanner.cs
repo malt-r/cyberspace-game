@@ -9,9 +9,7 @@ namespace Assets.Weapons
     {
         [SerializeField]
         private List<BaseWeapon> modes;
-        
-        public WeaponType Type { get; private set; }
-        
+
         private ParticleSystem overheatParticleSystem;
         
         public float condition = 100f;
@@ -31,7 +29,7 @@ namespace Assets.Weapons
 
         [SerializeField]
         private int currentMode = 0;
-
+        
         public void SwitchMode(int index)
         {
             currentMode += index;
@@ -87,17 +85,28 @@ namespace Assets.Weapons
 
         IEnumerator StartWeaponCooldown()
         {
+            PlayOverheatSound();
             shooted = false;
             yield return new WaitForSeconds(cooldownTime); 
             overHeated = false;
         }
-        
+
+        private void PlayOverheatSound()
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.volume = 0.5f;
+                audioSource.PlayOneShot(audioSource.clip);
+            }
+        }
+
         private void Awake()
         {
             overheatParticleSystem = GetComponentInChildren<ParticleSystem>();
             overheatParticleSystem.Stop();
             Type = WeaponType.SCANNER;
             deltaTime = atackSpeed+1;
+            audioSource = GetComponent<AudioSource>();
         }
 
         public override void Use()
@@ -117,7 +126,6 @@ namespace Assets.Weapons
                     modes[currentMode].Use();
                 }
             }
-
             UpdateOverheatDrawParticleSystem();
         }
 

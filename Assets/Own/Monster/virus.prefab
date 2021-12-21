@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 420751265672024476}
   m_LocalRotation: {x: -0.4069485, y: 0.5782672, z: 0.57826716, w: 0.40694842}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 420751267569082092}
   m_RootOrder: 0
@@ -43,7 +43,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &420751265672024450
 MonoBehaviour:
@@ -69,6 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 420751265687685234}
   - component: {fileID: 420751265687685235}
+  - component: {fileID: 285419838}
   m_Layer: 2
   m_Name: BulletWeapon
   m_TagString: Untagged
@@ -103,9 +104,106 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCost: 0
+  Material: {fileID: 0}
   damage: 10
   atackSpeed: 1
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
+--- !u!82 &285419838
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420751265687685197}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2436203743654749915, guid: c65776e92fd4bcc47b1482e9b3920499, type: 2}
+  m_audioClip: {fileID: 8300000, guid: aefa840b1b0f4ea4eb438350f84df6cc, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &420751266543916570
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +229,7 @@ Transform:
   m_GameObject: {fileID: 420751266543916570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100.000015, y: 100, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 420751265687685234}
   - {fileID: 420751266992989715}
@@ -182,6 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useCost: 0
+  Material: {fileID: 0}
   damage: 15
   atackSpeed: 10
   maxEnemies: 8
@@ -5026,7 +5125,7 @@ Transform:
   m_GameObject: {fileID: 420751267569082094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.793106, y: 3.3000002, z: 0.51}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 420751265672024477}
   - {fileID: 420751266543916571}
@@ -5046,7 +5145,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.01
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &420751267569082000
 MonoBehaviour:
@@ -5125,16 +5224,16 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 15
-  m_Acceleration: 6
+  m_Speed: 4
+  m_Acceleration: 3
   avoidancePriority: 50
-  m_AngularSpeed: 15
-  m_StoppingDistance: 0.5
+  m_AngularSpeed: 5
+  m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0.02
+  m_BaseOffset: 0.96
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!1001 &420751267230114146
@@ -5150,15 +5249,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75b6addd6d241784e85da565a3cb6970, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75b6addd6d241784e85da565a3cb6970, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75b6addd6d241784e85da565a3cb6970, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 75b6addd6d241784e85da565a3cb6970, type: 3}
       propertyPath: m_LocalPosition.x

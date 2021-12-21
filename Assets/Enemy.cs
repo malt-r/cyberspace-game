@@ -89,14 +89,12 @@ public class Enemy : MonoBehaviour
             deadRatio = 2 / (deadRatio + 1);
             deadRatio = Mathf.Clamp(deadRatio, 1f, 2);
         }
-        var newScale = new Vector3(50f * deadRatio, 50f * deadRatio, 50f * deadRatio);
-
+        var newScale = new Vector3(deadRatio, deadRatio,  deadRatio);
         this.transform.localScale = newScale;
     }
 
     private void SearchAndFollowPlayer()
     {
-      
         if (playerDetector.DetectedPlayer == null) {
             ParticleSystem.Stop();
             return; 

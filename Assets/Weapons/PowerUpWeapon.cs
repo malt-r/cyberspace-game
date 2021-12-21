@@ -10,11 +10,13 @@ public class PowerUpWeapon : BaseItem
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag.Equals(targetTag))
-        {
-            var player = other.gameObject.GetComponent<Player>();
-            player.AddWeapon(weapon);
-            Destroy(gameObject);
-        }
+    }
+
+    public override void Visit(Transform transform)
+    {
+        var player = transform.gameObject.GetComponent<Player>();
+        player.AddWeapon(weapon);
+        SoundManager.PlaySound(Sound.ItemPickup);
+        Destroy(gameObject);
     }
 }

@@ -22,6 +22,7 @@ public class BombThrower : BaseWeapon
     public override void Use()
     {
         if (!(deltaTime > atackSpeed)) return;
+        PlayUseSound();
         deltaTime = 0f;
         var forward = Camera.forward;
         var bomb = Instantiate(bombPrefab, Firepoint.position, Quaternion.LookRotation(forward,Vector3.up)).GetComponentInChildren<Bomb>();

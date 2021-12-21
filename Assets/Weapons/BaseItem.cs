@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseItem : MonoBehaviour
+public abstract class BaseItem : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -15,4 +15,6 @@ public class BaseItem : MonoBehaviour
     {
         
     }
+
+    public abstract void Visit(Transform player);
 }

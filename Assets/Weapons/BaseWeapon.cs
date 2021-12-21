@@ -27,11 +27,19 @@ namespace Assets.Weapons
         
         public abstract void Use();
 
+        protected AudioSource audioSource;
+
+        protected void PlayUseSound()
+        {
+            audioSource.volume=0.5f;
+            audioSource.PlayOneShot(audioSource.clip);
+        }
         public virtual void InitWeapon(Transform owner, Transform camera, Transform firepoint)
         {
             Owner = owner;
             Camera = camera;
             Firepoint = firepoint;
+            audioSource = GetComponent<AudioSource>();
         }
     }
 }

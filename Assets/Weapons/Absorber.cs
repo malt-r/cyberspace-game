@@ -20,11 +20,15 @@ public class Absorber : BaseWeapon
     {
         if (!shooted || overHeated){
             lineRenderer.enabled = false;
+            audioSource.volume = 0;
             return; 
         }
 
         shooted = false;
         lineRenderer.enabled = true; 
+        if(!audioSource.isPlaying){
+           PlayUseSound();
+        }
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {
@@ -47,8 +51,13 @@ public class Absorber : BaseWeapon
     private void handleItem(BaseItem item)
     {
         var smooth = Vector3.zero;
-        var Speed = 0.1f;
+        var Speed = 0.2f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
+        
+        var distance = Vector3.Distance(transform.position, item.transform.position);
+        if(distance <2){
+            item.Visit(Owner);
+        }
     }
     public override void Use()
     {
