@@ -74,9 +74,8 @@ namespace StarterAssets
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
 
-
-		
-
+		// minigame
+		private PlayerInput _playerInput;
 
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
@@ -101,6 +100,7 @@ namespace StarterAssets
 		{
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
+			_playerInput = GetComponent<PlayerInput>();
 
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
@@ -109,6 +109,8 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (_playerInput.currentActionMap.name == "Minigame") return;
+			
 			if (_input.weaponSwitch.y != 0)
 			{
 				//_input.weaponSwitch.y = 0;
@@ -123,6 +125,7 @@ namespace StarterAssets
 
 		private void LateUpdate()
 		{
+			if (_playerInput.currentActionMap.name == "Minigame") return;
 			CameraRotation();
 		}
 
