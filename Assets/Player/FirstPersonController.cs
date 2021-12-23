@@ -58,7 +58,8 @@ namespace StarterAssets
 		//Flags for basic skills
 		//Flags are used instead of setting speeds to zero, because it's easier
 		//to give the player hints when specific conditions are false
-		[Header("Skills")]
+		[Header("Skills")] 
+		private bool _prevCanSee = false;
 		public bool canSee = false;
 		public bool canLookAround = false;
 		public bool canMove = false;
@@ -109,6 +110,15 @@ namespace StarterAssets
 
 		private void Update()
 		{
+			if (_prevCanSee != canSee)
+			{
+				var visualBlock = FindObjectOfType<CannotSee>();
+				if (visualBlock != null)
+				{
+					visualBlock.SetVisibility(canSee);
+				}
+			}
+			
 			if (_playerInput.currentActionMap.name == "Minigame") return;
 			
 			if (_input.weaponSwitch.y != 0)
@@ -120,7 +130,7 @@ namespace StarterAssets
 			Move();
 			JumpAndGravity();
 			GroundedCheck();
-
+			_prevCanSee = canSee;
 		}
 
 		private void LateUpdate()

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// TODO:
+// only story markers with idx < 0 are to be placed wherever, indices greater 0 are still relevant for the level strucure, but not for the
+// story
 public class StoryManager : MonoBehaviour
 {
     public const string evt_StoryMarkerActivated = "StoryMarkerActivated";
