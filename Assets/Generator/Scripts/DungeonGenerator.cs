@@ -341,8 +341,16 @@ public partial class DungeonGenerator : MonoBehaviour
     public void InstantiatePlayer()
     {
         var rooms = _instantiatedRooms.Where(room => room.GetFirstStoryMarker().IndexInStory == 0);
+        var spawnPoint = FindObjectOfType<SpawnPoint>();
         var startRoom = rooms.First();
-        _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+        if (spawnPoint != null)
+        {
+            _playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        }
+        else
+        {
+            _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+        }
     }
 
     // Start is called before the first frame update
