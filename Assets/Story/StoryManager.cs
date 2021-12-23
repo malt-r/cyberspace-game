@@ -7,6 +7,11 @@ using UnityEngine;
 // TODO:
 // only story markers with idx < 0 are to be placed wherever, indices greater 0 are still relevant for the level strucure, but not for the
 // story
+
+// TODO: 
+// - integrate with tutorial manager
+// - create triggers and events for each relevant story thingy
+// - create event per trigger
 public class StoryManager : MonoBehaviour
 {
     public const string evt_StoryMarkerActivated = "StoryMarkerActivated";
@@ -64,6 +69,7 @@ public class StoryManager : MonoBehaviour
         // find next one.. it's possible, that this is not in sequential order..
         // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
         // a little bit of linear time won't hurt
+        // TODO: account for story markers, which's index is not -1 but which are also not relevant for the wayfinder
         for (int i = 0; i < _markerIdxs.Length; i++)
         {
             if (_markerIdxs[i] == marker.IndexInStory)

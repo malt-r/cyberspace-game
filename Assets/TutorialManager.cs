@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Reflection;
 using StarterAssets;
 using UnityEngine;
 
@@ -12,6 +9,8 @@ public class TutorialManager : MonoBehaviour
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
     private bool _currentStageFinished = false;
+
+    private Vector2 _prevLook;
 
     private const string msg_learnSee = "Dücke die Leertaste zum sehen";
     private const string msg_learnLook = "Bewege die Maus, um dich umzusehen";
@@ -98,11 +97,12 @@ public class TutorialManager : MonoBehaviour
                     _currentStageFiredMessage = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Space)) // TODO: fire event
+                if (Input.GetKeyDown(KeyCode.Space) && _readyForNextStage) // TODO: fire event
                 {
                     _playerController.canSee = true;
                     _currentTutorialStage = TutorialStage.learnLook;
                     _currentStageFiredMessage = false;
+                    _prevLook = _input.look;
                 }
                 break;
             case TutorialStage.learnLook:
@@ -113,12 +113,13 @@ public class TutorialManager : MonoBehaviour
                     _currentStageFiredMessage = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Space)) // TODO: fire event
+                if (_prevLook != _input.look && _readyForNextStage) // TODO: fire event
                 {
                     _playerController.canLookAround = true;
                     _currentTutorialStage = TutorialStage.learnWalk;
                     _currentStageFiredMessage = false;
                 }
+                _prevLook = _input.look;
                 break;
             case TutorialStage.learnWalk:
                 if (!_currentStageFiredMessage)
@@ -128,7 +129,7 @@ public class TutorialManager : MonoBehaviour
                     _currentStageFiredMessage = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Space)) // TODO: fire event
+                if (Input.GetKeyDown(KeyCode.Space) && _readyForNextStage) // TODO: fire event
                 {
                     _playerController.canMove = true;
                     _currentTutorialStage = TutorialStage.free;
