@@ -1,0 +1,134 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class StoryManager : MonoBehaviour
+{
+    public const string evt_StoryMarkerActivated = "StoryMarkerActivated";
+
+    private StoryMarker _lastFinishedStoryMarker;
+    private StoryMarker _currentStoryMarker;
+    private bool _readRooms;
+    private Dictionary<int, List<StoryMarker>> _storyMarkers;
+    private int[] _markerIdxs;
+    private int _sequentialMarkerIdx; // index into _markerIdxs, which is used to index into _storyMarkers
+
+    private StoryState _currentState;
+    private AudioSource _audioSource;
+
+    public StoryMarker CurrentStoryMarker
+    {
+        get => _currentStoryMarker;
+    } 
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    private void OnEnable()
+    {
+        Debug.Log("OnEnable");
+        
+        // This would be a good place to create more modularity to enable hooking in external handlers for story events
+        EventManager.StartListening(evt_StoryMarkerActivated, StoryMarkerActivated);
+        EventManager.StartListening("marker_foundLaser", FoundLaser);
+
+        _audioSource = this.GetComponent<AudioSource>();
+        if (null == _audioSource)
+        {
+            Debug.Log("Audio Source is null");
+        }
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("OnDisable");
+        EventManager.StopListening(evt_StoryMarkerActivated, StoryMarkerActivated);
+        EventManager.StopListening("marker_foundLaser", FoundLaser);
+    }
+
+    private void StoryMarkerActivated(object data)
+    {
+        var marker = data as StoryMarker;
+        Debug.Log($"Story Marker {marker.IndexInStory} activated");
+
+        if (marker.audioClip != null)
+        {
+            _audioSource.Stop();
+            _audioSource.PlayOneShot(marker.audioClip);
+        }
+
+        _lastFinishedStoryMarker = marker;
+
+        // find next one.. it's possible, that this is not in sequential order..
+        // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
+        // a little bit of linear time won't hurt
+        for (int i = 0; i < _markerIdxs.Length; i++)
+        {
+            if (_markerIdxs[i] == marker.IndexInStory)
+            {
+                _sequentialMarkerIdx = i + 1;
+            }
+        }
+        _currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+    }
+
+    private void FoundLaser(object data)
+    {
+        Debug.Log("Found the Lazor");
+    }
+
+    private bool ReadRooms()
+    {
+        var gen = FindObjectOfType<DungeonGenerator>();
+        if (!gen.FinishedGenerating) return false;
+        var instRooms = gen.InstantiatedRooms;
+
+        Dictionary<int, List<StoryMarker>> storyMarkers = new Dictionary<int, List<StoryMarker>>();
+        foreach (var room in instRooms)
+        {
+            foreach (var marker in room.GetStoryMarkers())
+            {
+                if (storyMarkers.TryGetValue(marker.IndexInStory, out var listForIdx))
+                {
+                    listForIdx.Add(marker);
+                }
+                else
+                {
+                    storyMarkers.Add(marker.IndexInStory, new List<StoryMarker>() {marker});
+                }
+            }
+        }
+
+        storyMarkers.OrderBy(entry => entry.Key);
+        _storyMarkers = storyMarkers;
+        _markerIdxs = _storyMarkers.Keys.ToArray();
+        
+        // filter out non-relevant story markers
+        _sequentialMarkerIdx = 0;
+        if (_storyMarkers.Keys.First() == -1)
+        {
+            _sequentialMarkerIdx = 1;
+        }
+
+        _currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+        return true;
+}
+    
+    // Update is called once per frame
+    void Update()
+    {
+        if (!_readRooms)
+        {
+            _readRooms = ReadRooms();
+            if (_readRooms)
+            {
+                Console.WriteLine("Read rooms");
+            }
+        }
+    }
+}

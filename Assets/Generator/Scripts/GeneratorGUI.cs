@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Assets
 {
     [CustomEditor(typeof(DungeonGenerator))]
-    class GeneratorGUI : Editor
+    class DungeonGeneratorGUI : Editor
     {
         public override void OnInspectorGUI()
         {

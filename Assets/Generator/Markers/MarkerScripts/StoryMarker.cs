@@ -34,6 +34,11 @@ public class StoryMarker : MonoBehaviour
     [SerializeField]
     StoryMarker DependantBarrierMarker;
 
+    [SerializeField]
+    public AudioClip audioClip;
+
+    // send index 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +60,7 @@ public class StoryMarker : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         var _style = new GUIStyle();
-        _style.normal.textColor = Color.black;
+        _style.normal.textColor = Color.white;
         _style.fontSize = 20;
         _style.fontStyle = FontStyle.Bold;
 
