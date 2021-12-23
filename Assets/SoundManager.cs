@@ -45,6 +45,11 @@ public class SoundManager : MonoBehaviour
     AudioMixer.SetFloat("MusicVolume", newVolume);
   }
   
+  public void SetVoiceVolume(float newVolume)
+  {
+    AudioMixer.SetFloat("VoiceVolume", newVolume);
+  }
+  
   public void SetSoundEffectVolume(float newVolume)
   {
     AudioMixer.SetFloat("SoundeffectVolume", newVolume);
