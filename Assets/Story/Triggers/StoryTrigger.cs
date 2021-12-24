@@ -36,13 +36,23 @@ public class StoryTrigger : MonoBehaviour
         
     }
 
+    public StoryEventData CreateEventData(string eventName)
+    {
+        StoryEventData data = new StoryEventData();
+        data
+            .SetMarker(_marker)
+            .SetEventName(StoryManager.evt_StoryMarkerActivated);
+        return data;
+    }
+
     public void Activate()
     {
         if (!_marker.AccomplishedMarker)
         {
             _marker.AccomplishedMarker = true;
-            EventManager.TriggerEvent($"marker_{_marker.IndexInStory}", _marker);
-            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, _marker);
+            var data = CreateEventData(StoryManager.evt_StoryMarkerActivated);
+            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, data);
+            //EventManager.TriggerEvent($"marker_{_marker.IndexInStory}", _marker);
         }
     }
 }

@@ -12,8 +12,39 @@ using UnityEngine;
 // - integrate with tutorial manager
 // - create triggers and events for each relevant story thingy
 // - create event per trigger
+public class StoryEventData
+{
+    private string _eventName;
+    private StoryMarker _marker;
+    private object _sender;
+
+    public StoryMarker Marker => _marker;
+    public string EventName => _eventName;
+    public object Sender => _sender;
+
+    public StoryEventData SetEventName(string name)
+    {
+        _eventName = name;
+        return this;
+    }
+    
+    public StoryEventData SetMarker(StoryMarker marker)
+    {
+        _marker = marker;
+        return this;
+    }
+
+    public StoryEventData SetSender(object sender)
+    {
+        _sender = sender;
+        return this;
+    }
+}
+
 public class StoryManager : MonoBehaviour
 {
+    
+    
     public const string evt_StoryMarkerActivated = "StoryMarkerActivated";
 
     private StoryMarker _lastFinishedStoryMarker;
@@ -59,9 +90,12 @@ public class StoryManager : MonoBehaviour
         EventManager.StopListening("marker_foundLaser", FoundLaser);
     }
 
+    // TODO: Handle this in narrator
     private void StoryMarkerActivated(object data)
     {
-        var marker = data as StoryMarker;
+        var eventData = data as StoryEventData;
+        var marker = eventData.Marker;
+        
         Debug.Log($"Story Marker {marker.IndexInStory} activated");
 
         _lastFinishedStoryMarker = marker;

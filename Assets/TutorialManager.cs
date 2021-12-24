@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
 using StarterAssets;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
+    
     private FirstPersonController _playerController;
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
     private bool _currentStageFinished = false;
 
     private Vector2 _prevLook;
+    private Vector2 _prevMove;
 
     private const string msg_learnSee = "Dücke die Leertaste zum sehen";
     private const string msg_learnLook = "Bewege die Maus, um dich umzusehen";
@@ -23,6 +26,7 @@ public class TutorialManager : MonoBehaviour
 
     public void SignalReadyForNextStage()
     {
+        Debug.Log("Ready for next tutorial stage");
         _readyForNextStage = true;
     }
 
@@ -60,14 +64,14 @@ public class TutorialManager : MonoBehaviour
                 _input = FindObjectOfType<StarterAssetsInputs>();
                 if (_input != null)
                 {
-                    Console.WriteLine("Found input");
+                    Debug.Log("Found input");
                 }
                 _playerController.canSee = false;
                 _playerController.canMove = false;
                 _playerController.canSprint = false;
                 _playerController.canLookAround = false;
                 _initialized = true;
-                Console.WriteLine("TutorialManager Initialized");
+                Debug.Log("TutorialManager Initialized");
             }
         }
 
@@ -87,29 +91,33 @@ public class TutorialManager : MonoBehaviour
                     _readyForNextStage = false;
                     _currentTutorialStage = TutorialStage.learnSee;
                     _currentStageFiredMessage = false;
+                    EventManager.TriggerEvent("tut_init", new StoryEventData().SetEventName("tut_init").SetSender(this));
                 }
                 break;
             case TutorialStage.learnSee:
                 if (!_currentStageFiredMessage)
                 {
                     DisplayPopup(msg_learnSee);
-                    Console.WriteLine(msg_learnSee);
+                    Debug.Log(msg_learnSee);
                     _currentStageFiredMessage = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Space) && _readyForNextStage) // TODO: fire event
+                // left mouse button
+                if (Input.GetMouseButtonDown(0) && _readyForNextStage) // TODO: fire event
                 {
                     _playerController.canSee = true;
                     _currentTutorialStage = TutorialStage.learnLook;
+                    EventManager.TriggerEvent("tut_see", new StoryEventData().SetEventName("tut_see").SetSender(this));
                     _currentStageFiredMessage = false;
                     _prevLook = _input.look;
+                    _readyForNextStage = false;
                 }
                 break;
             case TutorialStage.learnLook:
                 if (!_currentStageFiredMessage)
                 {
                     DisplayPopup(msg_learnLook);
-                    Console.WriteLine(msg_learnLook);
+                    Debug.Log(msg_learnLook);
                     _currentStageFiredMessage = true;
                 }
                 
@@ -117,7 +125,10 @@ public class TutorialManager : MonoBehaviour
                 {
                     _playerController.canLookAround = true;
                     _currentTutorialStage = TutorialStage.learnWalk;
+                    EventManager.TriggerEvent("tut_lookAround", new StoryEventData().SetEventName("tut_lookAround").SetSender(this));
                     _currentStageFiredMessage = false;
+                    _readyForNextStage = false;
+                    _prevMove = _input.move;
                 }
                 _prevLook = _input.look;
                 break;
@@ -125,16 +136,19 @@ public class TutorialManager : MonoBehaviour
                 if (!_currentStageFiredMessage)
                 {
                     DisplayPopup(msg_learnWalk);
-                    Console.WriteLine(msg_learnWalk);
+                    Debug.Log(msg_learnWalk);
                     _currentStageFiredMessage = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.Space) && _readyForNextStage) // TODO: fire event
+                if (_prevMove != _input.move && _readyForNextStage) // TODO: fire event
                 {
                     _playerController.canMove = true;
                     _currentTutorialStage = TutorialStage.free;
+                    EventManager.TriggerEvent("tut_walk", new StoryEventData().SetEventName("tut_walk").SetSender(this));
                     _currentStageFiredMessage = false;
                 }
+
+                _prevMove = _input.move;
                 break;
             case TutorialStage.free:
                 break;
