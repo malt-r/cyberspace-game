@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    
     private FirstPersonController _playerController;
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
@@ -15,7 +14,7 @@ public class TutorialManager : MonoBehaviour
     private Vector2 _prevLook;
     private Vector2 _prevMove;
 
-    private const string msg_learnSee = "Dücke die Leertaste zum sehen";
+    private const string msg_learnSee = "Dücke die linke Maustaste zum sehen";
     private const string msg_learnLook = "Bewege die Maus, um dich umzusehen";
     private const string msg_learnWalk = "Nutze WASD um dich zu bewegen";
     private const string msg_learnSprint = "Nutze die linke Umschalt-Taste, um zu sprinten";
@@ -151,6 +150,11 @@ public class TutorialManager : MonoBehaviour
                 _prevMove = _input.move;
                 break;
             case TutorialStage.free:
+                if (!_currentStageFiredMessage)
+                {
+                    var trigger = GetComponent<StoryTrigger>();
+                    trigger.Activate();
+                }
                 break;
             default:
                 break;

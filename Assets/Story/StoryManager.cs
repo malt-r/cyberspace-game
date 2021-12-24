@@ -141,9 +141,11 @@ public class StoryManager : MonoBehaviour
             }
         }
 
-        storyMarkers.OrderBy(entry => entry.Key);
+        //storyMarkers.OrderBy(entry => entry.Key);
+        
         _storyMarkers = storyMarkers;
         _markerIdxs = _storyMarkers.Keys.ToArray();
+        _markerIdxs = _markerIdxs.OrderBy(elem => elem).ToArray();
         
         // filter out non-relevant story markers
         _sequentialMarkerIdx = 0;

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4505922158175684813}
   - component: {fileID: 4505922158175684812}
+  - component: {fileID: 2705616130684095077}
   m_Layer: 0
   m_Name: TutorialManager
   m_TagString: Untagged
@@ -43,3 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24862c0b9f9a70428dc47036e933eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2705616130684095077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4505922158175684815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b611a477785a02e49806d03930aa1efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyEventName: tut_finish
+  marker: {fileID: 0}
