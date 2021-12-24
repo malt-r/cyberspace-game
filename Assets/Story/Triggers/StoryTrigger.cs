@@ -51,7 +51,7 @@ public class StoryTrigger : MonoBehaviour
         StoryEventData data = new StoryEventData();
         data
             .SetMarker(_marker)
-            .SetEventName(StoryManager.evt_StoryMarkerActivated);
+            .SetEventName(eventName);
         return data;
     }
 
