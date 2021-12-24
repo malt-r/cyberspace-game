@@ -42,7 +42,7 @@ public class TutorialManager : MonoBehaviour
 
     private HashSet<TutorialStage> shownMessages = new HashSet<TutorialStage>();
 
-    private TutorialStage _currentTutorialStage = TutorialStage.learnSee;
+    private TutorialStage _currentTutorialStage = TutorialStage.init;
     private StarterAssetsInputs _input;
 
     public TutorialStage CurrentTutorialStage => _currentTutorialStage;
@@ -95,7 +95,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.learnSee:
-                if (!_currentStageFiredMessage)
+                if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnSee);
                     Debug.Log(msg_learnSee);
@@ -114,7 +114,7 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.learnLook:
-                if (!_currentStageFiredMessage)
+                if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnLook);
                     Debug.Log(msg_learnLook);
@@ -133,7 +133,7 @@ public class TutorialManager : MonoBehaviour
                 _prevLook = _input.look;
                 break;
             case TutorialStage.learnWalk:
-                if (!_currentStageFiredMessage)
+                if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnWalk);
                     Debug.Log(msg_learnWalk);

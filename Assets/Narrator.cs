@@ -17,6 +17,8 @@ public class Narrator : MonoBehaviour
     [SerializeField] 
     private EventReactionClip[] eventReactions;
 
+    [SerializeField] private float tutorialDelayAddition = 1.0f;
+
     private Dictionary<string, EventReactionClip> _reactionClipDict;
 
     private AudioSource _audioSource;
@@ -62,7 +64,7 @@ public class Narrator : MonoBehaviour
             if (eventData.Sender is TutorialManager)
             {
                 var length = reaction.clip.length;
-                Invoke("SignalTutorialReadyForNextStage", length);
+                Invoke("SignalTutorialReadyForNextStage", length * tutorialDelayAddition);
             }
         }
         else
