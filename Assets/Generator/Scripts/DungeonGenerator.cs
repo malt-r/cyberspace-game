@@ -458,7 +458,7 @@ public partial class DungeonGenerator : MonoBehaviour
             // check, if room has only doors in front of barrier -> unite partitions
             if (room.HasBarrier())
             {
-                var doorsBehindBarrier = GetDoorsOnSideOfBarrier(room, false);
+                var doorsBehindBarrier = GetDoorTransformsOnSideOfBarrier(room, false);
                 if (doorsBehindBarrier.Any()) // split up in partitions only, if doors on other side
                 {
                     partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
@@ -541,19 +541,19 @@ public partial class DungeonGenerator : MonoBehaviour
                 }
                 else
                 {
-                    var doorCellsAfterBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: false);
+                    var doorCellsAfterBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: false);
                     doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsAfterBarrier));
 
                     // the barrier room is part of the next partition, but the doors before the barrier should be part of 
                     // the partition before
                     if (doorCellsAfterBarrier.Any())
                     {
-                        var doorCellsBeforeBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: true);
+                        var doorCellsBeforeBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: true);
                         doorPartitions[currentDoorPartition - 1].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
                     }
                     else
                     {
-                        var doorCellsBeforeBarrier = GetDoorsOnSideOfBarrier(room, beforeBarrier: true);
+                        var doorCellsBeforeBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: true);
                         doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
                     }
                 }
@@ -789,7 +789,33 @@ public partial class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    List<Vector3Int> GetDoorsOnSideOfBarrier(Room room, bool beforeBarrier)
+    List<Vector3> GetDoorTransformsOnSideOfBarrier(Room room, bool beforeBarrier)
+    {
+        var barrierMarker = room.GetFirstStoryMarker();
+        var barrierDir = barrierMarker.GetBarrierDirection();
+        var barrierLoc = barrierMarker.transform.position;
+
+        var doorMarkers = room.GameObject.GetComponentsInChildren<DoorMarker>();
+        List<Vector3> doorCellsOnSide = new List<Vector3>();
+        foreach (var marker in doorMarkers)
+        {
+            var markerPos = marker.transform.position;
+            var diff = markerPos - barrierLoc;
+            var dot = Vector3.Dot(barrierDir, diff);
+            if (dot > 0 && !beforeBarrier)
+            {
+                doorCellsOnSide.Add(markerPos);
+            } 
+            else if (dot < 0 && beforeBarrier)
+            {
+                doorCellsOnSide.Add(markerPos);
+            }
+        }
+        return doorCellsOnSide;
+    }
+
+    // This requires cells of room to be initialized
+    List<Vector3Int> GetDoorCellsOnSideOfBarrier(Room room, bool beforeBarrier)
     {
         var barrierMarker = room.GetFirstStoryMarker();
         var barrierDir = barrierMarker.GetBarrierDirection();
@@ -1469,6 +1495,9 @@ public partial class DungeonGenerator : MonoBehaviour
         while (!success && currentTries < MaxDungeonTries)
         {
             Cleanup(cleanupRoomTemplates: false);
+
+            var partitions = PartitionRooms(_roomTemplates.ToArray());
+            
             if (!SudoPlaceRooms())
             {
                 currentTries++;
