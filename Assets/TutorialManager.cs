@@ -44,8 +44,6 @@ public class TutorialManager : MonoBehaviour
     private TutorialStage _currentTutorialStage = TutorialStage.init;
     private StarterAssetsInputs _input;
 
-    public TutorialStage CurrentTutorialStage => _currentTutorialStage;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +67,7 @@ public class TutorialManager : MonoBehaviour
                 _playerController.canMove = false;
                 _playerController.canSprint = false;
                 _playerController.canLookAround = false;
+                _playerController.canJump = false;
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
             }
@@ -97,7 +96,6 @@ public class TutorialManager : MonoBehaviour
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnSee);
-                    Debug.Log(msg_learnSee);
                     _currentStageFiredMessage = true;
                 }
                 
@@ -116,7 +114,6 @@ public class TutorialManager : MonoBehaviour
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnLook);
-                    Debug.Log(msg_learnLook);
                     _currentStageFiredMessage = true;
                 }
                 
@@ -135,7 +132,6 @@ public class TutorialManager : MonoBehaviour
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
                     DisplayPopup(msg_learnWalk);
-                    Debug.Log(msg_learnWalk);
                     _currentStageFiredMessage = true;
                 }
                 
@@ -169,6 +165,7 @@ public class TutorialManager : MonoBehaviour
     // DUMMY
     void DisplayPopup(string message)
     {
-        
+        // TODO: real logic
+        Debug.Log(message);
     }
 }

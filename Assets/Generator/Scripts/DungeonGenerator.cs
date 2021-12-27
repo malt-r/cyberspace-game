@@ -359,9 +359,8 @@ public partial class DungeonGenerator : MonoBehaviour
         if (CreateDungeonOnStart)
         {
             GenerateDungeon();
-            
+            navmesh.BuildNavMesh();
         }
-        navmesh.BuildNavMesh();
     }
 
     // Update is called once per frame

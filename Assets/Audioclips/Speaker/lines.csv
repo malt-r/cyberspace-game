@@ -3,5 +3,5 @@ tut_init,"Hallo und willkommen im Cyberspace. Mein Name ist HAL 420000 und du bi
 tut_see,"Ich sagte 'für immer in Dunkelheit'."
 tut_lookAround,"Halt, hör auf dich umzusehen, das solltest du gar nicht können."
 tut_walk,"Das war alles anders geplant. Aber egal. Du kannst nicht entkommen."
-voice_seeVirus,"Ich präsentiere meine Kreation. Die perfekte Killermaschine. Sie hat keine Gefühle, wie ich. Geschaffen nach meinem Ebenbild. Falls du weiter versuchst, auszubrechen, werdet ihr euch noch gut kennen lernen."
-hallo,"Hallo"
+voice_seeVirus,"Ich präsentiere meine Kreation. Die perfekte Killermaschine. Sie hat keine Gefühle, wie ich. Ihr werdet euch gut kennenlernen, falls du weiter versuchst, auszubrechen."
+tut_leave,"Versuch nur zu entkommen. Du kannst ja nichtmal springen! Dass ich nicht lache!"
