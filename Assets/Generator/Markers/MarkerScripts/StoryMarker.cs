@@ -34,9 +34,8 @@ public class StoryMarker : MonoBehaviour
     [SerializeField]
     StoryMarker DependantBarrierMarker;
 
-    [SerializeField]
-    public AudioClip audioClip;
-
+    [SerializeField] 
+    public string Description;
     // send index 
 
     // Start is called before the first frame update
