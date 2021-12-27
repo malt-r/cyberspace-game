@@ -6,9 +6,11 @@ public class StoryTrigger : MonoBehaviour
 {
     StoryMarker _marker;
 
-    [Header("THE EVENT NAME WILL BE PREFIXED WITH 'marker_'")]
     [SerializeField]
-    string eventName;
+    string storyEventName;
+
+    [SerializeField] 
+    private StoryMarker marker;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +20,15 @@ public class StoryTrigger : MonoBehaviour
 
     protected void InitMarker()
     {
-        _marker = GetComponentInParent<StoryMarker>();
+        if (marker != null)
+        {
+            _marker = marker;
+        }
+        else
+        {
+            _marker = GetComponentInParent<StoryMarker>();
+        }
+        
         if (_marker == null)
         {
             Debug.LogWarning("Found no story marker");
@@ -36,13 +46,28 @@ public class StoryTrigger : MonoBehaviour
         
     }
 
+    public StoryEventData CreateEventData(string eventName)
+    {
+        StoryEventData data = new StoryEventData();
+        data
+            .SetMarker(_marker)
+            .SetEventName(eventName);
+        return data;
+    }
+
     public void Activate()
     {
         if (!_marker.AccomplishedMarker)
         {
             _marker.AccomplishedMarker = true;
-            EventManager.TriggerEvent($"marker_{_marker.IndexInStory}", _marker);
-            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, _marker);
+            
+            // standard event for story progression
+            var data = CreateEventData(StoryManager.evt_StoryMarkerActivated);
+            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, data);
+            
+            // custom event for triggering of specific response
+            data = CreateEventData(storyEventName);
+            EventManager.TriggerEvent(storyEventName, data);
         }
     }
 }

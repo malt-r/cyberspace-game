@@ -4,8 +4,47 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// TODO:
+// only story markers with idx < 0 are to be placed wherever, indices greater 0 are still relevant for the level strucure, but not for the
+// story
+
+// TODO: 
+// - integrate with tutorial manager
+// - create triggers and events for each relevant story thingy
+// - create event per trigger
+public class StoryEventData
+{
+    private string _eventName;
+    private StoryMarker _marker;
+    private object _sender;
+
+    public StoryMarker Marker => _marker;
+    public string EventName => _eventName;
+    public object Sender => _sender;
+
+    public StoryEventData SetEventName(string name)
+    {
+        _eventName = name;
+        return this;
+    }
+    
+    public StoryEventData SetMarker(StoryMarker marker)
+    {
+        _marker = marker;
+        return this;
+    }
+
+    public StoryEventData SetSender(object sender)
+    {
+        _sender = sender;
+        return this;
+    }
+}
+
 public class StoryManager : MonoBehaviour
 {
+    
+    
     public const string evt_StoryMarkerActivated = "StoryMarkerActivated";
 
     private StoryMarker _lastFinishedStoryMarker;
@@ -51,9 +90,12 @@ public class StoryManager : MonoBehaviour
         EventManager.StopListening("marker_foundLaser", FoundLaser);
     }
 
+    // TODO: Handle this in narrator
     private void StoryMarkerActivated(object data)
     {
-        var marker = data as StoryMarker;
+        var eventData = data as StoryEventData;
+        var marker = eventData.Marker;
+        
         Debug.Log($"Story Marker {marker.IndexInStory} activated");
 
         _lastFinishedStoryMarker = marker;
@@ -61,6 +103,7 @@ public class StoryManager : MonoBehaviour
         // find next one.. it's possible, that this is not in sequential order..
         // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
         // a little bit of linear time won't hurt
+        // TODO: account for story markers, which's index is not -1 but which are also not relevant for the wayfinder
         for (int i = 0; i < _markerIdxs.Length; i++)
         {
             if (_markerIdxs[i] == marker.IndexInStory)
@@ -98,9 +141,11 @@ public class StoryManager : MonoBehaviour
             }
         }
 
-        storyMarkers.OrderBy(entry => entry.Key);
+        //storyMarkers.OrderBy(entry => entry.Key);
+        
         _storyMarkers = storyMarkers;
         _markerIdxs = _storyMarkers.Keys.ToArray();
+        _markerIdxs = _markerIdxs.OrderBy(elem => elem).ToArray();
         
         // filter out non-relevant story markers
         _sequentialMarkerIdx = 0;

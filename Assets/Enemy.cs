@@ -29,6 +29,9 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private List<Transform> dropableItems;
 
+    [Tooltip("Forces the enemy to be idle and not attack")]
+    [SerializeField] 
+    private bool ForceIdle;
 
     private NavMeshAgent navMeshAgent;
     // Start is called before the first frame update
@@ -55,13 +58,15 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SearchAndFollowPlayer();
-        HandleCombat();
+        if (!ForceIdle)
+        {
+            SearchAndFollowPlayer();
+        }
+        HandleCombat(ForceIdle);
         model.transform.Rotate(0, 0, rotationSpeed);
-
     }
 
-    private void HandleCombat()
+    private void HandleCombat(bool forceIdle = false)
     {
         handleHealth();
         if (!weaponControl) { return; }
@@ -76,7 +81,10 @@ public class Enemy : MonoBehaviour
         if (angle > 15 || angle < -15) { return;}
         if (Vector3.Distance(transform.position, player.transform.position) < 20.0F)
         {
-            weaponControl.UseWeapon();
+            if (!forceIdle)
+            {
+                weaponControl.UseWeapon();
+            }
         }
     }
 

@@ -2,6 +2,9 @@
 
 public partial class DungeonGenerator
 {
+    // TODO:
+    // only story markers with idx < 0 are to be placed wherever, indices greater 0 are still relevant for the level strucure, but not for the
+    // story
     private class RoomComparer : IComparer<Room>
     {
         public int Compare(Room x, Room y)
