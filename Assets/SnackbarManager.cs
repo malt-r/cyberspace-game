@@ -24,7 +24,7 @@ public class SnackbarManager : MonoBehaviour
   {
     if (hasMessage)
     {
-      currentTime += Time.fixedDeltaTime;
+      currentTime += Time.deltaTime;
       if (currentTime > lifeTime)
       {
         currentTime = 0;
@@ -41,9 +41,14 @@ public class SnackbarManager : MonoBehaviour
     currentTime = 0;
   }
 
-  public void DisplayMessage(string message)
+  public enum SnackbarMessageType
   {
-    if (title != null) {title.text = "Info";}
+    Information
+  }
+  public void DisplayMessage(string message, SnackbarMessageType type =SnackbarMessageType.Information)
+  {
+    if (title != null)
+    { title.text = getDisplayStringOfEnum(type);}
     if (text != null) {text.text = message;}
     hasMessage = true;
   }
@@ -51,5 +56,17 @@ public class SnackbarManager : MonoBehaviour
   public void HideMessage()
   {
     hideText();
+  }
+
+  private string getDisplayStringOfEnum(SnackbarMessageType type)
+  {
+    var defaultString = @"<sprite=""GUI"" name=""INFO""> Information";
+    if (type == SnackbarMessageType.Information)
+    {
+      return defaultString;
+    }
+    
+    Debug.LogError("No String representation found for enum");
+    return defaultString;
   }
 }

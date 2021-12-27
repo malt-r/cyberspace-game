@@ -240,6 +240,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1692415758193948729, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
+      propertyPath: CreateDungeonOnStart
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1692415758235600320, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: m_Name
       value: Framework
