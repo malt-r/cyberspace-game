@@ -56,12 +56,6 @@ public class StoryManager : MonoBehaviour
         var marker = data as StoryMarker;
         Debug.Log($"Story Marker {marker.IndexInStory} activated");
 
-        if (marker.audioClip != null)
-        {
-            _audioSource.Stop();
-            _audioSource.PlayOneShot(marker.audioClip);
-        }
-
         _lastFinishedStoryMarker = marker;
 
         // find next one.. it's possible, that this is not in sequential order..
