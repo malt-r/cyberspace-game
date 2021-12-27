@@ -422,6 +422,55 @@ public partial class DungeonGenerator : MonoBehaviour
         return Delaunay2D.Triangulate(vertices);
     }
 
+    public List<Partition> PartitionRooms(Room[] rooms)
+    {
+        if (rooms.Length == 0)
+        {
+            Debug.LogError("Room array is empty");
+            return null;
+        }
+        
+        // partition rooms
+        List<Partition> partitions = new List<Partition>();
+        int i = 1;
+
+        bool prevRoomStoryRelevant = IsMarkerRelevantForStory(rooms[0].GetFirstStoryMarker());
+
+        bool firstRoomStoryRelevant = IsMarkerRelevantForStory(rooms[0].GetFirstStoryMarker());
+        if (!firstRoomStoryRelevant)
+        {
+            for (; i < rooms.Length; i++) // find first, that is relevant for story
+            {
+                Room room = rooms[i];
+                if (IsMarkerRelevantForStory(room.GetFirstStoryMarker()))
+                {
+                    partitions.Add(new Partition(0, i, false));
+                    break;
+                }
+            }
+        }
+
+        // continuation of room partitioning
+        for (; i < rooms.Length; i++)
+        {
+            Room room = rooms[i];
+            // check for barriers
+            // check, if room has only doors in front of barrier -> unite partitions
+            if (room.HasBarrier())
+            {
+                var doorsBehindBarrier = GetDoorsOnSideOfBarrier(room, false);
+                if (doorsBehindBarrier.Any()) // split up in partitions only, if doors on other side
+                {
+                    partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
+                }
+            }
+        }
+
+        // close of last partition
+        partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
+        
+        return partitions;
+    }
 
     public bool FindPaths()
     {
@@ -447,46 +496,7 @@ public partial class DungeonGenerator : MonoBehaviour
             }
         }
 
-        // partition rooms
-        List<Partition> partitions = new List<Partition>();
-        int i = 1;
-
-        bool prevRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetFirstStoryMarker());
-
-        bool firstRoomStoryRelevant = IsMarkerRelevantForStory(_instantiatedRooms[0].GetFirstStoryMarker());
-        if (!firstRoomStoryRelevant)
-        {
-            for (; i < _instantiatedRooms.Count; i++) // find first, that is relevant for story
-            {
-                Room room = _instantiatedRooms[i];
-                if (IsMarkerRelevantForStory(room.GetFirstStoryMarker()))
-                {
-                    partitions.Add(new Partition(0, i, false));
-                    break;
-                }
-            }
-        }
-
-        // continuation of room partitioning
-        for (; i < _instantiatedRooms.Count; i++)
-        {
-            Room room = _instantiatedRooms[i];
-            // check for barriers
-            // check, if room has only doors in front of barrier -> unite partitions
-            if (room.HasBarrier())
-            {
-                var doorsBehindBarrier = GetDoorsOnSideOfBarrier(room, false);
-                if (doorsBehindBarrier.Any()) // split up in partitions only, if doors on other side
-                {
-                    partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
-                }
-            }
-        }
-
-        // close of last partition
-        partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
-
-        _partitions = partitions;
+        _partitions = PartitionRooms(_instantiatedRooms.ToArray());
 
         // -> randomly put doors of non-story-relevant rooms in partitions (in the same per room obviously)
         Dictionary<int, List<int>> nonRelevantRooms = new Dictionary<int, List<int>>();
