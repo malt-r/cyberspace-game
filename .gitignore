@@ -102,3 +102,6 @@ $RECYCLE.BIN/
 
 # stfu probuilder
 ProjectSettings/Packages/com.unity.probuilder/Settings.json
+
+# build folders
+build*/
