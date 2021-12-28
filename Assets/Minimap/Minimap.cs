@@ -6,6 +6,8 @@ using static DungeonGenerator;
 
 public class Minimap : MonoBehaviour
 {
+    [SerializeField] private bool SetAllInactive;
+    
     [Header("Minimap Tileprefabs")]
     [SerializeField]
     GameObject TilePrefabStandard;
@@ -127,14 +129,7 @@ public class Minimap : MonoBehaviour
         {
             if (!_seenRooms.Contains(roomIdx))
             {
-                // activate all tiles associated with room
-
-                var cells = _generator.GetAssociatedCellsOfRoom(roomIdx);
-                foreach (var cell in cells)
-                {
-                    _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
-                }
-                _seenRooms.Add(roomIdx);
+                UncoverRoom(roomIdx);
             }
         }
 
@@ -142,6 +137,17 @@ public class Minimap : MonoBehaviour
         {
             Debug.LogWarning("player is now in room with idx: " + roomIdx);
         }
+    }
+
+    private void UncoverRoom(int roomIdx)
+    {
+        // activate all tiles associated with room
+        var cells = _generator.GetAssociatedCellsOfRoom(roomIdx);
+        foreach (var cell in cells)
+        {
+            _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
+        }
+        _seenRooms.Add(roomIdx);
     }
 
     public void Cleanup()
@@ -286,7 +292,10 @@ public class Minimap : MonoBehaviour
 
         var placementPosition = this.transform.position + cell + rotationOffset;
         var go = (Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
-        go.SetActive(false);
+        if (SetAllInactive)
+        {
+            go.SetActive(false);
+        }
         _instantiatedTiles[cell.x, cell.z] = go;
     }
 
@@ -318,9 +327,14 @@ public class Minimap : MonoBehaviour
 
         var placementPosition = this.transform.position + cell + rotationOffset;
         var go = (Instantiate(prefabToInstance, placementPosition, Quaternion.Euler(0, rotation, 0), this.transform));
-        go.SetActive(false);
+        if (SetAllInactive)
+        {
+            go.SetActive(false);
+        }
         _instantiatedTiles[cell.x, cell.z] = go;
     }
+
+
     #endregion
 
     private void OnDrawGizmos()

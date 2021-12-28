@@ -128,7 +128,7 @@ public class StoryManager : MonoBehaviour
         Dictionary<int, List<StoryMarker>> storyMarkers = new Dictionary<int, List<StoryMarker>>();
         foreach (var room in instRooms)
         {
-            foreach (var marker in room.GetStoryMarkers())
+            foreach (var marker in room.Value.GetStoryMarkers())
             {
                 if (storyMarkers.TryGetValue(marker.IndexInStory, out var listForIdx))
                 {
@@ -140,8 +140,6 @@ public class StoryManager : MonoBehaviour
                 }
             }
         }
-
-        //storyMarkers.OrderBy(entry => entry.Key);
         
         _storyMarkers = storyMarkers;
         _markerIdxs = _storyMarkers.Keys.ToArray();
@@ -149,7 +147,7 @@ public class StoryManager : MonoBehaviour
         
         // filter out non-relevant story markers
         _sequentialMarkerIdx = 0;
-        if (_storyMarkers.Keys.First() == -1)
+        if (_markerIdxs.First() == -1)
         {
             _sequentialMarkerIdx = 1;
         }
