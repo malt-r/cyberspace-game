@@ -74,7 +74,9 @@ namespace StarterAssets
 		private float xRotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
-
+		
+		
+		
 		// minigame
 		private PlayerInput _playerInput;
 
@@ -106,8 +108,21 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			
+			if (PlayerPrefs.HasKey("Mouse/Sensitivity"))
+			{
+				RotationSpeed = PlayerPrefs.GetFloat("Mouse/Sensitivity");
+			}
+			
+			EventManager.StartListening("Mouse/SensitivityChanged",handleSensitivityChanged);
 		}
 
+		void handleSensitivityChanged(object data)
+		{
+			var newSensitivity = data is float f ? f : 0;
+			RotationSpeed = newSensitivity;
+		}
+		
 		private void Update()
 		{
 			if (_prevCanSee != canSee)
@@ -157,7 +172,8 @@ namespace StarterAssets
 
 				// clamp our pitch rotation
 				yRotationVelocity = ClampAngle(yRotationVelocity, BottomClamp, TopClamp);
-				
+
+
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * xRotationVelocity);
 				MainCamera.transform.localRotation = Quaternion.Euler(yRotationVelocity, 0.0f, 0.0f);
