@@ -7647,6 +7647,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9111675097597171447}
     m_Modifications:
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 223.14911
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 325
+      objectReference: {fileID: 0}
+    - target: {fileID: 5651558391033393249, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -120.074524
+      objectReference: {fileID: 0}
     - target: {fileID: 5892073391043019672, guid: 69a996cfb62710040971f1247d4482a7, type: 3}
       propertyPath: playerStats
       value: 
