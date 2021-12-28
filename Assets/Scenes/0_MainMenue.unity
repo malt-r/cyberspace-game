@@ -743,5 +743,9 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8667978646922396813, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: playScene
+      value: 1_Level1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
