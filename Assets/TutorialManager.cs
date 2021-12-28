@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
+    [SerializeField] private bool skipTutorial;
+    
+    
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
     private bool _initialized = false;
@@ -65,14 +68,19 @@ public class TutorialManager : MonoBehaviour
                 {
                     Debug.Log("Found input");
                 }
-                _playerController.canSee = false;
-                _playerController.canMove = false;
-                _playerController.canSprint = false;
-                _playerController.canLookAround = false;
-                _playerController.canJump = false;
-
+                if (!skipTutorial)
+                {
+                    _playerController.canSee = false;
+                    _playerController.canMove = false;
+                    _playerController.canSprint = false;
+                    _playerController.canLookAround = false;
+                    _playerController.canJump = false;
+                }
+                else
+                {
+                    _currentTutorialStage = TutorialStage.free;
+                }
                 _snackBar = FindObjectOfType<SnackbarManager>();
-                
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
             }
