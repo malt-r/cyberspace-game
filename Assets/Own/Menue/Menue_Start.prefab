@@ -239,6 +239,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menue_Main
       objectReference: {fileID: 0}
+    - target: {fileID: 1807916354832186290, guid: 745085aa1d95a104bac5cad8514a3c2d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1807916354832186291, guid: 745085aa1d95a104bac5cad8514a3c2d, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -421,6 +425,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3462548356531133898}
     m_Modifications:
+    - target: {fileID: 6113653579775774551, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_Value
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113653579775774551, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113653580054350769, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_Value
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 6113653580089339758, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 2
@@ -457,9 +473,17 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6113653581140142715, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_Value
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 6113653581426548212, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
       propertyPath: m_Name
       value: Menue_Settings
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113653581426548212, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6113653581426548215, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
       propertyPath: m_RootOrder
@@ -504,6 +528,10 @@ PrefabInstance:
     - target: {fileID: 6113653581426548215, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6848865200717106988, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
+      propertyPath: m_Value
+      value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1388d5da12a55ac47b518fefe434d09d, type: 3}
