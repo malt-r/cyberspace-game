@@ -70,21 +70,30 @@ public class Enemy : MonoBehaviour
     {
         handleHealth();
         if (!weaponControl) { return; }
-        if (playerDetector.DetectedPlayer == null)
-        { return; }
-        var player = playerDetector.DetectedPlayer;
-        
-        var targetVec = player.transform.position - transform.position;
-        var angle = Vector3.Angle(targetVec, transform.forward);
+        if (playerDetector.ReachablePlayer == null) { return; }
+        var player = playerDetector.ReachablePlayer;
 
+        var ownTransform = transform;
+        var ownPosition = ownTransform.position;
+        var playerPosition = player.transform.position;
+        var targetVec = playerPosition - ownPosition;
+        var angle = Vector3.Angle(targetVec, ownTransform.forward);
+
+        
+        var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
+        Debug.DrawRay(ownPosition, targetVec, Color.green);
+        
+        if (!hitSomething) { return; }
+        if (!hit.collider.tag.Equals("Player")) { return;}
+
+        distance = Vector3.Distance(ownPosition, hit.transform.position);
 
         if (angle > 15 || angle < -15) { return;}
-        if (Vector3.Distance(transform.position, player.transform.position) < 20.0F)
+        if (!(distance < 20.0F)) return;
+        
+        if (!forceIdle)
         {
-            if (!forceIdle)
-            {
-                weaponControl.UseWeapon();
-            }
+            weaponControl.UseWeapon();
         }
     }
 
@@ -103,11 +112,11 @@ public class Enemy : MonoBehaviour
 
     private void SearchAndFollowPlayer()
     {
-        if (playerDetector.DetectedPlayer == null) {
+        if (playerDetector.ReachablePlayer == null) {
             ParticleSystem.Stop();
             return; 
         }
-        var player = playerDetector.DetectedPlayer;
+        var player = playerDetector.ReachablePlayer;
         ParticleSystem.Play();
         distance = Vector3.Distance(transform.position, player.position);
 
