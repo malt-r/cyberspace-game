@@ -133,7 +133,7 @@ public class SnackbarManager : MonoBehaviour
         return string.Format(baseString, iconGroup, iconName);
       default:
         Debug.LogError($"Unknwon icon identifier {iconIdentifier}");
-        return string.Format(baseString, iconGroup, iconName);
+        return string.Format(baseString, "GUI", "INFORMATION");
     }
   }
 }
