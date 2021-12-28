@@ -16,7 +16,7 @@ namespace Assets.Enemies
             GUILayout.Label("Snackbar Controls");
             if (GUILayout.Button("Trigger Snackbar"))
             {
-                if (snackbar != null) snackbar.DisplayMessage("Leftclick<sprite index=69>DpD<sprite index=77>DpD<sprite index=11>DpD<sprite index=16>DpD<sprite index=30>DpD<sprite index=33>Hl<sprite index=35><sprite index=40><sprite index=55><sprite index=57><sprite index=78><sprite index=82><sprite index=85><sprite index=86><sprite index=90>Hallo");
+                if (snackbar != null) snackbar.DisplayMessage($@"Benutze {snackbar.GetSpriteString("ICONS/MOUSE")} um dich umzusehen und verwende {snackbar.GetSpriteString("ICONS/MOUSE_LEFTCLICK")} um den Scanner zu verwenden.");
             }
             
             if (GUILayout.Button("Hide Snackbar"))

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class SnackbarManager : MonoBehaviour
 
   [SerializeField] private float lifeTime;
   [SerializeField] private float currentTime;
+
+  public const string spriteString = @"<sprite=""{0}"" name=""{1}"">";
 
   void Start()
   {
@@ -60,13 +63,57 @@ public class SnackbarManager : MonoBehaviour
 
   private string getDisplayStringOfEnum(SnackbarMessageType type)
   {
-    var defaultString = @"<sprite=""GUI"" name=""INFO""> Information";
+    var iconString = GetSpriteString("GUI/INFORMATION");
+    var defaultString = iconString + " Information";
+ 
     if (type == SnackbarMessageType.Information)
     {
       return defaultString;
     }
+   
+   
     
     Debug.LogError("No String representation found for enum");
     return defaultString;
+  }
+
+  public string GetSpriteString(string iconIdentifier)
+  {
+    var baseString = @"<sprite=""{0}"" name=""{1}"">";
+    var splitString = iconIdentifier.Split('/');
+    if (splitString.Length != 2)
+    {
+      Debug.LogError($"Wrong Format on iconIdentifier {iconIdentifier}");
+      return string.Format(baseString, "GUI", "INFORMATION");
+    }
+
+    var iconGroup = splitString[0];
+    var iconName = splitString[1];
+
+
+    switch (iconIdentifier)
+    {
+      case "ICONS/MOUSE":
+      case "ICONS/SHIFT":
+      case "ICONS/A":
+      case "ICONS/SPACE":
+      case "ICONS/CTRL":
+      case "ICONS/D":
+      case "ICONS/E":
+      case "ICONS/G":
+      case "ICONS/H":
+      case "ICONS/MOUSE_WHEEL":
+      case "ICONS/MOUSE_RIGHTCLICK":
+      case "ICONS/Q":
+      case "ICONS/R":
+      case "ICONS/S":
+      case "ICONS/W":
+      case "ICONS/MOUSE_LEFTCLICK":
+      case "GUI/INFORMATION":
+        return string.Format(baseString, iconGroup, iconName);
+      default:
+        Debug.LogError($"Unknwon icon identifier {iconIdentifier}");
+        return string.Format(baseString, iconGroup, iconName);
+    }
   }
 }
