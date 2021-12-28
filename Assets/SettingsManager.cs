@@ -18,7 +18,7 @@ public class SettingsManager : MonoBehaviour
   public void SetMouseSensitivity(float sensitivity)
   {
     PlayerPrefs.SetFloat("Mouse/Sensitivity",sensitivity);
-    EventManager.TriggerEvent("MouseSensitivityChanged",sensitivity);
+    EventManager.TriggerEvent("Mouse/SensitivityChanged",sensitivity);
   }
 
 
