@@ -564,25 +564,56 @@ public partial class DungeonGenerator : MonoBehaviour
                 if (!room.HasBarrier())
                 {
                     // if the room has no barriers, put every door into current partition
+                    var dockCells = GetDoorDockCells(room.DoorCells);
+                    foreach (var cell in dockCells)
+                    {
+                        if (!doorPartitions[currentDoorPartition].Contains(cell))
+                        {
+                            doorPartitions[currentDoorPartition].Add(cell);
+                        }
+                    }
 
-                    doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(room.DoorCells));
+                    //doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(room.DoorCells));
                 }
                 else
                 {
                     var doorCellsAfterBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: false);
-                    doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsAfterBarrier));
-
+                    var doorDockCells = GetDoorDockCells(doorCellsAfterBarrier);
+                    foreach (var cell in doorDockCells)
+                    {
+                        if (!doorPartitions[currentDoorPartition].Contains(cell))
+                        {
+                            doorPartitions[currentDoorPartition].Add(cell);
+                        }
+                    }
                     // the barrier room is part of the next partition, but the doors before the barrier should be part of 
                     // the partition before
                     if (doorCellsAfterBarrier.Any())
                     {
                         var doorCellsBeforeBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: true);
-                        doorPartitions[currentDoorPartition - 1].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
+                        var doorDockCellsBefore = GetDoorDockCells((doorCellsBeforeBarrier));
+                        foreach (var cell in doorDockCells)
+                        {
+                            if (!doorPartitions[currentDoorPartition-1].Contains(cell))
+                            {
+                                doorPartitions[currentDoorPartition-1].Add(cell);
+                            }
+                        }
+                        
+                        //doorPartitions[currentDoorPartition - 1].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
                     }
                     else
                     {
                         var doorCellsBeforeBarrier = GetDoorCellsOnSideOfBarrier(room, beforeBarrier: true);
-                        doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
+                        var doorDockCellsBefore = GetDoorDockCells(doorCellsBeforeBarrier);
+                        foreach (var cell in doorDockCellsBefore)
+                        {
+                            if (!doorPartitions[currentDoorPartition].Contains(cell))
+                            {
+                                doorPartitions[currentDoorPartition].Add(cell);
+                            }
+                        }
+                        //doorPartitions[currentDoorPartition].AddRange(GetDoorDockCells(doorCellsBeforeBarrier));
                     }
                 }
             }
