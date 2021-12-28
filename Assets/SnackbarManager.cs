@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SnackbarManager : MonoBehaviour
 {
@@ -18,13 +19,19 @@ public class SnackbarManager : MonoBehaviour
 
   public const string spriteString = @"<sprite=""{0}"" name=""{1}"">";
 
+  [SerializeField]
+  private GameObject snackbarUI;
   void Start()
   {
-    title.text = "";
-    text.text = "";
+    CheckForSnackbarUI();
+    if(snackbarUI){
+      title.text = "";
+      text.text = "";
+    }
   }
   private void Update()
   {
+    CheckForSnackbarUI();
     if (hasMessage)
     {
       currentTime += Time.deltaTime;
@@ -33,6 +40,16 @@ public class SnackbarManager : MonoBehaviour
         currentTime = 0;
         hideText();
       }
+    }
+  }
+
+  private void CheckForSnackbarUI()
+  {
+    if (snackbarUI == null)
+    {
+      snackbarUI = GameObject.Find("SnackbarUI");
+      title = snackbarUI.transform.GetChild(0).GetComponent<TMP_Text>();
+      text = snackbarUI.transform.GetChild(1).GetComponent<TMP_Text>();
     }
   }
 
@@ -48,12 +65,13 @@ public class SnackbarManager : MonoBehaviour
   {
     Information
   }
-  public void DisplayMessage(string message, SnackbarMessageType type =SnackbarMessageType.Information)
+  public void DisplayMessage(string message, float time = 15f, SnackbarMessageType type =SnackbarMessageType.Information)
   {
     if (title != null)
     { title.text = getDisplayStringOfEnum(type);}
     if (text != null) {text.text = message;}
     hasMessage = true;
+    lifeTime = time;
   }
   
   public void HideMessage()
@@ -70,8 +88,6 @@ public class SnackbarManager : MonoBehaviour
     {
       return defaultString;
     }
-   
-   
     
     Debug.LogError("No String representation found for enum");
     return defaultString;
