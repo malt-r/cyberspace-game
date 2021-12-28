@@ -45,17 +45,14 @@ public class PlayerDetector : MonoBehaviour
 
         var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
         Debug.DrawRay(ownPosition, targetVec, Color.green);
-        
+
+        reachablePlayer = null;
         if (!hitSomething) { return; }
         if (!hit.collider.tag.Equals("Player")) { return;}
 
         distance = Vector3.Distance(ownPosition, hit.transform.position);
             
-        if (distance > range)
-        {
-            reachablePlayer = null;
-            return;
-        }
+        if (distance > range) { return; }
 
         reachablePlayer = detectedPlayer;
     }
