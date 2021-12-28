@@ -48,6 +48,10 @@ public class SnackbarManager : MonoBehaviour
     if (snackbarUI == null)
     {
       snackbarUI = GameObject.Find("SnackbarUI");
+      if (snackbarUI == null)
+      {
+        return;
+      }
       title = snackbarUI.transform.GetChild(0).GetComponent<TMP_Text>();
       text = snackbarUI.transform.GetChild(1).GetComponent<TMP_Text>();
     }
