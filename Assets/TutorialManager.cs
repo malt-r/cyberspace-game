@@ -107,6 +107,7 @@ public class TutorialManager : MonoBehaviour
                 // left mouse button
                 if (Input.GetMouseButtonDown(0) && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canSee = true;
                     _currentTutorialStage = TutorialStage.learnLook;
                     EventManager.TriggerEvent("tut_see", new StoryEventData().SetEventName("tut_see").SetSender(this));
@@ -124,6 +125,7 @@ public class TutorialManager : MonoBehaviour
                 
                 if (_prevLook != _input.look && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canLookAround = true;
                     _currentTutorialStage = TutorialStage.learnWalk;
                     EventManager.TriggerEvent("tut_lookAround", new StoryEventData().SetEventName("tut_lookAround").SetSender(this));
@@ -142,6 +144,7 @@ public class TutorialManager : MonoBehaviour
                 
                 if (_prevMove != _input.move && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canMove = true;
                     _currentTutorialStage = TutorialStage.free;
                     EventManager.TriggerEvent("tut_walk", new StoryEventData().SetEventName("tut_walk").SetSender(this));
@@ -155,6 +158,7 @@ public class TutorialManager : MonoBehaviour
                 {
                     var trigger = GetComponent<StoryTrigger>();
                     trigger.Activate();
+                    _snackBar.HideMessage();
                 }
                 break;
             default:
@@ -167,10 +171,8 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialStage = stage;
     }
 
-    // DUMMY
     void DisplayPopup(string message)
     {
-        // TODO: real logic
         if (_snackBar == null)
         {
             Debug.Log(message);
@@ -179,7 +181,6 @@ public class TutorialManager : MonoBehaviour
         {
             var parsed = ParseSnackBarString(message);
             _snackBar.DisplayMessage(parsed);
-            //_snackBar.DisplayMessage($@"Benutze {_snackBar.GetSpriteString("ICONS/MOUSE_LEFT")} um dich umzusehen.");
         }
     }
 
