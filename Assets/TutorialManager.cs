@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using StarterAssets;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class TutorialManager : MonoBehaviour
 {
     private FirstPersonController _playerController;
+    private SnackbarManager _snackBar;
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
     private bool _currentStageFinished = false;
@@ -14,9 +16,9 @@ public class TutorialManager : MonoBehaviour
     private Vector2 _prevLook;
     private Vector2 _prevMove;
 
-    private const string msg_learnSee = "Dücke die linke Maustaste zum sehen";
-    private const string msg_learnLook = "Bewege die Maus, um dich umzusehen";
-    private const string msg_learnWalk = "Nutze WASD um dich zu bewegen";
+    private const string msg_learnSee = "Dücke #icon{ICONS/MOUSE_LEFTCLICK} zum sehen";
+    private const string msg_learnLook = "Bewege #icon{ICONS/MOUSE}, um dich umzusehen";
+    private const string msg_learnWalk = "Nutze #icon{ICONS/W}#icon{ICONS/A}#icon{ICONS/S}#icon{ICONS/D}, um dich zu bewegen";
     private const string msg_learnSprint = "Nutze die linke Umschalt-Taste, um zu sprinten";
     private const string msg_learnJump = "Nutze die Leertaste, um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
@@ -68,6 +70,9 @@ public class TutorialManager : MonoBehaviour
                 _playerController.canSprint = false;
                 _playerController.canLookAround = false;
                 _playerController.canJump = false;
+
+                _snackBar = FindObjectOfType<SnackbarManager>();
+                
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
             }
@@ -102,6 +107,7 @@ public class TutorialManager : MonoBehaviour
                 // left mouse button
                 if (Input.GetMouseButtonDown(0) && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canSee = true;
                     _currentTutorialStage = TutorialStage.learnLook;
                     EventManager.TriggerEvent("tut_see", new StoryEventData().SetEventName("tut_see").SetSender(this));
@@ -119,6 +125,7 @@ public class TutorialManager : MonoBehaviour
                 
                 if (_prevLook != _input.look && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canLookAround = true;
                     _currentTutorialStage = TutorialStage.learnWalk;
                     EventManager.TriggerEvent("tut_lookAround", new StoryEventData().SetEventName("tut_lookAround").SetSender(this));
@@ -137,6 +144,7 @@ public class TutorialManager : MonoBehaviour
                 
                 if (_prevMove != _input.move && _readyForNextStage) // TODO: fire event
                 {
+                    _snackBar.HideMessage();
                     _playerController.canMove = true;
                     _currentTutorialStage = TutorialStage.free;
                     EventManager.TriggerEvent("tut_walk", new StoryEventData().SetEventName("tut_walk").SetSender(this));
@@ -150,6 +158,7 @@ public class TutorialManager : MonoBehaviour
                 {
                     var trigger = GetComponent<StoryTrigger>();
                     trigger.Activate();
+                    _snackBar.HideMessage();
                 }
                 break;
             default:
@@ -162,10 +171,29 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialStage = stage;
     }
 
-    // DUMMY
     void DisplayPopup(string message)
     {
-        // TODO: real logic
-        Debug.Log(message);
+        if (_snackBar == null)
+        {
+            Debug.Log(message);
+        }
+        else
+        {
+            var parsed = ParseSnackBarString(message);
+            _snackBar.DisplayMessage(parsed);
+        }
+    }
+
+    string ParseSnackBarString(string message)
+    {
+        var matches = Regex.Matches(message, "#icon{([^}]+)}");
+
+        foreach (Match match in matches)
+        {
+            var groups = match.Groups;
+            message = message.Replace(match.Value, _snackBar.GetSpriteString(groups[1].Value));
+        }
+
+        return message;
     }
 }

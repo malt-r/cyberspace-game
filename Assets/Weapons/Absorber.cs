@@ -32,19 +32,22 @@ public class Absorber : BaseWeapon
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {
-            lineRenderer.SetPosition(1, hit.point);
+            if(hit.distance<range){
+                lineRenderer.SetPosition(1, hit.point);
             
             var item = hit.collider.GetComponent<BaseItem>();
 
-            if (item != null)
-            {
-                handleItem(item);
-                return;
-            }
+                if (item != null)
+                {
+                    handleItem(item);
+                }
+            
+             }   
         }
         else
         {
-            lineRenderer.SetPosition(1,Camera.forward * range);
+            lineRenderer.SetPosition(1,Camera.transform.position + Camera.forward * range);
+            Debug.Log("no target");
         }
     }
 
