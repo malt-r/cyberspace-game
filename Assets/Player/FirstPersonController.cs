@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System;
-using System.Collections;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -89,9 +88,22 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
+		
+		
+		//Sounds
+
+		[SerializeField] private AudioSource audioSource;
+		[SerializeField] private AudioClip jumpingSoundStart;
+		[SerializeField] private AudioClip jumpingSoundEnd;
+		[SerializeField] private AudioClip walkingSound;
+		[SerializeField] private AudioClip runningSound;
+
+
+		public bool groundedBefore = false;
 
 		private void Awake()
 		{
+			audioSource = GetComponent<AudioSource>();
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
@@ -146,6 +158,28 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			_prevCanSee = canSee;
+			handleMoveSounds();
+		}
+
+		private void handleMoveSounds()
+		{
+
+			if (_input.sprint && _controller.isGrounded && _controller.velocity.magnitude > 2.0f &!audioSource.isPlaying)
+			{
+				audioSource.clip = runningSound;
+				audioSource.volume = Random.Range(0.4f, 0.6f);
+				audioSource.pitch = Random.Range(0.9f, 1.1f);
+				audioSource.Play();
+				Debug.Log("Running");
+			}
+			if (_controller.isGrounded && _controller.velocity.magnitude > 2.0f &!audioSource.isPlaying)
+			{
+				audioSource.clip = walkingSound;
+				audioSource.volume = Random.Range(0.4f, 0.6f);
+				audioSource.pitch = Random.Range(0.9f, 1.1f);
+				audioSource.Play();
+				Debug.Log("Walking");
+			}
 		}
 
 		private void LateUpdate()
@@ -163,9 +197,18 @@ namespace StarterAssets
 
 		private void GroundedCheck()
 		{
+			groundedBefore = Grounded;
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+
+			if(!groundedBefore && Grounded)
+			{
+				audioSource.volume = 0.5f;
+				audioSource.pitch = 1f;
+				audioSource.PlayOneShot(jumpingSoundEnd);
+				Debug.Log("Landed");
+			}
 		}
 
 		private void CameraRotation()
@@ -253,8 +296,13 @@ namespace StarterAssets
 				// Jump
 				if (canJump && _input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
+					audioSource.volume = 0.5f;
+					audioSource.pitch = 1f;
+					audioSource.PlayOneShot(jumpingSoundStart);
+					Debug.Log("Jumping");
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					_input.jump = false;
 				}
 
 				// jump timeout
