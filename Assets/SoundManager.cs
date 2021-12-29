@@ -64,6 +64,7 @@ public class SoundManager : MonoBehaviour
     var audioClip = GetAudioClip(sound);
     if (audioClip == null) return;
     audioSource.PlayOneShot(GetAudioClip(sound));
+    Destroy(soundGameObject,30);
   }
 
   private static AudioClip GetAudioClip(Sound sound)
