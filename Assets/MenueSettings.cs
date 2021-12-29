@@ -1,4 +1,4 @@
-using UnityEditor;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +14,8 @@ public class MenueSettings : MonoBehaviour
     private Slider soundeffectsVolumeSlider;
     [SerializeField]
     private Slider mouseSensitivitySlider;
+
+    [SerializeField] private Button backButton;
     
     
     // Start is called before the first frame update
@@ -28,7 +30,11 @@ public class MenueSettings : MonoBehaviour
         //Mouse
         mouseSensitivitySlider.onValueChanged.AddListener((float newValue) => { handleMouseSettings(mouseSensitivitySlider, newValue); });
 
-        //mainVolumeSlider.value = PlayerPrefs.GetFloat("", 0);
+        backButton.onClick.AddListener(() =>
+        {
+            var menueInteractor = FindObjectOfType(typeof(MenueInteractor)) as MenueInteractor;
+            menueInteractor.DisableMenue();
+        });
 
         initSlider(mainVolumeSlider, "MainVolume");
         initSlider(musicVolumeSlider,"MusicVolume");

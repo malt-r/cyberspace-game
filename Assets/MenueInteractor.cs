@@ -27,25 +27,35 @@ public class MenueInteractor : MonoBehaviour
         {
             if (input.escape)
             {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                input.escape = false;
-                playerInput.SwitchCurrentActionMap("Menue");
-                menue.SetActive(true);
+               ActivateMenue();
             }
         }else if (playerInput.currentActionMap.name == "Menue")
         {
             if (input.escape)
             {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                playerInput.SwitchCurrentActionMap("Player");
-                menue.SetActive(false);
-                input.escape = false;
+                DisableMenue();
 
             }
         }
 
 
+    }
+
+    public void DisableMenue()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        playerInput.SwitchCurrentActionMap("Player");
+        menue.SetActive(false);
+        input.escape = false;
+    }
+
+    public void ActivateMenue()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        input.escape = false;
+        playerInput.SwitchCurrentActionMap("Menue");
+        menue.SetActive(true);
     }
 }
