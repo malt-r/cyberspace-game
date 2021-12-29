@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 1058313287927112924}
   - component: {fileID: 5213552167724617618}
   - component: {fileID: 1879624749105246067}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: LeavingTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27678,7 +27678,7 @@ GameObject:
   - component: {fileID: 1033204316710056724}
   - component: {fileID: 1983815533757896519}
   - component: {fileID: 1129958181349330599}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SeeVIrusTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27843,11 +27843,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 315986612908538075, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: IndexInStory
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 315986612908538076, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: m_Name
-      value: LeavingTutorialMarker
+      value: LeavingTutorialAreaMarker
       objectReference: {fileID: 0}
     - target: {fileID: 315986612908538077, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: m_RootOrder
@@ -28111,11 +28111,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 315986612908538075, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: IndexInStory
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 315986612908538076, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: m_Name
-      value: BasicTutorialMarker
+      value: TutorialMarker
       objectReference: {fileID: 0}
     - target: {fileID: 315986612908538077, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: m_RootOrder
