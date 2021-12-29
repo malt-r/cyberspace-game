@@ -19,11 +19,11 @@ public class TutorialManager : MonoBehaviour
     private Vector2 _prevLook;
     private Vector2 _prevMove;
 
-    private const string msg_learnSee = "Dücke #icon{ICONS/MOUSE_LEFTCLICK} zum sehen";
+    private const string msg_learnSee = "Drücke #icon{ICONS/MOUSE_LEFTCLICK} zum Sehen";
     private const string msg_learnLook = "Bewege #icon{ICONS/MOUSE}, um dich umzusehen";
     private const string msg_learnWalk = "Nutze #icon{ICONS/W}#icon{ICONS/A}#icon{ICONS/S}#icon{ICONS/D}, um dich zu bewegen";
     private const string msg_learnSprint = "Nutze die linke Umschalt-Taste, um zu sprinten";
-    private const string msg_learnJump = "Nutze die Leertaste, um zu springen";
+    private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
 
     private bool _readyForNextStage = true;
@@ -83,12 +83,8 @@ public class TutorialManager : MonoBehaviour
                 _snackBar = FindObjectOfType<SnackbarManager>();
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
-                
-                EventManager.StartListening("Minigame/GetJump", arg0 =>
-                {
-                    Debug.LogWarning("hello");
-                    _playerController.canJump = true;
-                }); 
+
+                EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
             }
         }
 
@@ -173,6 +169,7 @@ public class TutorialManager : MonoBehaviour
                     var trigger = GetComponent<StoryTrigger>();
                     trigger.Activate();
                     _snackBar.HideMessage();
+                    _currentStageFiredMessage = true;
                 }
                 break;
             default:
@@ -185,7 +182,13 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialStage = stage;
     }
 
-    void DisplayPopup(string message)
+    void HandleLearnJump(object arg)
+    {
+        _playerController.canJump = true;
+        DisplayPopup(msg_learnJump, 7);
+    }
+
+    void DisplayPopup(string message, float timeInS = 20)
     {
         if (_snackBar == null)
         {
@@ -194,7 +197,7 @@ public class TutorialManager : MonoBehaviour
         else
         {
             var parsed = ParseSnackBarString(message);
-            _snackBar.DisplayMessage(parsed);
+            _snackBar.DisplayMessage(parsed, timeInS);
         }
     }
 
