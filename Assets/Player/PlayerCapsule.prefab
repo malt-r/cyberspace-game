@@ -8046,7 +8046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainVolumeSlider: {fileID: 7964439517624733342}
-  musicVolumeSlider: {fileID: 7301283452757249765}
-  voiceVolumeSlider: {fileID: 7964439517365062264}
+  musicVolumeSlider: {fileID: 7964439517365062264}
+  voiceVolumeSlider: {fileID: 7301283452757249765}
   soundeffectsVolumeSlider: {fileID: 7964439518426737586}
   mouseSensitivitySlider: {fileID: 1316251776942945717}
