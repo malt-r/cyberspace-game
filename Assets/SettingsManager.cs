@@ -10,9 +10,17 @@ public class SettingsManager : MonoBehaviour
 
   public float MouseSensitivity = 5f;
 
-  void Start()
+  private void Awake()
   {
+    if (_instance != null && _instance != this) 
+    { 
+      Destroy(this.gameObject);
+      return;
+    }
 
+    _instance = this;
+    DontDestroyOnLoad(this.gameObject);
+    
   }
 
   public void SetMouseSensitivity(float sensitivity)
