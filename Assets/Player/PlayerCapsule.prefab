@@ -7825,11 +7825,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4213422565389698562, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.9470588
+      value: 0.06666667
       objectReference: {fileID: 0}
     - target: {fileID: 4213422565389698562, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459825466734701850, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6365842082793444758, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7957,7 +7961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7810165383154210665, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.9470588
+      value: 0.06666667
       objectReference: {fileID: 0}
     - target: {fileID: 7810165383154210665, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7965,7 +7969,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7810165383154210665, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.9470588
+      value: 0.06666667
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
@@ -8042,7 +8046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainVolumeSlider: {fileID: 7964439517624733342}
-  musicVolumeSlider: {fileID: 7964439517365062264}
-  voiceVolumeSlider: {fileID: 7301283452757249765}
+  musicVolumeSlider: {fileID: 7301283452757249765}
+  voiceVolumeSlider: {fileID: 7964439517365062264}
   soundeffectsVolumeSlider: {fileID: 7964439518426737586}
   mouseSensitivitySlider: {fileID: 1316251776942945717}
