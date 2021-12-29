@@ -65,7 +65,14 @@ public class DungeonPathfinder2D {
         queue = new SimplePriorityQueue<Node, float>();
         closed = new HashSet<Node>();
 
-        grid[start].Cost = 0;
+        try
+        {
+            grid[start].Cost = 0;
+        }
+        catch (IndexOutOfRangeException)
+        {
+            Debug.LogError("wtf");
+        }
         queue.Enqueue(grid[start], 0);
 
         while (queue.Count > 0) {

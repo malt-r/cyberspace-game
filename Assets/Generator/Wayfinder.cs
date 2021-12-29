@@ -26,7 +26,7 @@ public class Wayfinder : MonoBehaviour
     Player _player;
     bool _gotDataFromGen = false;
     private DungeonGrid<DungeonGenerator.Cell> _grid;
-    private List<DungeonGenerator.Room> _rooms;
+    private Dictionary<int, DungeonGenerator.Room> _rooms;
 
     private Dictionary<int, List<DungeonGenerator.Room>> _orderedRoomsByStoryIdx = new Dictionary<int, List<DungeonGenerator.Room>>();
     private Path _foundPath;
@@ -59,18 +59,18 @@ public class Wayfinder : MonoBehaviour
     {
         foreach(var room in _rooms)
         {
-            foreach (var marker in room.GetStoryMarkers())
+            foreach (var marker in room.Value.GetStoryMarkers())
             {
                 if (_orderedRoomsByStoryIdx.TryGetValue(marker.IndexInStory, out var roomList))
                 {
                     if (marker.RelevantForStory)
                     {
-                        roomList.Add(room);
+                        roomList.Add(room.Value);
                     }
                 } 
                 else
                 {
-                    _orderedRoomsByStoryIdx.Add(marker.IndexInStory, new List<DungeonGenerator.Room>() { room });
+                    _orderedRoomsByStoryIdx.Add(marker.IndexInStory, new List<DungeonGenerator.Room>() { room.Value });
                 }
             }
         }
