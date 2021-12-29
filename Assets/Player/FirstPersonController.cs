@@ -133,8 +133,8 @@ namespace StarterAssets
 					visualBlock.SetVisibility(canSee);
 				}
 			}
-			
-			if (_playerInput.currentActionMap.name == "Minigame") return;
+
+			if (!IsPlayerActionmapActive()) { return;}
 			
 			if (_input.weaponSwitch.y != 0)
 			{
@@ -150,8 +150,15 @@ namespace StarterAssets
 
 		private void LateUpdate()
 		{
-			if (_playerInput.currentActionMap.name == "Minigame") return;
+			if (!IsPlayerActionmapActive()) return;
 			CameraRotation();
+		}
+
+		private bool IsPlayerActionmapActive()
+		{
+			if (_playerInput.currentActionMap.name == "Minigame") return false;
+			if (_playerInput.currentActionMap.name == "Menue") return false;
+			return true;
 		}
 
 		private void GroundedCheck()
