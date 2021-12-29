@@ -7809,11 +7809,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2637728579433682615, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_MaxValue
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2637728579433682615, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_MinValue
-      value: 0.25
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2659884529080053023, guid: cf52813c9e9efe6408784a8e1d178f15, type: 3}
       propertyPath: m_AnchorMax.x
