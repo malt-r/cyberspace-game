@@ -56,8 +56,8 @@ MonoBehaviour:
     clip: {fileID: 0}
   - sound: 0
     clip: {fileID: 0}
-  - sound: 0
-    clip: {fileID: 0}
+  - sound: 5
+    clip: {fileID: 8300000, guid: 747ba53d9fcb54b4bb2bdd8ea8c7cc85, type: 3}
 --- !u!82 &426767722
 AudioSource:
   m_ObjectHideFlags: 0
