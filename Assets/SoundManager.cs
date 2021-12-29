@@ -101,7 +101,8 @@ public enum Sound
   PlayerHit,
   EnemyHit,
   EnemyDie,
-  ItemPickup
+  ItemPickup,
+  GUICLick
 }
 
 
