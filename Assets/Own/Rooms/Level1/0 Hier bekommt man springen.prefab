@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1127050977}
   - component: {fileID: 5053578496070937120}
   - component: {fileID: 1684137781467381203}
+  - component: {fileID: 6939276397267002699}
   m_Layer: 0
   m_Name: MinigameBlock
   m_TagString: MiniGame
@@ -249,7 +250,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1544
+  m_VersionIndex: 1565
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -370,6 +371,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDone: 0
+--- !u!114 &6939276397267002699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127050975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b611a477785a02e49806d03930aa1efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyEventName: Minigame/GetJump
+  marker: {fileID: 5015111198027103700}
 --- !u!1 &1862039245604673212
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +632,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3209
+  m_VersionIndex: 3221
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -9003,7 +9018,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 10334
+  m_VersionIndex: 10346
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10907,7 +10922,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2355
+  m_VersionIndex: 2367
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11075,6 +11090,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5015111197404185558, guid: bee12912903f27d45a6e2964a202d16d, type: 3}
   m_PrefabInstance: {fileID: 757169668}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5015111198027103700 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5015111197404185552, guid: bee12912903f27d45a6e2964a202d16d, type: 3}
+  m_PrefabInstance: {fileID: 757169668}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 071a0e1d3c297c54a8c1c4bd77b84f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1365967207
 PrefabInstance:
   m_ObjectHideFlags: 0
