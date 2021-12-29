@@ -379,6 +379,71 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Menue",
+            "id": "d28bdf2d-9abd-4371-bc7d-aa70e3dbf580",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "PassThrough",
+                    "id": "dfd1d5aa-3227-473a-b1e9-2e4d7ffda168",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "98c92a21-904b-4ecc-b5f5-a98310ffe34f",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Exit",
+                    "type": "PassThrough",
+                    "id": "b63648d2-a003-4bb0-bed5-5d16d9de1f4c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "17bc4e7e-4791-4408-b7c2-19d9063e5cfd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be7fcdf9-ebf5-45f0-a5ba-bc3d85b23cfd",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=15,y=15)",
+                    "groups": "KeyboardMouse",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b6ed776-89b5-4542-bf1f-557e4869821d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
