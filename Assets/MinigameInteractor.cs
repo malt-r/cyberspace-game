@@ -36,8 +36,7 @@ public class MinigameInteractor : MonoBehaviour
         {
             if (wireTask.IsTaskCompleted)
             {
-                currentMgStatus.isDone = true;
-                //Party??
+                currentMgStatus.SetDone();
                 disableMinigame();
             }
         }

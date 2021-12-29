@@ -83,6 +83,12 @@ public class TutorialManager : MonoBehaviour
                 _snackBar = FindObjectOfType<SnackbarManager>();
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
+                
+                EventManager.StartListening("Minigame/GetJump", arg0 =>
+                {
+                    Debug.LogWarning("hello");
+                    _playerController.canJump = true;
+                }); 
             }
         }
 
