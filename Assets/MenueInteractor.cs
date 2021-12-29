@@ -29,18 +29,20 @@ public class MenueInteractor : MonoBehaviour
             {
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                input.interact = false;
-                //playerInput.SwitchCurrentActionMap("Minigame");
-                menue.SetActive(!menue.activeSelf);
+                input.escape = false;
+                playerInput.SwitchCurrentActionMap("Menue");
+                menue.SetActive(true);
             }
-        }else if (playerInput.currentActionMap.name == "Minigame")
+        }else if (playerInput.currentActionMap.name == "Menue")
         {
             if (input.escape)
             {
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
                 playerInput.SwitchCurrentActionMap("Player");
-                
+                menue.SetActive(false);
+                input.escape = false;
+
             }
         }
 
