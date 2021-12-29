@@ -1,5 +1,7 @@
 
+using System;
 using System.Collections;
+using System.Transactions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -17,6 +19,8 @@ public class MinigameInteractor : MonoBehaviour
     public GameObject minigame;
     private WireTask wireTask;
 
+    private MinigameStatus currentMgStatus;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,29 +32,53 @@ public class MinigameInteractor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInput.currentActionMap.name == "Player")
+        if (currentMgStatus != null && !currentMgStatus.isDone)
         {
-            if (input.interact)
+            if (wireTask.IsTaskCompleted)
             {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                input.interact = false;
-                playerInput.SwitchCurrentActionMap("Minigame");
-                minigame.SetActive(true);
-                wireTask.StartMinigame();
+                currentMgStatus.isDone = true;
+                //Party??
+                disableMinigame();
             }
-        }else if (playerInput.currentActionMap.name == "Minigame")
+        }
+        
+        if (playerInput.currentActionMap.name == "Minigame")
         {
             if (input.escape)
             {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                playerInput.SwitchCurrentActionMap("Player");
-                minigame.SetActive(false);
-                wireTask.StopMinigame();
+                disableMinigame();
             }
         }
+    }
 
+    private void disableMinigame()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        playerInput.SwitchCurrentActionMap("Player");
+        minigame.SetActive(false);
+        wireTask.StopMinigame();
+    }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("MiniGame"))
+        {
+            currentMgStatus = other.gameObject.GetComponent<MinigameStatus>();
+            if (currentMgStatus.isDone) { return; }
+
+            if (playerInput.currentActionMap.name == "Player")
+            {
+                if (input.interact)
+                {
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
+                    input.interact = false;
+                    playerInput.SwitchCurrentActionMap("Minigame");
+                    minigame.SetActive(true);
+                    wireTask.StartMinigame();
+                }
+            }
+        }
     }
 }
