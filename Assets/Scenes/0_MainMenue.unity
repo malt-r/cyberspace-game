@@ -228,6 +228,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 499433955}
+    - target: {fileID: 196963344401834145, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
+      propertyPath: m_VersionIndex
+      value: 922
+      objectReference: {fileID: 0}
     - target: {fileID: 196963344401834156, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -300,7 +304,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-38382
+  m_Name: pb_Mesh-430400
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -309,7 +313,7 @@ Mesh:
     topology: 0
     baseVertex: 0
     firstVertex: 0
-    vertexCount: 6
+    vertexCount: 4
     localAABB:
       m_Center: {x: 0.00036668777, y: 0, z: 0.07889326}
       m_Extent: {x: 0.4166667, y: 0, z: 0.46189326}
@@ -329,10 +333,10 @@ Mesh:
   m_KeepVertices: 1
   m_KeepIndices: 1
   m_IndexFormat: 0
-  m_IndexBuffer: 000001000200030004000500
+  m_IndexBuffer: 000001000200030000000200
   m_VertexData:
     serializedVersion: 3
-    m_VertexCount: 6
+    m_VertexCount: 4
     m_Channels:
     - stream: 0
       offset: 0
@@ -390,8 +394,8 @@ Mesh:
       offset: 0
       format: 0
       dimension: 0
-    m_DataSize: 288
-    _typelessdata: 00e8c23900000000921e0fbe000000000000803f000000000000803f0000000000000000000080bf0056d53e9412793e4625d5be000000009318c4be000000000000803f000000000000803f0000000000000000000080bf000000000000000000e8c23900000000fc700a3f000000000000803f000000000000803f0000000000000000000080bf0056d53e457d6c3f6685d53e000000009318c4be000000000000803f000000000000803f000000002f985b33000080bf5655553f0000000000e8c23900000000921e0fbe000000000000803f000000000000803f000000002f985b33000080bf0056d53e9412793e00e8c23900000000fc700a3f000000000000803f000000000000803f000000002f985b33000080bf0056d53e457d6c3f
+    m_DataSize: 192
+    _typelessdata: 00e8c23900000000921e0fbe000000000000803f000000000000803f0000000000000000000080bf0056d53e9412793e4625d5be000000009318c4be000000000000803f000000000000803f0000000000000000000080bf000000000000000000e8c23900000000fc700a3f000000000000803f000000000000803f0000000000000000000080bf0056d53e457d6c3f6685d53e000000009318c4be000000000000803f000000000000803f000000002f985b33000080bf5655553f00000000
   m_CompressedMesh:
     m_Vertices:
       m_NumItems: 0
@@ -734,6 +738,14 @@ PrefabInstance:
     - target: {fileID: 5529501313719518111, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534478562135586871, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_MaxValue
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534478562135586871, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_MinValue
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 5921221653894424706, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_AnchorMax.x

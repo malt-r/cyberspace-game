@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     {
         input = GetComponent<StarterAssetsInputs>();
         weaponControl = GetComponent<WeaponControl>();
+        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -31,6 +34,11 @@ public class Player : MonoBehaviour
         if (!weaponControl) { return; }
         
         weaponControl.UseWeapon();
+
+        if (input.escape)
+        {
+            
+        }
     }
 
     public void AddWeapon(BaseWeapon weapon)
