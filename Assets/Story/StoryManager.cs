@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 // TODO:
 // only story markers with idx < 0 are to be placed wherever, indices greater 0 are still relevant for the level strucure, but not for the
@@ -56,6 +59,8 @@ public class StoryManager : MonoBehaviour
 
     private StoryState _currentState;
     private AudioSource _audioSource;
+    
+    [SerializeField] private TMP_Text storyTextlabel;
 
     public StoryMarker CurrentStoryMarker
     {
@@ -65,7 +70,6 @@ public class StoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     private void OnEnable()
@@ -81,6 +85,8 @@ public class StoryManager : MonoBehaviour
         {
             Debug.Log("Audio Source is null");
         }
+        
+
     }
 
     private void OnDisable()
@@ -97,7 +103,8 @@ public class StoryManager : MonoBehaviour
         var marker = eventData.Marker;
         
         Debug.Log($"Story Marker {marker.IndexInStory} activated");
-
+        storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
+        storyTextlabel.text = marker.Description;
         _lastFinishedStoryMarker = marker;
 
         // find next one.. it's possible, that this is not in sequential order..
