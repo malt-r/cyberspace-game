@@ -96,7 +96,6 @@ public class StoryManager : MonoBehaviour
         EventManager.StopListening("marker_foundLaser", FoundLaser);
     }
 
-    // TODO: Handle this in narrator
     private void StoryMarkerActivated(object data)
     {
         var eventData = data as StoryEventData;
@@ -109,10 +108,18 @@ public class StoryManager : MonoBehaviour
         // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
         // a little bit of linear time won't hurt
         // TODO: account for story markers, which's index is not -1 but which are also not relevant for the wayfinder
+        
         for (int i = 0; i < _markerIdxs.Length; i++)
         {
             if (_markerIdxs[i] == marker.IndexInStory)
             {
+                // skip marker, which's ShowAsStoryTask-flag is not set
+                var nextPotentialMarker = _storyMarkers[_markerIdxs[i + 1]].First();
+                if (!nextPotentialMarker.ShowAsStoryTask)
+                {
+                    continue;
+                }
+                
                 _sequentialMarkerIdx = i + 1;
             }
         }

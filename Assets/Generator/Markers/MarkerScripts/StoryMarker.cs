@@ -19,6 +19,11 @@ public class StoryMarker : MonoBehaviour
     [SerializeField]
     public bool RelevantForStory = true;
 
+    [Tooltip("This flag determines, whether this story marker is handled like an actual task by the story manager. Setting this " +
+             "to false will cause the story manager to skip this marker and set the next marker as the active marker.")]
+    [SerializeField] 
+    public bool ShowAsStoryTask = true;
+
     public bool AccomplishedMarker { get; set; }
 
     [SerializeField]
