@@ -25,7 +25,7 @@ public class DoorMarker : MonoBehaviour
         
     }
 
-    bool BeforeBarrier()
+    public bool BeforeBarrier()
     {
         bool beforeBarrier = true;
         var roomMarker = gameObject.GetComponentInParent<RoomMarker>();

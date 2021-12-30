@@ -1470,6 +1470,7 @@ public partial class DungeonGenerator : MonoBehaviour
     // scan from left to right -> break rectangle, if we meet free cell
     
     // or just brute force it?
+    // TODO: place room with barrier at lowest possible position in partition (with door before barrier at the bottom
     public bool PlaceRooms(List<Partition> partitions)
     {
         _partitionDimensionRanges = new List<PartitionDimensionRange>();
@@ -1542,9 +1543,58 @@ public partial class DungeonGenerator : MonoBehaviour
             range.highBound = rangeHigh;
             _partitionDimensionRanges.Add(range);
             
+            // TODO: find room with barrier in it, if there is one (will probably be the first one)
+            
             for (i = partition.StartIdxInclusive; i < partition.EndIdxExclusive; i++)
             {
-                success &= PlaceRoomMultipleTries(i, rangeLow, rangeHigh);
+                var room = _roomTemplates[i];
+                bool placedRoom = false;
+                if (_roomTemplates[i].HasBarrier()) // force position an rotation
+                {
+                    // get cell 
+                    Vector2Int cell = new Vector2Int(rangeLow.x, rangeLow.y);
+                    Vector3 rotation = Vector3.zero;
+                    var doorMarkers = room.GetDoorMarkers();
+                    var doorBeforeBarrier = doorMarkers.Where(marker => !marker.BeforeBarrier()).First();
+                    if (doorBeforeBarrier != null)
+                    {
+                        var meshCenter= room.GetMeshCenter();
+                        var doorPosition = doorBeforeBarrier.transform.position;
+                        
+                        if (doorPosition.x > meshCenter.x && doorPosition.z > meshCenter.z) // flip 180 deg
+                        {
+                            rotation.y = 180;
+                        }
+                        else if (doorPosition.x > meshCenter.x && doorPosition.z < meshCenter.z) // flip 90 deg
+                        {
+                            rotation.y = 90;
+                        }
+                        else if (doorPosition.x < meshCenter.x && doorPosition.z < meshCenter.z) // don't flip 
+                        {
+                            ;
+                        }
+                        else if (doorPosition.x < meshCenter.x && doorPosition.z > meshCenter.z) // flip 270 deg
+                        {
+                            rotation.y = 270;
+                        }
+                        for (int offset = 0; offset < dim.x; offset++)
+                        {
+                            if (PlaceRoom(i, cell + new Vector2Int(offset, 0), rotation))
+                            {
+                                placedRoom = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (placedRoom)
+                {
+                    success = true;
+                }
+                else
+                {
+                    success &= PlaceRoomMultipleTries(i, rangeLow, rangeHigh);
+                }
                 if (!success) break;
             }
 
