@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8061197236578638413}
   - component: {fileID: 5412785544746312384}
   - component: {fileID: 4697745182185944835}
+  - component: {fileID: 5529964758557852153}
   m_Layer: 0
   m_Name: CorridorCollectible
   m_TagString: Untagged
@@ -1452,7 +1453,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2670
+  m_VersionIndex: 2676
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1547,6 +1548,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &5529964758557852153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158141216570118464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a4362083191f444b3348bb7a34b960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InstantiationIndex: -1
 --- !u!1001 &7259913539298280691
 PrefabInstance:
   m_ObjectHideFlags: 0
