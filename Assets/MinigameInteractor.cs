@@ -38,6 +38,7 @@ public class MinigameInteractor : MonoBehaviour
             {
                 currentMgStatus.SetDone();
                 disableMinigame();
+                // Tim hoerst du mich?
             }
         }
         
@@ -56,7 +57,7 @@ public class MinigameInteractor : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         playerInput.SwitchCurrentActionMap("Player");
         minigame.SetActive(false);
-        wireTask.StopMinigame();
+        wireTask.ResetMinigame();
     }
 
     private void OnTriggerStay(Collider other)

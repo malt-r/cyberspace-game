@@ -1,5 +1,66 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1748948451046711754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3779198420363712039}
+  - component: {fileID: 5309544546365127617}
+  - component: {fileID: 6760826671571924613}
+  m_Layer: 2
+  m_Name: Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3779198420363712039
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748948451046711754}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5693374954301404750}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5309544546365127617
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748948451046711754}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9.873647, y: 5.1884584, z: 1.0163504}
+  m_Center: {x: -0.3775096, y: 1.4549346, z: -0.008175194}
+--- !u!114 &6760826671571924613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1748948451046711754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77fe78dc8f38f994dace33e9e4672b52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyEventName: Story/SmallJump
+  marker: {fileID: 5693374954301404744}
+  Collider: {fileID: 5309544546365127617}
+  TriggerOnEnter: 1
 --- !u!1 &7720980764881288548
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +308,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3435
+  m_VersionIndex: 3513
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11062,7 +11123,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 13499
+  m_VersionIndex: 13577
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11315,6 +11376,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 7720980766456826937}
     m_Modifications:
     - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
+      propertyPath: Description
+      value: "Spring \xFCber den Abgrund"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: IndexInStory
       value: 6
       objectReference: {fileID: 0}
@@ -11328,11 +11393,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5693374955369745421, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5693374955369745421, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 5693374955369745421, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11373,3 +11438,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5693374955369745421, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
   m_PrefabInstance: {fileID: 1205271107}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5693374954301404744 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
+  m_PrefabInstance: {fileID: 1205271107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 071a0e1d3c297c54a8c1c4bd77b84f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

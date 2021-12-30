@@ -58,8 +58,9 @@ public class WireTask : MonoBehaviour {
       coroutine = StartCoroutine(CheckTaskCompletion());
    }
 
-   public void StopMinigame()
+   public void ResetMinigame()
    {
+      IsTaskCompleted = false;
       for (int i = 0; i < _leftWires.Count; i++)
       {
          _leftWires[i].ResetWire();

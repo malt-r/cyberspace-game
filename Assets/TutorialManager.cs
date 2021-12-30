@@ -22,7 +22,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnSee = "Drücke #icon{ICONS/MOUSE_LEFTCLICK} zum Sehen";
     private const string msg_learnLook = "Bewege #icon{ICONS/MOUSE}, um dich umzusehen";
     private const string msg_learnWalk = "Nutze #icon{ICONS/W}#icon{ICONS/A}#icon{ICONS/S}#icon{ICONS/D}, um dich zu bewegen";
-    private const string msg_learnSprint = "Nutze die linke Umschalt-Taste, um zu sprinten";
+    private const string msg_learnSprint = "Nutze die linke Umschalt-Taste (#icon{ICONS/SHIFT}), um zu sprinten";
     private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
 
@@ -85,6 +85,7 @@ public class TutorialManager : MonoBehaviour
                 Debug.Log("TutorialManager Initialized");
 
                 EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
+                EventManager.StartListening("Minigame/GetSprint", HandleLearnSprint);
             }
         }
 
@@ -93,6 +94,7 @@ public class TutorialManager : MonoBehaviour
             ImplementFirstTutorial();
         }
     }
+
 
     void ImplementFirstTutorial()
     {
@@ -186,6 +188,12 @@ public class TutorialManager : MonoBehaviour
     {
         _playerController.canJump = true;
         DisplayPopup(msg_learnJump, 7);
+    }
+    
+    private void HandleLearnSprint(object arg0)
+    {
+        _playerController.canSprint = true;
+        DisplayPopup(msg_learnSprint, 7);
     }
 
     void DisplayPopup(string message, float timeInS = 20)
