@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using StarterAssets;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnSprint = "Nutze die linke Umschalt-Taste (#icon{ICONS/SHIFT}), um zu sprinten";
     private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
+    private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
 
     private bool _readyForNextStage = true;
 
@@ -86,6 +88,9 @@ public class TutorialManager : MonoBehaviour
 
                 EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
                 EventManager.StartListening("Minigame/GetSprint", HandleLearnSprint);
+                
+                EventManager.StartListening(MinigameInteractor.evt_EnterCollider, HandleInteractPrompt);
+                EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
             }
         }
 
@@ -94,6 +99,7 @@ public class TutorialManager : MonoBehaviour
             ImplementFirstTutorial();
         }
     }
+
 
 
     void ImplementFirstTutorial()
@@ -195,6 +201,11 @@ public class TutorialManager : MonoBehaviour
         _playerController.canSprint = true;
         DisplayPopup(msg_learnSprint, 7);
     }
+    
+    private void HandleInteractPrompt(object arg0)
+    {
+        DisplayPopup(msg_infoInteract);
+    }
 
     void DisplayPopup(string message, float timeInS = 20)
     {
@@ -207,6 +218,11 @@ public class TutorialManager : MonoBehaviour
             var parsed = ParseSnackBarString(message);
             _snackBar.DisplayMessage(parsed, timeInS);
         }
+    }
+
+    void HidePopup(object arg0)
+    {
+        _snackBar.HideMessage();
     }
 
     string ParseSnackBarString(string message)
