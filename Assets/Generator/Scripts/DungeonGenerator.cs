@@ -1953,12 +1953,33 @@ public partial class DungeonGenerator : MonoBehaviour
         return doorCellList;
     }
 
+
+    public List<Vector3Int> GetDoorDockCellsRawCoords(List<Vector3Int> doorCellCoords)
+    {
+        List<Vector3Int> doorDockCells = new List<Vector3Int>();
+        foreach (var coord in doorCellCoords)
+        {
+            var coords = GetDoorDockCells(new List<Vector3Int> {GlobalToCellIdx(coord)});
+            foreach (var doorCellCoord in coords)
+            {
+                doorDockCells.Add(Vector3Int.RoundToInt(CellIdxToGlobal(doorCellCoord)));
+            }
+        }
+
+        return doorDockCells;
+    }
+
     private List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)
     {
         List<Vector3Int> doorDockCells = new List<Vector3Int>();
         foreach (var doorCell in doorCells)
         {
             var doorMarkers = _grid[doorCell].doorMarkers;
+            if (doorMarkers == null)
+            {
+                return null;
+            }
+            
             foreach (var marker in doorMarkers)
             {
                 var markerDirection = marker.gameObject.transform.forward;

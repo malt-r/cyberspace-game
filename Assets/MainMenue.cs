@@ -14,7 +14,8 @@ public class MainMenue : MonoBehaviour
    public void PlayGame()
    {
       SoundManager.Instance.SetBackgroundMusic("Game");
-      SceneManager.LoadScene(playScene);
+      FindObjectOfType<GameManager>().LoadScene(playScene);
+      //SceneManager.LoadScene(playScene);
    }
 
    public void QuitGame()

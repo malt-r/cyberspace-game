@@ -22,6 +22,7 @@ public class ActorStats : MonoBehaviour
 		if (currentHealth > 0) { return; }
         OnHealthReachedZero?.Invoke(); 
 		gameObject.SetActive(false);
+		EventManager.TriggerEvent("Combat/ActorDied", this.gameObject);
 	}
 
 	public void Heal(float amount)
@@ -30,4 +31,8 @@ public class ActorStats : MonoBehaviour
 		currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 	}
 
+	public void HealToMaxHealth()
+	{
+		currentHealth = maxHealth;
+	}
 }
