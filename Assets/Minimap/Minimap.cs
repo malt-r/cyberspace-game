@@ -44,6 +44,8 @@ public class Minimap : MonoBehaviour
     int _cellSize;
 
     int _prevRoomIdx = -1;
+    Vector3Int _prevCellIdx = Vector3Int.zero;
+    private int _prevStoryMarkerIdx = -1;
 
     HashSet<int> _seenRooms;
 
@@ -72,13 +74,19 @@ public class Minimap : MonoBehaviour
             if (enableWayfinding)
             {
                 int storyMarkerTargetIdx = _storyManager.CurrentStoryMarker.IndexInStory;
-                UpdateWayToTarget(storyMarkerTargetIdx);
+                if (_prevStoryMarkerIdx != storyMarkerTargetIdx ||
+                    cellIdx != _prevCellIdx)
+                {
+                    UpdateWayToTarget(storyMarkerTargetIdx);
+                }
+                _prevStoryMarkerIdx = storyMarkerTargetIdx;
             }
             else if (_lineRenderer.positionCount > 0)
             {
                 _lineRenderer.positionCount = 0;
             }
             _prevRoomIdx = roomIdx;
+            _prevCellIdx = cellIdx;
         }
     }
     

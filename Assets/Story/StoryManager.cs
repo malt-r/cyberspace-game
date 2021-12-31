@@ -78,7 +78,7 @@ public class StoryManager : MonoBehaviour
         
         // This would be a good place to create more modularity to enable hooking in external handlers for story events
         EventManager.StartListening(evt_StoryMarkerActivated, StoryMarkerActivated);
-        EventManager.StartListening("marker_foundLaser", FoundLaser);
+        EventManager.StartListening("Level/EndLevel", FinishLevel);
 
         _audioSource = this.GetComponent<AudioSource>();
         if (null == _audioSource)
@@ -93,10 +93,8 @@ public class StoryManager : MonoBehaviour
     {
         Debug.Log("OnDisable");
         EventManager.StopListening(evt_StoryMarkerActivated, StoryMarkerActivated);
-        EventManager.StopListening("marker_foundLaser", FoundLaser);
     }
 
-    // TODO: Handle this in narrator
     private void StoryMarkerActivated(object data)
     {
         var eventData = data as StoryEventData;
@@ -109,23 +107,33 @@ public class StoryManager : MonoBehaviour
         // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
         // a little bit of linear time won't hurt
         // TODO: account for story markers, which's index is not -1 but which are also not relevant for the wayfinder
+
         for (int i = 0; i < _markerIdxs.Length; i++)
         {
             if (_markerIdxs[i] == marker.IndexInStory)
             {
+                // skip marker, which's ShowAsStoryTask-flag is not set
                 _sequentialMarkerIdx = i + 1;
+                var nextPotentialMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+                while (!nextPotentialMarker.ShowAsStoryTask)
+                {
+                    _sequentialMarkerIdx++;
+                    nextPotentialMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+                }
+
+                _currentStoryMarker = nextPotentialMarker;
             }
         }
-        _currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+        //_currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
         
         // update task description in UI
         storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
         storyTextlabel.text = _currentStoryMarker.Description;
     }
 
-    private void FoundLaser(object data)
+    private void FinishLevel(object data)
     {
-        Debug.Log("Found the Lazor");
+        Debug.Log("Finishing the Level");
     }
 
     private bool ReadRooms()

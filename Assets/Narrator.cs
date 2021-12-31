@@ -60,6 +60,10 @@ public class Narrator : MonoBehaviour
         var eventName = eventData.EventName;
         if (_reactionClipDict.TryGetValue(eventName, out EventReactionClip reaction))
         {
+            if (_audioSource.isPlaying)
+            {
+                _audioSource.Stop();
+            }
             _audioSource.PlayOneShot(reaction.clip);
             if (eventData.Sender is TutorialManager)
             {

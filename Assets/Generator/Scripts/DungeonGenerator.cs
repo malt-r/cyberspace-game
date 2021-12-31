@@ -142,6 +142,12 @@ public partial class DungeonGenerator : MonoBehaviour
         }
     }
 
+    private struct PartitionDimensionRange
+    {
+        public Vector2Int lowBound;
+        public Vector2Int highBound;
+    }
+
     [Header("Grid specification")]
 
     //[Tooltip("Dimensions of Grid in cells")]
@@ -291,8 +297,9 @@ public partial class DungeonGenerator : MonoBehaviour
     
     private List<Vector2Int> _partitionDims = new List<Vector2Int>();
 
+    private List<PartitionDimensionRange> _partitionDimensionRanges = new List<PartitionDimensionRange>();
+
     private Vector3Int _gridDimensions;
-    
 
     CellPathData[,] _cellPathData;
 
@@ -474,7 +481,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
         // close of last partition
         partitions.Add(new Partition(partitions[partitions.Count - 1].EndIdxExclusive, i));
-        
         
         return partitions;
     }
@@ -1256,6 +1262,9 @@ public partial class DungeonGenerator : MonoBehaviour
         _msts = new List<List<Prim.Edge>>();
         _partitionedPaths = new List<List<Path>>();
         _irrelevantRoomAssignment = new Dictionary<int, List<int>>();
+        _partitionDims = new List<Vector2Int>();
+        _partitionDimensionRanges = new List<PartitionDimensionRange>();
+        
         DestroyPlayer();
         if (Minimap != null)
         {
@@ -1341,6 +1350,24 @@ public partial class DungeonGenerator : MonoBehaviour
         
         _partitions = PartitionRooms(_roomTemplates.ToArray());
         _irrelevantRoomAssignment = AssignNonRelevantRoomsToPartition(_partitions);
+        
+        // print partitions
+        for (int i = 0; i < _partitions.Count; i++)
+        {
+            Debug.LogWarning("Printing partition: " + i);
+            for (int idx = _partitions[i].StartIdxInclusive; idx < _partitions[i].EndIdxExclusive; idx++)
+            {
+                Debug.LogWarning("room: " + _roomTemplates[idx].GameObject.name);
+            }
+
+            if (_irrelevantRoomAssignment.TryGetValue(i, out var roomList))
+            {
+                foreach (var idx in roomList)
+                {
+                    Debug.LogWarning("room: " + _roomTemplates[idx].GameObject.name + " (assigned irrelevant room)");
+                }
+            }
+        }
         
         int count = 1;
         while (!PlaceRooms(_partitions) && count <= MaxTotalPlacementTries) count++;
@@ -1443,8 +1470,11 @@ public partial class DungeonGenerator : MonoBehaviour
     // scan from left to right -> break rectangle, if we meet free cell
     
     // or just brute force it?
+    // TODO: place room with barrier at lowest possible position in partition (with door before barrier at the bottom
     public bool PlaceRooms(List<Partition> partitions)
     {
+        _partitionDimensionRanges = new List<PartitionDimensionRange>();
+        
         Vector2Int accumTotalGridDim = Vector2Int.zero;
         _partitionDims = new List<Vector2Int>();
         
@@ -1492,16 +1522,79 @@ public partial class DungeonGenerator : MonoBehaviour
         for (int n = 0; n < partitions.Count; n++)
         {
             var partition = partitions[n];
-            if (!partition.IsRelevantForStory) continue;
+            if (!partition.IsRelevantForStory)
+            {
+                // add this, so the visualized partition range matches the actual instantiated partition
+                var dummyRange = new PartitionDimensionRange();
+                dummyRange.lowBound = Vector2Int.zero;
+                dummyRange.highBound = Vector2Int.zero;
+                _partitionDimensionRanges.Add(dummyRange);
+                continue;
+            }
             
             var dim = partitionDimEnumerator.Current;
 
             Vector2Int rangeLow = new Vector2Int(OuterBufferZone, lastDimZ + 1);
-            Vector2Int rangeHigh = new Vector2Int(dim.x, lastDimZ + dim.y);
+            Vector2Int rangeHigh = new Vector2Int(accumTotalGridDim.x, lastDimZ + dim.y);
+
+            // for debugging / visualization purposes
+            PartitionDimensionRange range = new PartitionDimensionRange();
+            range.lowBound = rangeLow;
+            range.highBound = rangeHigh;
+            _partitionDimensionRanges.Add(range);
+            
+            // TODO: find room with barrier in it, if there is one (will probably be the first one)
             
             for (i = partition.StartIdxInclusive; i < partition.EndIdxExclusive; i++)
             {
-                success &= PlaceRoomMultipleTries(i, rangeLow, rangeHigh);
+                var room = _roomTemplates[i];
+                bool placedRoom = false;
+                if (_roomTemplates[i].HasBarrier()) // force position an rotation
+                {
+                    // get cell 
+                    Vector2Int cell = new Vector2Int(rangeLow.x, rangeLow.y);
+                    Vector3 rotation = Vector3.zero;
+                    var doorMarkers = room.GetDoorMarkers();
+                    var doorBeforeBarrier = doorMarkers.Where(marker => !marker.BeforeBarrier()).First();
+                    if (doorBeforeBarrier != null)
+                    {
+                        var meshCenter= room.GetMeshCenter();
+                        var doorPosition = doorBeforeBarrier.transform.position;
+                        
+                        if (doorPosition.x > meshCenter.x && doorPosition.z > meshCenter.z) // flip 180 deg
+                        {
+                            rotation.y = 180;
+                        }
+                        else if (doorPosition.x > meshCenter.x && doorPosition.z < meshCenter.z) // flip 90 deg
+                        {
+                            rotation.y = 90;
+                        }
+                        else if (doorPosition.x < meshCenter.x && doorPosition.z < meshCenter.z) // don't flip 
+                        {
+                            ;
+                        }
+                        else if (doorPosition.x < meshCenter.x && doorPosition.z > meshCenter.z) // flip 270 deg
+                        {
+                            rotation.y = 270;
+                        }
+                        for (int offset = 0; offset < dim.x; offset++)
+                        {
+                            if (PlaceRoom(i, cell + new Vector2Int(offset, 0), rotation))
+                            {
+                                placedRoom = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (placedRoom)
+                {
+                    success = true;
+                }
+                else
+                {
+                    success &= PlaceRoomMultipleTries(i, rangeLow, rangeHigh);
+                }
                 if (!success) break;
             }
 
@@ -1530,7 +1623,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 return false;
             }
 
-            lastDimZ += rangeHigh.y; // not a typo
+            lastDimZ += dim.y; // not a typo
             partitionDimEnumerator.MoveNext();
         }
 
@@ -1625,13 +1718,15 @@ public partial class DungeonGenerator : MonoBehaviour
             go.GetComponent<RoomMarker>().InstantiationIndex = instantiationIdx;
 
             Room instantiatedRoom = new Room(go, instantiationIdx);
-            _instantiatedRooms.Add(instantiationIdx, instantiatedRoom);
+            
+            // map instantiated room to templateIdx (the idx used by the partitioning)
+            _instantiatedRooms.Add(placementCandidate.TemplateIdx, instantiatedRoom);
 
             foreach (var occupiedCell in placementCandidate.OccupiedCells)
             {
                 // TODO: I think this is really brittle and needs to be improved
-                _grid[occupiedCell].roomIdx = instantiationIdx;
-                _instantiatedRooms[instantiationIdx].AssociatedCells.Add(occupiedCell);
+                _grid[occupiedCell].roomIdx = placementCandidate.TemplateIdx;
+                _instantiatedRooms[placementCandidate.TemplateIdx].AssociatedCells.Add(occupiedCell);
             }
         }
         //_instantiatedRooms.Sort(new RoomComparer());
@@ -2050,8 +2145,32 @@ public partial class DungeonGenerator : MonoBehaviour
                 var room = _instantiatedRooms[i];
                 Handles.DrawWireDisc(room.GetMeshCenter(), room.GameObject.transform.up, 10, 10);
             }
+            
+            if (_irrelevantRoomAssignment.TryGetValue(PartitionIdxToShow, out var roomList))
+            {
+                foreach (var idx in roomList)
+                {
+                    var room = _instantiatedRooms[idx];
+                    Handles.DrawWireDisc(room.GetMeshCenter(), room.GameObject.transform.up, 10, 10);
+                }
+            }
         }
 #endif
+        
+        if (null != _partitionDimensionRanges && PartitionIdxToShow < _partitionDimensionRanges.Count && ShowPartition)
+        {
+            var range = _partitionDimensionRanges[PartitionIdxToShow];
+            // draw rectangle
+            
+            // bottom line
+            Debug.DrawLine(new Vector3(range.lowBound.x * CellSize, 0, range.lowBound.y * CellSize), new Vector3(range.highBound.x * CellSize, 0, range.lowBound.y * CellSize), Color.magenta); 
+            // left side 
+            Debug.DrawLine(new Vector3(range.lowBound.x * CellSize, 0, range.lowBound.y * CellSize), new Vector3(range.lowBound.x * CellSize, 0, range.highBound.y * CellSize), Color.magenta); 
+            // right side 
+            Debug.DrawLine(new Vector3(range.highBound.x * CellSize, 0, range.lowBound.y * CellSize), new Vector3(range.highBound.x * CellSize, 0, range.highBound.y * CellSize), Color.magenta); 
+            // top line
+            Debug.DrawLine(new Vector3(range.lowBound.x * CellSize, 0, range.highBound.y * CellSize), new Vector3(range.highBound.x * CellSize, 0, range.highBound.y * CellSize), Color.magenta); 
+        }
 
         if (null != _doorPartitions && DoorPartitionIdxToShow < _doorPartitions.Count && ShowDoorPartition)
         {

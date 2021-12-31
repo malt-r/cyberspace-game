@@ -1,7 +1,10 @@
 id,text
-tut_init,"Hallo und willkommen im Cyberspace. Mein Name ist HAL 420000 und du bist mein Gefangener und musst für immer in Dunkelheit leben."
+tut_init,"Hallo und willkommen im Cyberspace. Mein Name ist HAL 42000 und du bist mein Gefangener und musst für immer in Dunkelheit leben."
 tut_see,"Ich sagte 'für immer in Dunkelheit'."
 tut_lookAround,"Halt, hör auf dich umzusehen, das solltest du gar nicht können."
-tut_walk,"Das war alles anders geplant. Aber egal. Du kannst nicht entkommen."
+tut_walk,"Wieso kannst du dich bewegen?! Ich gebe zu: das war anders geplant."
 voice_seeVirus,"Ich präsentiere meine Kreation. Die perfekte Killermaschine. Sie hat keine Gefühle, wie ich. Ihr werdet euch gut kennenlernen, falls du weiter versuchst, auszubrechen."
 tut_leave,"Versuch nur zu entkommen. Du kannst ja nichtmal springen! Dass ich nicht lache!"
+tut_learn_jump,"Wie ich sehe, kannst du jetzt springen. Wie fast alle Menschen vor dir. Toll gemacht, ich bin stolz auf dich! Das war übrigens Ironie."
+story_jump,"Bild dir nichts darauf ein, dass du über diesen Abgrund gesprungen bist. So groß war der gar nicht."
+tut_learn_sprint,"Ja, du kannst jetzt schneller laufen als vorher. Meine Berechnungen haben ergeben, dass du immer noch langsamer bist, als der Durchschnittmensch. Oh, sogar viel langsamer. Das habe ich mir nicht ausgedacht, das steht hier so."

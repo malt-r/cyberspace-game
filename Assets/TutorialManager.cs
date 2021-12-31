@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using StarterAssets;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -19,12 +20,13 @@ public class TutorialManager : MonoBehaviour
     private Vector2 _prevLook;
     private Vector2 _prevMove;
 
-    private const string msg_learnSee = "Dücke #icon{ICONS/MOUSE_LEFTCLICK} zum sehen";
+    private const string msg_learnSee = "Drücke #icon{ICONS/MOUSE_LEFTCLICK} zum Sehen";
     private const string msg_learnLook = "Bewege #icon{ICONS/MOUSE}, um dich umzusehen";
     private const string msg_learnWalk = "Nutze #icon{ICONS/W}#icon{ICONS/A}#icon{ICONS/S}#icon{ICONS/D}, um dich zu bewegen";
-    private const string msg_learnSprint = "Nutze die linke Umschalt-Taste, um zu sprinten";
-    private const string msg_learnJump = "Nutze die Leertaste, um zu springen";
+    private const string msg_learnSprint = "Nutze die linke Umschalt-Taste (#icon{ICONS/SHIFT}), um zu sprinten";
+    private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
+    private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
 
     private bool _readyForNextStage = true;
 
@@ -83,12 +85,12 @@ public class TutorialManager : MonoBehaviour
                 _snackBar = FindObjectOfType<SnackbarManager>();
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
+
+                EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
+                EventManager.StartListening("Minigame/GetSprint", HandleLearnSprint);
                 
-                EventManager.StartListening("Minigame/GetJump", arg0 =>
-                {
-                    Debug.LogWarning("hello");
-                    _playerController.canJump = true;
-                }); 
+                EventManager.StartListening(MinigameInteractor.evt_EnterCollider, HandleInteractPrompt);
+                EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
             }
         }
 
@@ -97,6 +99,8 @@ public class TutorialManager : MonoBehaviour
             ImplementFirstTutorial();
         }
     }
+
+
 
     void ImplementFirstTutorial()
     {
@@ -173,6 +177,7 @@ public class TutorialManager : MonoBehaviour
                     var trigger = GetComponent<StoryTrigger>();
                     trigger.Activate();
                     _snackBar.HideMessage();
+                    _currentStageFiredMessage = true;
                 }
                 break;
             default:
@@ -185,7 +190,24 @@ public class TutorialManager : MonoBehaviour
         _currentTutorialStage = stage;
     }
 
-    void DisplayPopup(string message)
+    void HandleLearnJump(object arg)
+    {
+        _playerController.canJump = true;
+        DisplayPopup(msg_learnJump, 7);
+    }
+    
+    private void HandleLearnSprint(object arg0)
+    {
+        _playerController.canSprint = true;
+        DisplayPopup(msg_learnSprint, 7);
+    }
+    
+    private void HandleInteractPrompt(object arg0)
+    {
+        DisplayPopup(msg_infoInteract);
+    }
+
+    void DisplayPopup(string message, float timeInS = 20)
     {
         if (_snackBar == null)
         {
@@ -194,8 +216,13 @@ public class TutorialManager : MonoBehaviour
         else
         {
             var parsed = ParseSnackBarString(message);
-            _snackBar.DisplayMessage(parsed);
+            _snackBar.DisplayMessage(parsed, timeInS);
         }
+    }
+
+    void HidePopup(object arg0)
+    {
+        _snackBar.HideMessage();
     }
 
     string ParseSnackBarString(string message)
