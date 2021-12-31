@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EventManager.StartListening("Combat/ActorDied", HandleActorDeath);
+        EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
         
         SceneManager.LoadScene(startSceneName);
@@ -42,10 +42,14 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    private void HandleActorDeath(object data)
+    private void HandlePlayerDeath(object data)
     {
         var actorObject = data as GameObject;
-        if (actorObject.CompareTag("Player"))
+        if (!actorObject.CompareTag("Player"))
+        {
+            Debug.LogError("HandlePlayerDeath was called but tag is not 'player'");
+        }
+        else 
         {
             Debug.Log("Reviving Player");
             var combatant = actorObject.GetComponent<CombatParticipant>();

@@ -1,4 +1,5 @@
 using System;
+using Random = UnityEngine.Random;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -19,7 +20,7 @@ public class Narrator : MonoBehaviour
 
     [SerializeField] private float tutorialDelayAddition = 1.0f;
 
-    private Dictionary<string, EventReactionClip> _reactionClipDict;
+    private Dictionary<string, List<EventReactionClip>> _reactionClipDict;
 
     private AudioSource _audioSource;
     // Start is called before the first frame update
@@ -29,11 +30,18 @@ public class Narrator : MonoBehaviour
 
     void OnEnable()
     {
-        _reactionClipDict = new Dictionary<string, EventReactionClip>();
+        _reactionClipDict = new Dictionary<string, List<EventReactionClip>>();
         // build dict for reactions 
         foreach (var reaction in eventReactions)
         {
-            _reactionClipDict.Add(reaction.eventName, reaction);
+            if (!_reactionClipDict.TryGetValue(reaction.eventName, out var reactionList))
+            {
+                _reactionClipDict.Add(reaction.eventName, new List<EventReactionClip>(){reaction});
+            }
+            else
+            {
+                reactionList.Add(reaction);
+            }
         }
 
         _audioSource = GetComponent<AudioSource>();
@@ -58,16 +66,30 @@ public class Narrator : MonoBehaviour
     {
         var eventData = data as StoryEventData;
         var eventName = eventData.EventName;
-        if (_reactionClipDict.TryGetValue(eventName, out EventReactionClip reaction))
+        if (_reactionClipDict.TryGetValue(eventName, out List<EventReactionClip> reactions))
         {
             if (_audioSource.isPlaying)
             {
                 _audioSource.Stop();
             }
-            _audioSource.PlayOneShot(reaction.clip);
+
+            AudioClip clip;
+            // select clip
+            if (reactions.Count == 1)
+            {
+                clip = reactions[0].clip;
+            }
+            else
+            {
+                // pick random one
+                int idx = Random.Range(0, reactions.Count);
+                clip = reactions[idx].clip;
+            }
+            _audioSource.PlayOneShot(clip);
+            
             if (eventData.Sender is TutorialManager)
             {
-                var length = reaction.clip.length;
+                var length = clip.length;
                 Invoke("SignalTutorialReadyForNextStage", length * tutorialDelayAddition);
             }
         }

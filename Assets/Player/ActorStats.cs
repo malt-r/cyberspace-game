@@ -3,7 +3,6 @@ using System;
 
 public class ActorStats : MonoBehaviour
 {
-
 	public float maxHealth = 100;
 	[SerializeField]
 	private float currentHealth;
@@ -22,7 +21,14 @@ public class ActorStats : MonoBehaviour
 		if (currentHealth > 0) { return; }
         OnHealthReachedZero?.Invoke(); 
 		gameObject.SetActive(false);
-		EventManager.TriggerEvent("Combat/ActorDied", this.gameObject);
+		if (gameObject.CompareTag("Player"))
+		{
+			EventManager.TriggerEvent("Combat/PlayerDied", this.gameObject);
+		}
+		else
+		{
+			EventManager.TriggerEvent("Combat/EnemyDied", this.gameObject);
+		}
 	}
 
 	public void Heal(float amount)

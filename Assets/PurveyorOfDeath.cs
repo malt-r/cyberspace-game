@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,6 +6,9 @@ using UnityEngine;
 
 public class PurveyorOfDeath : MonoBehaviour
 {
+    [SerializeField] 
+    private string EventNameOnDeath;
+    
     private BoxCollider _collider;
     
     // Start is called before the first frame update
@@ -25,6 +29,9 @@ public class PurveyorOfDeath : MonoBehaviour
         if (combatant != null)
         {
             combatant.TakeDamage(float.MaxValue);
+
+            StoryEventData data = new StoryEventData().SetEventName(EventNameOnDeath);
+            EventManager.TriggerEvent(EventNameOnDeath, data);
         }
     }
 }
