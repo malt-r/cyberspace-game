@@ -103,8 +103,6 @@ public class StoryManager : MonoBehaviour
         var marker = eventData.Marker;
         
         Debug.Log($"Story Marker {marker.IndexInStory} activated");
-        storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
-        storyTextlabel.text = marker.Description;
         _lastFinishedStoryMarker = marker;
 
         // find next one.. it's possible, that this is not in sequential order..
@@ -119,6 +117,10 @@ public class StoryManager : MonoBehaviour
             }
         }
         _currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
+        
+        // update task description in UI
+        storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
+        storyTextlabel.text = _currentStoryMarker.Description;
     }
 
     private void FoundLaser(object data)
