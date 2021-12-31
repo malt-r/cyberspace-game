@@ -247,7 +247,7 @@ PrefabInstance:
       objectReference: {fileID: 499433955}
     - target: {fileID: 196963344401834145, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: m_VersionIndex
-      value: 931
+      value: 949
       objectReference: {fileID: 0}
     - target: {fileID: 196963344401834156, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: m_Mesh
@@ -257,14 +257,6 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 499433955}
-    - target: {fileID: 1692415758193948728, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1692415758193948729, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
-      propertyPath: CreateDungeonOnStart
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1692415758235600320, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: m_Name
       value: Framework
@@ -326,7 +318,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-634140
+  m_Name: pb_Mesh-882880
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
