@@ -13314,7 +13314,7 @@ GameObject:
   - component: {fileID: 3106031973870014224}
   - component: {fileID: 1506248736137811598}
   - component: {fileID: 1412268344886325163}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EndTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13343,7 +13343,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4705381675580211498}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 5.784467, z: 4.153888}
