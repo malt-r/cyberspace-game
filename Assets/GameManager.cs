@@ -1,15 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
-using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// TODO: determine Minimap-type and trigger minimap-creation by generator
 // TODO: store stats about game-flow
-// TODO: deactivate scanner in first level
-// TODO: place player
 public class GameManager : MonoBehaviour
 {
     // scene state
@@ -31,7 +26,9 @@ public class GameManager : MonoBehaviour
 
     private int _gameLevelIdx = 0;
 
-    private bool _extendedMinimapOnFirstLevel;
+    [SerializeField] 
+    private bool ExtendedMinimapInFirstLevel;
+
     private bool _extendedMinimap;
     private bool _activateScanner;
     
@@ -44,6 +41,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(startSceneName);
     }
 
+    // store door dock as last passed respawn point
     private void HandlePassDoorMarker(object data)
     {
         var marker = data as DoorMarker;
@@ -63,6 +61,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
+    // respawn player at last passed respawn point
     private void HandlePlayerDeath(object data)
     {
         var actorObject = data as GameObject;
@@ -97,11 +96,12 @@ public class GameManager : MonoBehaviour
             if (!InstantiatePlayer())
             {
                 Debug.LogError("Could not instantiate player");
+                return false;
             }
             else 
             {
                 // create minimap
-                _minimap = _generator.CreateMinimap(_instantiatedPlayer);
+                _minimap = _generator.CreateMinimap(_instantiatedPlayer, _extendedMinimap);
                 SetScannerActive(_activateScanner);
             }
 
@@ -113,7 +113,9 @@ public class GameManager : MonoBehaviour
 
     private void InitFirstLevel()
     {
-        _extendedMinimapOnFirstLevel = Random.Range(0, 1) == 1;
+        _extendedMinimap = ExtendedMinimapInFirstLevel;
+        
+        // TODO: setting the scanner active should really only be done, if the player finds the scanner
         _activateScanner = false;
     }
 
@@ -124,6 +126,9 @@ public class GameManager : MonoBehaviour
         _minimap = null;
         _lastPassedRespawnPoint = Vector3Int.zero;
         _initializedScene = false;
+        
+        // this effectively alternates between extended and basic minimap for each scene initialization
+        _extendedMinimap = !_extendedMinimap;
     }
     
     private void LoadScene(int levelIdx)

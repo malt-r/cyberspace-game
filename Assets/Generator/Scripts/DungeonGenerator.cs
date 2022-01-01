@@ -1235,14 +1235,14 @@ public partial class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public Minimap CreateMinimap(GameObject playerInstance)
+    public Minimap CreateMinimap(GameObject playerInstance, bool extendedVariation)
     {
         if (Minimap == null)
         {
             Debug.Log("No minimap");
             return null;
         }
-        Minimap.CreateMinimap(_grid, _gridDimensions, playerInstance, CellSize, _cellPathData, this);
+        Minimap.CreateMinimap(_grid, _gridDimensions, playerInstance, CellSize, _cellPathData, this, extendedVariation);
         return Minimap;
     }
     #endregion
@@ -2043,7 +2043,7 @@ public partial class DungeonGenerator : MonoBehaviour
         return marker.RelevantForStory && marker.IndexInStory >= 0;
     }
 
-    private long GetExternalSeed()
+    public static long GetExternalSeed()
     {
         var now = System.DateTime.Now;
         var notNow = now.AddDays((double)Random.Range(0.0f, 100.0f));
