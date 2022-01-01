@@ -21,15 +21,17 @@ public class GUIAmmo : MonoBehaviour
 
     private void updateProperties()
     {
-        var laser = (Scanner) weaponControl.CurrentWeapon;
-        if (laser.overHeated)
+        if (weaponControl.isActiveAndEnabled)
         {
-            text.text = "###";
-            return;
+            var laser = (Scanner) weaponControl.CurrentWeapon;
+            if (laser.overHeated)
+            {
+                text.text = "###";
+                return;
+            }
+            var prefix = laser.condition < 15 ? "‼" : "";
+            var laserCondition = Mathf.Floor(laser.condition).ToString(CultureInfo.InvariantCulture);
+            text.text = prefix + "¤" + laserCondition;
         }
-        var prefix = laser.condition < 15 ? "‼" : "";
-        var laserCondition = Mathf.Floor(laser.condition).ToString(CultureInfo.InvariantCulture);
-        text.text = prefix + "¤" + laserCondition;
-        
     }
 }

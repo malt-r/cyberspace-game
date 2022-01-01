@@ -35,11 +35,15 @@ public class WeaponControl : MonoBehaviour
 
     public void UseWeapon()
     {
+        if (CurrentWeapon == null) return;
+        
         CurrentWeapon.Use();
     }
 
     public void SwitchWeapon(int indexDelta)
     {
+        if (CurrentWeapon == null) return;
+        
         var scanner = CurrentWeapon as Scanner;
         //TODO: Switching passiert hier
         //Weil Monster auch switchen eventuell

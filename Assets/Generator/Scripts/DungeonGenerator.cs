@@ -150,9 +150,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
     [Header("Grid specification")]
 
-    //[Tooltip("Dimensions of Grid in cells")]
-    //[SerializeField]
-
     [Tooltip("Size of the sides of one cell")]
     [SerializeField]
     int CellSize = 4;
@@ -303,8 +300,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
     CellPathData[,] _cellPathData;
 
-    GameObject _playerInstance;
-
     bool _generationSuccessfull = false;
 
     // TODO: find better place for this
@@ -348,25 +343,6 @@ public partial class DungeonGenerator : MonoBehaviour
     private Vector3Int GetNeighborDir(NeighborDirection dir)
     {
         return GridDirections[((int)dir)];
-    }
-
-    [SerializeField]
-    GameObject playerPrefab;
-
-
-    public void InstantiatePlayer()
-    {
-        var rooms = _instantiatedRooms.Where(room => room.Value.GetFirstStoryMarker().IndexInStory == 0);
-        var spawnPoint = FindObjectOfType<SpawnPoint>();
-        var startRoom = rooms.First().Value;
-        if (spawnPoint != null)
-        {
-            _playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-        }
-        else
-        {
-            _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
-        }
     }
 
     // Start is called before the first frame update
@@ -1235,14 +1211,15 @@ public partial class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public void CreateMinimap()
+    public Minimap CreateMinimap(GameObject playerInstance, bool extendedVariation)
     {
         if (Minimap == null)
         {
             Debug.Log("No minimap");
-            return;
+            return null;
         }
-        Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
+        Minimap.CreateMinimap(_grid, _gridDimensions, playerInstance, CellSize, _cellPathData, this, extendedVariation);
+        return Minimap;
     }
     #endregion
 
@@ -1265,25 +1242,9 @@ public partial class DungeonGenerator : MonoBehaviour
         _partitionDims = new List<Vector2Int>();
         _partitionDimensionRanges = new List<PartitionDimensionRange>();
         
-        DestroyPlayer();
         if (Minimap != null)
         {
             Minimap.Cleanup();
-        }
-    }
-
-    private void DestroyPlayer()
-    {
-        if (null != _playerInstance)
-        {
-            if (Application.isEditor)
-            {
-                DestroyImmediate(_playerInstance);
-            } 
-            else
-            {
-                Destroy(_playerInstance);
-            }
         }
     }
 
@@ -1618,7 +1579,6 @@ public partial class DungeonGenerator : MonoBehaviour
                         ", skipped rooms: " + 
                         roomsSkipped
                         );
-                //CreateGrid(Vector3Int.one * OuterBufferZone);
                 UnmarkTemplatesForInstantiation();
                 return false;
             }
@@ -1729,7 +1689,6 @@ public partial class DungeonGenerator : MonoBehaviour
                 _instantiatedRooms[placementCandidate.TemplateIdx].AssociatedCells.Add(occupiedCell);
             }
         }
-        //_instantiatedRooms.Sort(new RoomComparer());
     }
 
     public void GenerateDungeon()
@@ -1753,17 +1712,8 @@ public partial class DungeonGenerator : MonoBehaviour
             }
 
             PlaceCorridors();
-            InstantiatePlayer();
             _generationSuccessfull = true;
             
-            if (Minimap == null)
-            {
-                Debug.LogError("Minimap object is null");
-            } 
-            else
-            {
-                Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
-            }
             success = true;
         }
         if (currentTries >= MaxDungeonTries)
@@ -1953,12 +1903,33 @@ public partial class DungeonGenerator : MonoBehaviour
         return doorCellList;
     }
 
+
+    public List<Vector3Int> GetDoorDockCellsRawCoords(List<Vector3Int> doorCellCoords)
+    {
+        List<Vector3Int> doorDockCells = new List<Vector3Int>();
+        foreach (var coord in doorCellCoords)
+        {
+            var coords = GetDoorDockCells(new List<Vector3Int> {GlobalToCellIdx(coord)});
+            foreach (var doorCellCoord in coords)
+            {
+                doorDockCells.Add(Vector3Int.RoundToInt(CellIdxToGlobal(doorCellCoord)));
+            }
+        }
+
+        return doorDockCells;
+    }
+
     private List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)
     {
         List<Vector3Int> doorDockCells = new List<Vector3Int>();
         foreach (var doorCell in doorCells)
         {
             var doorMarkers = _grid[doorCell].doorMarkers;
+            if (doorMarkers == null)
+            {
+                return null;
+            }
+            
             foreach (var marker in doorMarkers)
             {
                 var markerDirection = marker.gameObject.transform.forward;
@@ -2021,7 +1992,7 @@ public partial class DungeonGenerator : MonoBehaviour
         return marker.RelevantForStory && marker.IndexInStory >= 0;
     }
 
-    private long GetExternalSeed()
+    public static long GetExternalSeed()
     {
         var now = System.DateTime.Now;
         var notNow = now.AddDays((double)Random.Range(0.0f, 100.0f));

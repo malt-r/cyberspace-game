@@ -37,4 +37,8 @@ public class CombatParticipant : MonoBehaviour
         stats.TakeDamage(amount);
     }
 
+    public void Revive()
+    {
+        stats.HealToMaxHealth();
+    }
 }

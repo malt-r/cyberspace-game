@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Android;
 using static DungeonGenerator;
 
 public class Minimap : MonoBehaviour
@@ -52,6 +55,7 @@ public class Minimap : MonoBehaviour
     DungeonGenerator _generator;
 
     private bool _initialized;
+    private bool _extendedVariation;
 
     private Wayfinder _wayfinder;
     private LineRenderer _lineRenderer;
@@ -71,6 +75,14 @@ public class Minimap : MonoBehaviour
         {
             GetCurrentLocation(out var roomIdx, out var cellIdx);
             UpdateVisibility(roomIdx, cellIdx);
+            
+            // TODO: this should not be depentent on the minimap
+            if (_prevCellIdx != cellIdx && _dungeonGrid[cellIdx].type == CellType.Door)
+            {
+                var marker = _dungeonGrid[cellIdx].doorMarkers.First();
+                EventManager.TriggerEvent("Level/PassDoorMarker", marker);
+            }
+            
             if (enableWayfinding)
             {
                 int storyMarkerTargetIdx = _storyManager.CurrentStoryMarker.IndexInStory;
@@ -178,7 +190,8 @@ public class Minimap : MonoBehaviour
     }
 
     #region minimap generation
-    public void CreateMinimap(DungeonGrid<Cell> dungeonGrid, Vector3Int GridDimensions, GameObject toFollow, int CellSize, CellPathData[,] cellPathData, DungeonGenerator generator)
+    public void CreateMinimap(DungeonGrid<Cell> dungeonGrid, Vector3Int GridDimensions, GameObject toFollow,
+        int CellSize, CellPathData[,] cellPathData, DungeonGenerator generator, bool extendedVariation)
     {
         Cleanup();
 
@@ -188,6 +201,21 @@ public class Minimap : MonoBehaviour
         _cellPathData = cellPathData;
         _cellSize = CellSize;
         _generator = generator;
+        _extendedVariation = extendedVariation;
+
+        // implement variation of minimap
+        SetAllInactive = !extendedVariation;
+        enableWayfinding = extendedVariation;
+
+        if (extendedVariation)
+        {
+            Debug.Log("Creating extended minimap");
+        }
+        else
+        {
+            Debug.Log("Creating basic minimap");
+        }
+        
 
         for (int x = 0; x < GridDimensions.x; x++)
         {
