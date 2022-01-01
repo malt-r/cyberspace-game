@@ -127,8 +127,8 @@ MonoBehaviour:
   FollowTargetOrigin: {x: 0, y: 0, z: 0}
   FollowDeltaScaling: 0.2
   playerMarker: {fileID: 1569339768493587052}
-  playerMarkerScale: 1.6
-  cameraProjectionSize: 6.5
+  playerMarkerScale: 1
+  cameraProjectionSize: 5
 --- !u!114 &6170732818136236662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d809b255a8386154a96945b8c17df693, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SetAllInactive: 0
   TilePrefabStandard: {fileID: 6191027702522863804, guid: 4e82edb484645344bbaf96bf54be2c10, type: 3}
   TilePrefabLTurn: {fileID: 6610978940910924021, guid: c563eacd208c2e1409c81fcb4c1739cc, type: 3}
   TilePrefabStraight: {fileID: 3343147955499631927, guid: 04eccd3c4e0a42845836db5cf390bb06, type: 3}
@@ -149,6 +150,7 @@ MonoBehaviour:
   TilePrefabRoomLowerLeftCorner: {fileID: 8599137918983226352, guid: 471f4e41c9dbf654eb9d6576e56336a1, type: 3}
   TilePrefabRoomUShape: {fileID: 4574406479897329212, guid: 57123664bfdf4d441ae552b3c5608b56, type: 3}
   TilePrefabRoomOneSide: {fileID: 5401925883774717226, guid: 7f259d924c92cb24e9c446379b01a965, type: 3}
+  TilePrefabQuestionMark: {fileID: 6191027702522863804, guid: 2ac7d0e8e281838439873c47c2383e5b, type: 3}
   enableWayfinding: 1
 --- !u!120 &4366632444317774855
 LineRenderer:
@@ -261,6 +263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomInstantiationIdx: 0
   targetIdx: 8
+  overrideTargetIdx: 0
 --- !u!1001 &6170732816668980539
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -310,7 +313,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4640311777577553754, guid: ce4a6380ccc6b734aa8828e39472fa9a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4640311777577553754, guid: ce4a6380ccc6b734aa8828e39472fa9a, type: 3}
       propertyPath: m_LocalPosition.z
