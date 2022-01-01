@@ -172,6 +172,7 @@ MonoBehaviour:
   startSceneName: 0_MainMenue
   gameLevels:
   - 1_Level1_V2
+  ExtendedMinimapInFirstLevel: 0
 --- !u!114 &157760535
 MonoBehaviour:
   m_ObjectHideFlags: 0
