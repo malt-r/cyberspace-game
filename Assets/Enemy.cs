@@ -75,7 +75,7 @@ public class Enemy : MonoBehaviour
 
         var ownTransform = transform;
         var ownPosition = ownTransform.position;
-        var playerPosition = player.transform.position+ Vector3.up;
+        var playerPosition = player.transform.position+ Vector3.up/2;
         var targetVec = playerPosition - ownPosition;
         var angle = Vector3.Angle(targetVec, ownTransform.forward);
 
