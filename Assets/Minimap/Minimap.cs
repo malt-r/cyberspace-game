@@ -177,6 +177,9 @@ public class Minimap : MonoBehaviour
         var placementPosition = this.transform.position + cell + Vector3.up;
         var questionMarkTile = (Instantiate(TilePrefabQuestionMark, placementPosition, Quaternion.identity, this.transform));
         _markedWithQuestionMark.Add(cell, questionMarkTile);
+        
+        // reveal cell, but lay transparent layer on top
+        _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
     }
 
     private void UncoverCell(Vector3Int cell)
