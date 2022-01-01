@@ -303,7 +303,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
     CellPathData[,] _cellPathData;
 
-    GameObject _playerInstance;
+    //GameObject _playerInstance;
 
     bool _generationSuccessfull = false;
 
@@ -354,20 +354,20 @@ public partial class DungeonGenerator : MonoBehaviour
     GameObject playerPrefab;
 
 
-    public void InstantiatePlayer()
-    {
-        var rooms = _instantiatedRooms.Where(room => room.Value.GetFirstStoryMarker().IndexInStory == 0);
-        var spawnPoint = FindObjectOfType<SpawnPoint>();
-        var startRoom = rooms.First().Value;
-        if (spawnPoint != null)
-        {
-            _playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-        }
-        else
-        {
-            _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
-        }
-    }
+    //public void InstantiatePlayer()
+    //{
+    //    var rooms = _instantiatedRooms.Where(room => room.Value.GetFirstStoryMarker().IndexInStory == 0);
+    //    var spawnPoint = FindObjectOfType<SpawnPoint>();
+    //    var startRoom = rooms.First().Value;
+    //    if (spawnPoint != null)
+    //    {
+    //        _playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+    //    }
+    //    else
+    //    {
+    //        _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
+    //    }
+    //}
 
     // Start is called before the first frame update
     void Start()
@@ -1235,14 +1235,15 @@ public partial class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public void CreateMinimap()
+    public Minimap CreateMinimap(GameObject playerInstance)
     {
         if (Minimap == null)
         {
             Debug.Log("No minimap");
-            return;
+            return null;
         }
-        Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
+        Minimap.CreateMinimap(_grid, _gridDimensions, playerInstance, CellSize, _cellPathData, this);
+        return Minimap;
     }
     #endregion
 
@@ -1265,27 +1266,27 @@ public partial class DungeonGenerator : MonoBehaviour
         _partitionDims = new List<Vector2Int>();
         _partitionDimensionRanges = new List<PartitionDimensionRange>();
         
-        DestroyPlayer();
+        //DestroyPlayer();
         if (Minimap != null)
         {
             Minimap.Cleanup();
         }
     }
 
-    private void DestroyPlayer()
-    {
-        if (null != _playerInstance)
-        {
-            if (Application.isEditor)
-            {
-                DestroyImmediate(_playerInstance);
-            } 
-            else
-            {
-                Destroy(_playerInstance);
-            }
-        }
-    }
+    //private void DestroyPlayer()
+    //{
+    //    if (null != _playerInstance)
+    //    {
+    //        if (Application.isEditor)
+    //        {
+    //            DestroyImmediate(_playerInstance);
+    //        } 
+    //        else
+    //        {
+    //            Destroy(_playerInstance);
+    //        }
+    //    }
+    //}
 
     private void DestroyCorridors()
     {
@@ -1753,17 +1754,17 @@ public partial class DungeonGenerator : MonoBehaviour
             }
 
             PlaceCorridors();
-            InstantiatePlayer();
+            //InstantiatePlayer();
             _generationSuccessfull = true;
             
-            if (Minimap == null)
-            {
-                Debug.LogError("Minimap object is null");
-            } 
-            else
-            {
-                Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
-            }
+            //if (Minimap == null)
+            //{
+            //    Debug.LogError("Minimap object is null");
+            //} 
+            //else
+            //{
+            //    Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
+            //}
             success = true;
         }
         if (currentTries >= MaxDungeonTries)

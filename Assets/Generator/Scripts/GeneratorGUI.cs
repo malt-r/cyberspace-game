@@ -51,15 +51,15 @@ namespace Assets
                 gen.PlaceCorridors();
             }
 
-            if (GUILayout.Button("Instantiate Player"))
-            {
-                gen.InstantiatePlayer();
-            }
+            //if (GUILayout.Button("Instantiate Player"))
+            //{
+            //    gen.InstantiatePlayer();
+            //}
 
-            if (GUILayout.Button("MINIMAP"))
-            {
-                gen.CreateMinimap();
-            }
+            //if (GUILayout.Button("MINIMAP"))
+            //{
+            //    gen.CreateMinimap();
+            //}
 
             GUILayout.Label("When finished press this:");
             if (GUILayout.Button("Cleanup"))

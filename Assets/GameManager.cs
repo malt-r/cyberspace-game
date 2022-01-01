@@ -1,19 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Weapons;
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// TODO: determine Minimap-type and trigger minimap-creation by generator
+// TODO: store stats about game-flow
+// TODO: deactivate scanner in first level
+// TODO: place player
 public class GameManager : MonoBehaviour
 {
-    private DungeonGenerator generator;
+    // scene state
+    private DungeonGenerator _generator;
+    private GameObject _instantiatedPlayer;
     private Vector3Int _lastPassedRespawnPoint;
-    private bool _foundGenerator = false;
+    private Minimap _minimap;
+    
+    private bool _initializedScene = false;
+    
+    [SerializeField]
+    GameObject playerPrefab;
 
     [SerializeField] 
     private string startSceneName;
 
+    [SerializeField] 
+    private string[] gameLevels;
+
+    private int _gameLevelIdx = 0;
+
+    private bool _extendedMinimapOnFirstLevel;
+    private bool _extendedMinimap;
+    private bool _activateScanner;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -27,13 +48,13 @@ public class GameManager : MonoBehaviour
     {
         var marker = data as DoorMarker;
         Debug.Log("Passed door marker");
-        _lastPassedRespawnPoint = generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.RoundToInt(marker.transform.position)}).First();
+        _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.RoundToInt(marker.transform.position)}).First();
         if (_lastPassedRespawnPoint == null)
         {
-            _lastPassedRespawnPoint = generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.CeilToInt(marker.transform.position)}).First();
+            _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.CeilToInt(marker.transform.position)}).First();
             if (_lastPassedRespawnPoint == null)
             {
-                _lastPassedRespawnPoint = generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.FloorToInt(marker.transform.position)}).First();
+                _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.FloorToInt(marker.transform.position)}).First();
                 if (_lastPassedRespawnPoint == null)
                 {
                     Debug.LogError("Invalid door marker position, can't find corresponding door dock");
@@ -62,20 +83,122 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_foundGenerator)
+        if (!_initializedScene)
         {
-            generator = FindObjectOfType<DungeonGenerator>();
-            if (generator != null && generator.FinishedGenerating)
+            _initializedScene = InitializeScene();
+        }
+    }
+
+    bool InitializeScene()
+    {
+        _generator = FindObjectOfType<DungeonGenerator>();
+        if (_generator != null && _generator.FinishedGenerating) // generator will start generating on scene loading
+        {
+            if (!InstantiatePlayer())
             {
-                _foundGenerator = true;
+                Debug.LogError("Could not instantiate player");
+            }
+            else 
+            {
+                // create minimap
+                _minimap = _generator.CreateMinimap(_instantiatedPlayer);
+                SetScannerActive(_activateScanner);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void InitFirstLevel()
+    {
+        _extendedMinimapOnFirstLevel = Random.Range(0, 1) == 1;
+        _activateScanner = false;
+    }
+
+    private void ResetSceneState()
+    {
+        _generator = null;
+        _instantiatedPlayer = null;
+        _minimap = null;
+        _lastPassedRespawnPoint = Vector3Int.zero;
+        _initializedScene = false;
+    }
+    
+    private void LoadScene(int levelIdx)
+    {
+        SceneManager.LoadScene(gameLevels[levelIdx]);
+        ResetSceneState();
+        if (levelIdx == 0)
+        {
+            InitFirstLevel();
+        }
+    }
+
+    private void SetScannerActive(bool value)
+    {
+        if (_instantiatedPlayer == null)
+        {
+            Debug.LogError("No player instance");
+            return;
+        }
+
+        var weaponControl = _instantiatedPlayer.GetComponent<WeaponControl>();
+        if (weaponControl == null)
+        {
+            Debug.LogError("Could not find weaponcontrol in playerinstance");
+        }
+        else
+        {
+            weaponControl.enabled = value;
+        }
+
+        var camera = _instantiatedPlayer.GetComponentInChildren<Camera>(true);
+        if (camera == null)
+        {
+            Debug.LogError("Could not find camera in children of player instance");
+        }
+        else
+        {
+            var camGameObj = camera.gameObject;
+            var scanner = camGameObj.GetComponentInChildren<Scanner>(true);
+            if (scanner == null)
+            {
+                Debug.LogError("Could not find Scanner");
+            }
+            else
+            {
+                scanner.gameObject.SetActive(value);
             }
         }
     }
 
-    public void LoadScene(string name)
+    public void LoadNextGameLevel()
     {
-        SceneManager.LoadScene(name);
-        generator = null;
-        _foundGenerator = false;
+        if (_gameLevelIdx < gameLevels.Length)
+        {
+            LoadScene(_gameLevelIdx);
+            _gameLevelIdx++;
+        }
+        else
+        {
+            Debug.LogError("Index is already at the end of gameLevel array");
+        }
+    }
+
+    private bool InstantiatePlayer()
+    {
+        var spawnPoint = FindObjectOfType<SpawnPoint>();
+        if (spawnPoint == null)
+        {
+            Debug.LogError("Could not find SpawnPoint in Scene");
+        }
+        else 
+        {
+            _instantiatedPlayer = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+            return true;
+        }
+        return false;
     }
 }

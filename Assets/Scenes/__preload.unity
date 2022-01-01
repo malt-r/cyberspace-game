@@ -168,7 +168,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3ec93755759d944b84c9b5489275bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 8446778818680392781, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
   startSceneName: 0_MainMenue
+  gameLevels:
+  - 1_Level1_V2
 --- !u!114 &157760535
 MonoBehaviour:
   m_ObjectHideFlags: 0
