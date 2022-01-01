@@ -371,6 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ccc4df2cd5b61349b2eb9a41f00b5cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  materialAfterDone: {fileID: 2100000, guid: f104b7d2d7eb9a545ba160efee12b2be, type: 2}
   isDone: 0
 --- !u!114 &1442562779109987467
 MonoBehaviour:
