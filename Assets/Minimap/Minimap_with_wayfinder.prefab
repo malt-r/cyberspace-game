@@ -127,8 +127,8 @@ MonoBehaviour:
   FollowTargetOrigin: {x: 0, y: 0, z: 0}
   FollowDeltaScaling: 0.2
   playerMarker: {fileID: 1569339768493587052}
-  playerMarkerScale: 1.6
-  cameraProjectionSize: 6.5
+  playerMarkerScale: 1
+  cameraProjectionSize: 5
 --- !u!114 &6170732818136236662
 MonoBehaviour:
   m_ObjectHideFlags: 0
