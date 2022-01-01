@@ -150,9 +150,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
     [Header("Grid specification")]
 
-    //[Tooltip("Dimensions of Grid in cells")]
-    //[SerializeField]
-
     [Tooltip("Size of the sides of one cell")]
     [SerializeField]
     int CellSize = 4;
@@ -303,8 +300,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
     CellPathData[,] _cellPathData;
 
-    //GameObject _playerInstance;
-
     bool _generationSuccessfull = false;
 
     // TODO: find better place for this
@@ -349,25 +344,6 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         return GridDirections[((int)dir)];
     }
-
-    [SerializeField]
-    GameObject playerPrefab;
-
-
-    //public void InstantiatePlayer()
-    //{
-    //    var rooms = _instantiatedRooms.Where(room => room.Value.GetFirstStoryMarker().IndexInStory == 0);
-    //    var spawnPoint = FindObjectOfType<SpawnPoint>();
-    //    var startRoom = rooms.First().Value;
-    //    if (spawnPoint != null)
-    //    {
-    //        _playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-    //    }
-    //    else
-    //    {
-    //        _playerInstance = Instantiate(playerPrefab, startRoom.GameObject.transform.position + startRoom.GameObject.transform.rotation * new Vector3(3, 3, 3) , this.transform.rotation);
-    //    }
-    //}
 
     // Start is called before the first frame update
     void Start()
@@ -1266,27 +1242,11 @@ public partial class DungeonGenerator : MonoBehaviour
         _partitionDims = new List<Vector2Int>();
         _partitionDimensionRanges = new List<PartitionDimensionRange>();
         
-        //DestroyPlayer();
         if (Minimap != null)
         {
             Minimap.Cleanup();
         }
     }
-
-    //private void DestroyPlayer()
-    //{
-    //    if (null != _playerInstance)
-    //    {
-    //        if (Application.isEditor)
-    //        {
-    //            DestroyImmediate(_playerInstance);
-    //        } 
-    //        else
-    //        {
-    //            Destroy(_playerInstance);
-    //        }
-    //    }
-    //}
 
     private void DestroyCorridors()
     {
@@ -1619,7 +1579,6 @@ public partial class DungeonGenerator : MonoBehaviour
                         ", skipped rooms: " + 
                         roomsSkipped
                         );
-                //CreateGrid(Vector3Int.one * OuterBufferZone);
                 UnmarkTemplatesForInstantiation();
                 return false;
             }
@@ -1730,7 +1689,6 @@ public partial class DungeonGenerator : MonoBehaviour
                 _instantiatedRooms[placementCandidate.TemplateIdx].AssociatedCells.Add(occupiedCell);
             }
         }
-        //_instantiatedRooms.Sort(new RoomComparer());
     }
 
     public void GenerateDungeon()
@@ -1754,17 +1712,8 @@ public partial class DungeonGenerator : MonoBehaviour
             }
 
             PlaceCorridors();
-            //InstantiatePlayer();
             _generationSuccessfull = true;
             
-            //if (Minimap == null)
-            //{
-            //    Debug.LogError("Minimap object is null");
-            //} 
-            //else
-            //{
-            //    Minimap.CreateMinimap(_grid, _gridDimensions, _playerInstance, CellSize, _cellPathData, this);
-            //}
             success = true;
         }
         if (currentTries >= MaxDungeonTries)
