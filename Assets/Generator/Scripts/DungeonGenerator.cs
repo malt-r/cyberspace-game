@@ -1919,7 +1919,7 @@ public partial class DungeonGenerator : MonoBehaviour
         return doorDockCells;
     }
 
-    private List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)
+    public List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)
     {
         List<Vector3Int> doorDockCells = new List<Vector3Int>();
         foreach (var doorCell in doorCells)

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Android;
 using static DungeonGenerator;
 
+// Questionmark
 public class Minimap : MonoBehaviour
 {
     [SerializeField] private bool SetAllInactive;
@@ -36,6 +37,9 @@ public class Minimap : MonoBehaviour
     [SerializeField]
     GameObject TilePrefabRoomOneSide;
 
+    [SerializeField] 
+    GameObject TilePrefabQuestionMark;
+
     [Header("Options")] [SerializeField] bool enableWayfinding;
 
     GameObject _toFollow;
@@ -51,6 +55,8 @@ public class Minimap : MonoBehaviour
     private int _prevStoryMarkerIdx = -1;
 
     HashSet<int> _seenRooms;
+    private HashSet<Vector3Int> _seenCells;
+    private Dictionary<Vector3Int, GameObject> _markedWithQuestionMark;
 
     DungeonGenerator _generator;
 
@@ -142,14 +148,19 @@ public class Minimap : MonoBehaviour
         {
             if (_instantiatedTiles[cellIdx.x, cellIdx.z] != null)
             {
-                _instantiatedTiles[cellIdx.x, cellIdx.z].gameObject.SetActive(true);
+                // mark not-uncovered cells with questionmark
+                //_instantiatedTiles[cellIdx.x, cellIdx.z].gameObject.SetActive(true);
+                UncoverCell(cellIdx);
+                
             }
         }
         else if (_dungeonGrid[cellIdx].type != CellType.DoorDock)
         {
             if (!_seenRooms.Contains(roomIdx))
             {
+                // mark not-uncovered cells with questionmark -> door docks?
                 UncoverRoom(roomIdx);
+                
             }
         }
 
@@ -159,13 +170,68 @@ public class Minimap : MonoBehaviour
         }
     }
 
+    private void MarkCellWithQuestionMark(Vector3Int cell)
+    {
+        if (_markedWithQuestionMark.ContainsKey(cell)) return;
+        
+        var placementPosition = this.transform.position + cell + Vector3.up;
+        var questionMarkTile = (Instantiate(TilePrefabQuestionMark, placementPosition, Quaternion.identity, this.transform));
+        _markedWithQuestionMark.Add(cell, questionMarkTile);
+    }
+
+    private void UncoverCell(Vector3Int cell)
+    {
+        _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
+        _seenCells.Add(cell);
+        
+        if (_markedWithQuestionMark.TryGetValue(cell, out var questionMarkTile))
+        {
+            _markedWithQuestionMark.Remove(cell);
+            Destroy(questionMarkTile);
+        }
+
+        var neighborsInPaths = _dungeonGrid[cell].neighborsInPaths;
+        if (neighborsInPaths != null)
+        {
+            foreach (var neighbor in neighborsInPaths)
+            {
+                if (!_seenCells.Contains(neighbor))
+                {
+                    MarkCellWithQuestionMark(neighbor);
+                }
+            }
+        }
+        
+        if (_dungeonGrid[cell].type == CellType.DoorDock)
+        {
+            var doorCell = _dungeonGrid[cell].doorCellOfDoorDock;
+            if (!_seenCells.Contains(doorCell))
+            {
+                MarkCellWithQuestionMark(doorCell);
+            }
+        }
+    }
+
     private void UncoverRoom(int roomIdx)
     {
         // activate all tiles associated with room
         var cells = _generator.GetAssociatedCellsOfRoom(roomIdx);
         foreach (var cell in cells)
         {
-            _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
+            // _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
+            UncoverCell(cell);
+
+            if (_dungeonGrid[cell].type == CellType.Door)
+            {
+                var docks = _generator.GetDoorDockCells(new List<Vector3Int>{cell});
+                foreach (var dock in docks)
+                {
+                    if (!_seenCells.Contains(dock))
+                    {
+                        MarkCellWithQuestionMark(dock);
+                    }
+                }
+            }
         }
         _seenRooms.Add(roomIdx);
     }
@@ -202,6 +268,8 @@ public class Minimap : MonoBehaviour
         _cellSize = CellSize;
         _generator = generator;
         _extendedVariation = extendedVariation;
+        _seenCells = new HashSet<Vector3Int>();
+        _markedWithQuestionMark = new Dictionary<Vector3Int, GameObject>();
 
         // implement variation of minimap
         SetAllInactive = !extendedVariation;
