@@ -37,8 +37,14 @@ public class GameManager : MonoBehaviour
     {
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
+        EventManager.StartListening("Collectible/Collect", HandleCollectible);
         
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private void HandleCollectible(object arg0)
+    {
+        Debug.Log("Collected collectible");
     }
 
     // store door dock as last passed respawn point

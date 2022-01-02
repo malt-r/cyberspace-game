@@ -18,9 +18,9 @@ public class Collectible : BaseItem
 
     private void handlePickup()
     {
+        OnPickup();
         SoundManager.PlaySound(Sound.CollectiblePickup);
         this.gameObject.SetActive(false);
         //TODO: Malte MR : Hier kannst du eingreifen 
-        OnPickup();
     }
 }

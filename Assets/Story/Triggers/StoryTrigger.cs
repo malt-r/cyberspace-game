@@ -49,25 +49,27 @@ public class StoryTrigger : MonoBehaviour
     public StoryEventData CreateEventData(string eventName)
     {
         StoryEventData data = new StoryEventData();
-        data
-            .SetMarker(_marker)
-            .SetEventName(eventName);
+        if (_marker != null)
+        {
+            data.SetMarker(_marker);
+        }
+        data.SetEventName(eventName);
         return data;
     }
 
     public void Activate()
     {
-        if (!_marker.AccomplishedMarker)
+        if (_marker != null && !_marker.AccomplishedMarker)
         {
             _marker.AccomplishedMarker = true;
             
             // standard event for story progression
-            var data = CreateEventData(StoryManager.evt_StoryMarkerActivated);
-            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, data);
-            
-            // custom event for triggering of specific response
-            data = CreateEventData(storyEventName);
-            EventManager.TriggerEvent(storyEventName, data);
+            var storyData = CreateEventData(StoryManager.evt_StoryMarkerActivated);
+            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, storyData);
         }
+        
+        // custom event for triggering of specific response
+        var data = CreateEventData(storyEventName);
+        EventManager.TriggerEvent(storyEventName, data);
     }
 }
