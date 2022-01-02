@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class SnackbarManager : MonoBehaviour
 {
@@ -25,15 +23,16 @@ public class SnackbarManager : MonoBehaviour
   private GameObject snackbarUI;
   void Start()
   {
-    CheckForSnackbarUI();
+    ResetSnackbarUI();
     if(snackbarUI){
       title.text = "";
       text.text = "";
+      backgroundImage.transform.gameObject.SetActive(false);
     }
   }
   private void Update()
   {
-    CheckForSnackbarUI();
+    ResetSnackbarUI();
     if (hasMessage)
     {
       currentTime += Time.deltaTime;
@@ -45,7 +44,7 @@ public class SnackbarManager : MonoBehaviour
     }
   }
 
-  private void CheckForSnackbarUI()
+  private void ResetSnackbarUI()
   {
     if (snackbarUI == null)
     {
@@ -57,8 +56,6 @@ public class SnackbarManager : MonoBehaviour
       title = GameObject.Find("SnackbarUITitle").GetComponent<TMP_Text>();
       text = GameObject.Find("SnackbarUIMessage").GetComponent<TMP_Text>();
       backgroundImage = GameObject.Find("SnackbarUIBackground").GetComponent<Image>();
-
-
     }
   }
 
@@ -68,6 +65,7 @@ public class SnackbarManager : MonoBehaviour
     text.text = "";
     hasMessage = false;
     currentTime = 0;
+    backgroundImage.transform.gameObject.SetActive(false);
   }
 
   public enum SnackbarMessageType
@@ -76,6 +74,7 @@ public class SnackbarManager : MonoBehaviour
   }
   public void DisplayMessage(string message, float time = 15f, SnackbarMessageType type =SnackbarMessageType.Information)
   {
+    backgroundImage.transform.gameObject.SetActive(true);
     if (title != null)
     { title.text = getDisplayStringOfEnum(type);}
     if (text != null) {text.text = message;}
