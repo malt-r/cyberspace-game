@@ -9,10 +9,11 @@ using UnityEngine.InputSystem.HID;
 public class TutorialManager : MonoBehaviour
 {
     [SerializeField] private bool skipTutorial;
-    
+    [SerializeField] private bool disableMinimapOnStart;
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
+    private GameObject _minimapUIPanel;
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
     private bool _currentStageFinished = false;
@@ -27,6 +28,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
+    private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
 
     private bool _readyForNextStage = true;
 
@@ -83,11 +85,19 @@ public class TutorialManager : MonoBehaviour
                     _currentTutorialStage = TutorialStage.free;
                 }
                 _snackBar = FindObjectOfType<SnackbarManager>();
+
+                _minimapUIPanel = GameObject.Find("MinimapUIPanel");
+                if (_minimapUIPanel != null && disableMinimapOnStart)
+                {
+                    _minimapUIPanel.SetActive(false);
+                }
+                
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
 
                 EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
                 EventManager.StartListening("Minigame/GetSprint", HandleLearnSprint);
+                EventManager.StartListening("tut_leave", HandleLeaveTutorial);
                 
                 EventManager.StartListening(MinigameInteractor.evt_EnterCollider, HandleInteractPrompt);
                 EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
@@ -100,6 +110,11 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    private void HandleLeaveTutorial(object arg0)
+    {
+        _minimapUIPanel.SetActive(true);
+        DisplayPopup(msg_minimap);
+    }
 
 
     void ImplementFirstTutorial()

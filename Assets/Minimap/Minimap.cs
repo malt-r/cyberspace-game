@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Android;
 using static DungeonGenerator;
+using Debug = UnityEngine.Debug;
 
 // Questionmark
 public class Minimap : MonoBehaviour
@@ -187,30 +189,33 @@ public class Minimap : MonoBehaviour
         _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
         _seenCells.Add(cell);
         
-        if (_markedWithQuestionMark.TryGetValue(cell, out var questionMarkTile))
+        if (!_extendedVariation)
         {
-            _markedWithQuestionMark.Remove(cell);
-            Destroy(questionMarkTile);
-        }
-
-        var neighborsInPaths = _dungeonGrid[cell].neighborsInPaths;
-        if (neighborsInPaths != null)
-        {
-            foreach (var neighbor in neighborsInPaths)
+            if (_markedWithQuestionMark.TryGetValue(cell, out var questionMarkTile))
             {
-                if (!_seenCells.Contains(neighbor))
+                _markedWithQuestionMark.Remove(cell);
+                Destroy(questionMarkTile);
+            }
+
+            var neighborsInPaths = _dungeonGrid[cell].neighborsInPaths;
+            if (neighborsInPaths != null)
+            {
+                foreach (var neighbor in neighborsInPaths)
                 {
-                    MarkCellWithQuestionMark(neighbor);
+                    if (!_seenCells.Contains(neighbor))
+                    {
+                        MarkCellWithQuestionMark(neighbor);
+                    }
                 }
             }
-        }
-        
-        if (_dungeonGrid[cell].type == CellType.DoorDock)
-        {
-            var doorCell = _dungeonGrid[cell].doorCellOfDoorDock;
-            if (!_seenCells.Contains(doorCell))
+            
+            if (_dungeonGrid[cell].type == CellType.DoorDock)
             {
-                MarkCellWithQuestionMark(doorCell);
+                var doorCell = _dungeonGrid[cell].doorCellOfDoorDock;
+                if (!_seenCells.Contains(doorCell))
+                {
+                    MarkCellWithQuestionMark(doorCell);
+                }
             }
         }
     }
@@ -224,14 +229,17 @@ public class Minimap : MonoBehaviour
             // _instantiatedTiles[cell.x, cell.z].gameObject.SetActive(true);
             UncoverCell(cell);
 
-            if (_dungeonGrid[cell].type == CellType.Door)
+            if (!_extendedVariation)
             {
-                var docks = _generator.GetDoorDockCells(new List<Vector3Int>{cell});
-                foreach (var dock in docks)
+                if (_dungeonGrid[cell].type == CellType.Door)
                 {
-                    if (!_seenCells.Contains(dock))
+                    var docks = _generator.GetDoorDockCells(new List<Vector3Int>{cell});
+                    foreach (var dock in docks)
                     {
-                        MarkCellWithQuestionMark(dock);
+                        if (!_seenCells.Contains(dock))
+                        {
+                            MarkCellWithQuestionMark(dock);
+                        }
                     }
                 }
             }

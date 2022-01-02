@@ -129,6 +129,9 @@ public class StoryManager : MonoBehaviour
         // update task description in UI
         storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
         storyTextlabel.text = _currentStoryMarker.Description;
+        
+        GameObject.Find("StoryUI").transform.Find("Task").GetComponent<Animator>()
+            .SetTrigger("TriggerAnimation");
     }
 
     private void FinishLevel(object data)
