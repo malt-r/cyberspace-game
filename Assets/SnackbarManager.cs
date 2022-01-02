@@ -23,6 +23,7 @@ public class SnackbarManager : MonoBehaviour
   private GameObject snackbarUI;
   void Start()
   {
+    snackbarUI = GameObject.Find("SnackbarUI");
     ResetSnackbarUI();
     if(snackbarUI){
       title.text = "";
@@ -56,6 +57,7 @@ public class SnackbarManager : MonoBehaviour
       title = GameObject.Find("SnackbarUITitle").GetComponent<TMP_Text>();
       text = GameObject.Find("SnackbarUIMessage").GetComponent<TMP_Text>();
       backgroundImage = GameObject.Find("SnackbarUIBackground").GetComponent<Image>();
+      hideText();
     }
   }
 
