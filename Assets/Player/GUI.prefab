@@ -843,6 +843,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: SnackbarUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5705520378400198429, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_text
+      value: sdfsdf
+      objectReference: {fileID: 0}
+    - target: {fileID: 6579212147336471938, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_text
+      value: sdfsdf
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 616.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 308.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7297121600629754811, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -111.99976
+      objectReference: {fileID: 0}
     - target: {fileID: 8613371505879280593, guid: d7b2d337a69b23840b7f365567d16227, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

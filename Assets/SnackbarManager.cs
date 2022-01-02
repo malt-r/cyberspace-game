@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class SnackbarManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SnackbarManager : MonoBehaviour
   
   [SerializeField] private TMP_Text title;
   [SerializeField] private TMP_Text text;
+  [SerializeField] private Image backgroundImage;
 
   [SerializeField] private bool hasMessage;
 
@@ -52,8 +54,11 @@ public class SnackbarManager : MonoBehaviour
       {
         return;
       }
-      title = snackbarUI.transform.GetChild(0).GetComponent<TMP_Text>();
-      text = snackbarUI.transform.GetChild(1).GetComponent<TMP_Text>();
+      title = GameObject.Find("SnackbarUITitle").GetComponent<TMP_Text>();
+      text = GameObject.Find("SnackbarUIMessage").GetComponent<TMP_Text>();
+      backgroundImage = GameObject.Find("SnackbarUIBackground").GetComponent<Image>();
+
+
     }
   }
 
