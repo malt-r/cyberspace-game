@@ -202,7 +202,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.25833702
+        value: 0.1276455
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -353,7 +353,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4640311777577553755, guid: ce4a6380ccc6b734aa8828e39472fa9a, type: 3}
       propertyPath: m_VersionIndex
-      value: 895
+      value: 898
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce4a6380ccc6b734aa8828e39472fa9a, type: 3}
