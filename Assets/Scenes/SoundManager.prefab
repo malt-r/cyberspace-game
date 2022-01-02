@@ -48,13 +48,13 @@ MonoBehaviour:
   MenueSound: {fileID: 8300000, guid: 2ae7931bf123447448a2ffec497811b1, type: 3}
   BackgroundSound: {fileID: 8300000, guid: 0db5405604d637f4a9baa544ccf4a037, type: 3}
   audioClips:
-  - sound: 4
+  - sound: 3
     clip: {fileID: 8300000, guid: 41cfd9d5497136546aec1b9eace0231f, type: 3}
+  - sound: 4
+    clip: {fileID: 8300000, guid: 8d25f782fcd55384fa1c33310d47f083, type: 3}
   - sound: 0
     clip: {fileID: 0}
-  - sound: 0
-    clip: {fileID: 0}
-  - sound: 0
+  - sound: 1
     clip: {fileID: 0}
   - sound: 5
     clip: {fileID: 8300000, guid: 747ba53d9fcb54b4bb2bdd8ea8c7cc85, type: 3}
