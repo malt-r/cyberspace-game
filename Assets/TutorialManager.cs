@@ -28,7 +28,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
-    private const string msg_minimap = "Die Minimap rechts oben hilft bei der Erkundung";
+    private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
 
     private bool _readyForNextStage = true;
 
