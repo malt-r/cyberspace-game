@@ -96,15 +96,16 @@ public class SoundManager : MonoBehaviour
   }
 }
 
+//Obacht: Das ändern der Enumreihenfolge macht die Zuordnung in der Szene kaputt!
 public enum Sound
 {
-  PlayerMove,
   PlayerHit,
   EnemyHit,
   EnemyDie,
   ItemPickup,
-  GUICLick
-}
+  CollectiblePickup,
+  GUICLick,
+  }
 
 
 [Serializable]

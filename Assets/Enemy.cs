@@ -75,13 +75,13 @@ public class Enemy : MonoBehaviour
 
         var ownTransform = transform;
         var ownPosition = ownTransform.position;
-        var playerPosition = player.transform.position;
+        var playerPosition = player.transform.position+ Vector3.up/2;
         var targetVec = playerPosition - ownPosition;
         var angle = Vector3.Angle(targetVec, ownTransform.forward);
 
         
         var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
-        Debug.DrawRay(ownPosition, targetVec, Color.green);
+        //Debug.DrawRay(ownPosition, targetVec, Color.green);
         
         if (!hitSomething) { return; }
         if (!hit.collider.tag.Equals("Player")) { return;}

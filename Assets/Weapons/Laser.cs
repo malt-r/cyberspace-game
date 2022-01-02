@@ -45,7 +45,7 @@ public class Laser : BaseWeapon
         }
         else
         {
-            lineRenderer.SetPosition(1,Camera.transform.position + Camera.forward);
+            lineRenderer.SetPosition(1,Camera.transform.position + Camera.forward * range);
         }
     }
     

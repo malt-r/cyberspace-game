@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4205211748122512755}
   - component: {fileID: 1534128070161470307}
   m_Layer: 2
-  m_Name: Absorber
+  m_Name: AbsorberMode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

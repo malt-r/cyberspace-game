@@ -39,15 +39,17 @@ public class PlayerDetector : MonoBehaviour
         }
         var ownTransform = transform;
         var ownPosition = ownTransform.position;
-        var playerPosition = detectedPlayer.transform.position;
+        var playerPosition = detectedPlayer.transform.position+ Vector3.up/2;
         var targetVec = playerPosition - ownPosition;
+        targetVec.y += 1;
 
 
         var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
-        Debug.DrawRay(ownPosition, targetVec, Color.green);
+        Debug.DrawRay(ownPosition, targetVec, Color.red);
 
         reachablePlayer = null;
         if (!hitSomething) { return; }
+        //Debug.Log($"{hit.collider.tag},{hit.collider.name}");
         if (!hit.collider.tag.Equals("Player")) { return;}
 
         distance = Vector3.Distance(ownPosition, hit.transform.position);
