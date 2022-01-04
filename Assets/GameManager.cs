@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
 using TMPro;
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     private DungeonGenerator _generator;
     private GameObject _instantiatedPlayer;
     private Vector3Int _lastPassedRespawnPoint;
+    private Vector3 _lastPassedDoorMarkerPos;
     private Minimap _minimap;
     private int _totalCollectibleCount;
     private int _collectedCount;
@@ -60,6 +62,7 @@ public class GameManager : MonoBehaviour
     private void HandlePassDoorMarker(object data)
     {
         var marker = data as DoorMarker;
+        _lastPassedDoorMarkerPos = marker.transform.position;
         Debug.Log("Passed door marker");
         _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.RoundToInt(marker.transform.position)}).First();
         if (_lastPassedRespawnPoint == null)
@@ -90,6 +93,7 @@ public class GameManager : MonoBehaviour
             var combatant = actorObject.GetComponent<CombatParticipant>();
             combatant.Revive();
             actorObject.transform.position = _lastPassedRespawnPoint;
+            _instantiatedPlayer.GetComponent<FirstPersonController>().ForceLookAt(_lastPassedDoorMarkerPos);
             actorObject.SetActive(true);
         }
     }

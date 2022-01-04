@@ -66,7 +66,7 @@ namespace StarterAssets
 		public bool canSprint = false;
 
 		// cinemachine
-		private float yRotationVelocity;
+		private float yLookAngle;
 
 		// player
 		private float _speed;
@@ -170,7 +170,7 @@ namespace StarterAssets
 				audioSource.volume = Random.Range(0.4f, 0.6f);
 				audioSource.pitch = Random.Range(0.9f, 1.1f);
 				audioSource.Play();
-				Debug.Log("Running");
+				//Debug.Log("Running");
 			}
 			if (_controller.isGrounded && _controller.velocity.magnitude > 2.0f &!audioSource.isPlaying)
 			{
@@ -178,7 +178,7 @@ namespace StarterAssets
 				audioSource.volume = Random.Range(0.4f, 0.6f);
 				audioSource.pitch = Random.Range(0.9f, 1.1f);
 				audioSource.Play();
-				Debug.Log("Walking");
+				//Debug.Log("Walking");
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace StarterAssets
 				audioSource.volume = 0.5f;
 				audioSource.pitch = 1f;
 				audioSource.PlayOneShot(jumpingSoundEnd);
-				Debug.Log("Landed");
+				//Debug.Log("Landed");
 			}
 		}
 
@@ -225,17 +225,28 @@ namespace StarterAssets
 			// if there is an input
 			if (_input.look.sqrMagnitude >= _threshold)
 			{
-				yRotationVelocity += _input.look.y * RotationSpeed * Time.deltaTime;
+				yLookAngle += _input.look.y * RotationSpeed * Time.deltaTime;
 				xRotationVelocity = _input.look.x * RotationSpeed * Time.deltaTime;
 
 				// clamp our pitch rotation
-				yRotationVelocity = ClampAngle(yRotationVelocity, BottomClamp, TopClamp);
+				yLookAngle = ClampAngle(yLookAngle, BottomClamp, TopClamp);
 
 
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * xRotationVelocity);
-				MainCamera.transform.localRotation = Quaternion.Euler(yRotationVelocity, 0.0f, 0.0f);
+				MainCamera.transform.localRotation = Quaternion.Euler(yLookAngle, 0.0f, 0.0f);
 			}
+		}
+		
+		
+		public void ForceLookAt(Vector3 LookAt)
+		{
+			var directionToLookAt = LookAt - transform.position;
+			var transRot = Quaternion.FromToRotation(transform.forward, directionToLookAt).eulerAngles;
+			
+			transform.Rotate(Vector3.up * transRot.y);
+			MainCamera.transform.localRotation= Quaternion.Euler(0, 0, 0);
+			yLookAngle = 0;
 		}
 
 		private void Move()
@@ -307,7 +318,7 @@ namespace StarterAssets
 					audioSource.volume = 0.5f;
 					audioSource.pitch = 1f;
 					audioSource.PlayOneShot(jumpingSoundStart);
-					Debug.Log("Jumping");
+					//Debug.Log("Jumping");
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 					_input.jump = false;
