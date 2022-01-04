@@ -28,6 +28,7 @@ public class ActorStats : MonoBehaviour
 		else
 		{
 			EventManager.TriggerEvent("Combat/EnemyDied", this.gameObject);
+			SoundManager.PlaySound(Sound.EnemyDie);
 		}
 	}
 
