@@ -59,6 +59,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectedPlayer: {fileID: 0}
   TargetTag: Player
+  range: 20
+  reachablePlayer: {fileID: 0}
+  distance: 0
 --- !u!1 &6352733567694271562
 GameObject:
   m_ObjectHideFlags: 0
@@ -5309,8 +5312,9 @@ MonoBehaviour:
   rotationSpeed: 0.25
   inverse: 1
   dropableItems:
-  - {fileID: 6787548328456421411, guid: 4830eebd955d7b94a981bc297c4565e9, type: 3}
   - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
+  - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
+  ForceIdle: 0
 --- !u!195 &1441803958301013956
 NavMeshAgent:
   m_ObjectHideFlags: 0
