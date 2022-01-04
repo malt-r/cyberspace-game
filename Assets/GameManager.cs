@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
 
             _totalCollectibleCount = _generator.PlacedCollectibles;
             _collectibleGuiController = FindObjectOfType<CollectibleGuiController>();
+            _collectibleGuiController.UpdateGui(0, _totalCollectibleCount, false);
             
             return true;
         }

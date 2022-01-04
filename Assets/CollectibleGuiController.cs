@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class CollectibleGuiController : MonoBehaviour
 {
@@ -12,9 +13,13 @@ public class CollectibleGuiController : MonoBehaviour
     private TMP_Text _collectibleGUIText;
     
     private bool wasShownTimed;
+    private bool initialized = false;
 
     private float lifeTime;
     private float currentTime;
+
+    private int _currentCollected;
+    private int _total;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +30,14 @@ public class CollectibleGuiController : MonoBehaviour
         
         _collectibleGUIAnimation.SetActive(false);
         _collectibleGUIStat.SetActive(false);
+        
+        UpdateText();
+        initialized = true;
+    }
+
+    private void UpdateText()
+    {
+        _collectibleGUIText.text = $"{_currentCollected} / {_total}";
     }
 
     // Update is called once per frame
@@ -41,10 +54,19 @@ public class CollectibleGuiController : MonoBehaviour
         }
     }
 
-    public void UpdateGui(int currentCollected, int total, bool timed = true)
+    public void UpdateGui(int currentCollected, int total, bool showGui = true, bool timed = true)
     {
-        _collectibleGUIText.text = $"{currentCollected} / {total}";
-        ShowGui(timed);
+        _currentCollected = currentCollected;
+        _total = total;
+        
+        if (initialized)
+        {
+            UpdateText();
+            if (showGui)
+            {
+                ShowGui(timed);
+            }
+        }
     }
 
     public void ShowGui(bool timed = true)
