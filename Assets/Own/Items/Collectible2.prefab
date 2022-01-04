@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6490976271153769474}
   - component: {fileID: 6490976271153769475}
   - component: {fileID: 6490976271153769473}
+  - component: {fileID: 4060038778580967817}
   m_Layer: 0
   m_Name: Collectible2
   m_TagString: Untagged
@@ -58,6 +59,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46e0d9c1ed984e079360201dfe5dc67c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4060038778580967817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6490976271153769484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a62f8317a6c7304ca4619f865bc5481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyEventName: Collectible/Collect
+  marker: {fileID: 0}
+  ItemToWatch: {fileID: 6490976271153769473}
 --- !u!1001 &6490976270991977235
 PrefabInstance:
   m_ObjectHideFlags: 0

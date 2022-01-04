@@ -301,6 +301,7 @@ public partial class DungeonGenerator : MonoBehaviour
     CellPathData[,] _cellPathData;
 
     bool _generationSuccessfull = false;
+    private int _placedCollectibles;
 
     // TODO: find better place for this
     HashSet<Vector2Int> _triedCells = new HashSet<Vector2Int>();
@@ -311,6 +312,7 @@ public partial class DungeonGenerator : MonoBehaviour
     public List<List<Path>> PartitionedPaths { get => _partitionedPaths; }
     public CellPathData[,] CellPathDatas { get => _cellPathData; }
     public bool FinishedGenerating { get => _generationSuccessfull; }
+    public int PlacedCollectibles { get => _placedCollectibles; }
     public DungeonGrid<Cell> Grid { get => _grid; }
     public Dictionary<int, Room> InstantiatedRooms { get => _instantiatedRooms; }
 
@@ -1676,6 +1678,11 @@ public partial class DungeonGenerator : MonoBehaviour
 
             int instantiationIdx = _instantiatedRooms.Count;
             go.GetComponent<RoomMarker>().InstantiationIndex = instantiationIdx;
+            var collectiblesInRoom = go.GetComponentsInChildren<Collectible>();
+            if (collectiblesInRoom.Length > 0)
+            {
+                _placedCollectibles += collectiblesInRoom.Length;
+            }
 
             Room instantiatedRoom = new Room(go, instantiationIdx);
             

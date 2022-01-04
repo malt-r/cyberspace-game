@@ -173,6 +173,7 @@ MonoBehaviour:
   gameLevels:
   - 1_Level1_V2
   ExtendedMinimapInFirstLevel: 1
+  ShowCollectiblesTimed: 1
 --- !u!114 &157760535
 MonoBehaviour:
   m_ObjectHideFlags: 0

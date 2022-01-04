@@ -10,6 +10,7 @@ public class TutorialManager : MonoBehaviour
 {
     [SerializeField] private bool skipTutorial;
     [SerializeField] private bool disableMinimapOnStart;
+    [SerializeField] private bool messageOnFirstCollectible;
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
@@ -17,6 +18,8 @@ public class TutorialManager : MonoBehaviour
     private bool _initialized = false;
     private bool _currentStageFiredMessage = false;
     private bool _currentStageFinished = false;
+
+    private bool _foundCollectibleBefore = false;
 
     private Vector2 _prevLook;
     private Vector2 _prevMove;
@@ -29,6 +32,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
     private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
+    private const string msg_collectible = "Du hast ein Collectible gefunden, finde sie alle!";
 
     private bool _readyForNextStage = true;
 
@@ -101,6 +105,8 @@ public class TutorialManager : MonoBehaviour
                 
                 EventManager.StartListening(MinigameInteractor.evt_EnterCollider, HandleInteractPrompt);
                 EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
+                
+                EventManager.StartListening("Collectible/Collect", HandleCollectible);
             }
         }
 
@@ -108,6 +114,15 @@ public class TutorialManager : MonoBehaviour
         {
             ImplementFirstTutorial();
         }
+    }
+
+    private void HandleCollectible(object arg0)
+    {
+        if (!_foundCollectibleBefore && messageOnFirstCollectible)
+        {
+            DisplayPopup(msg_collectible, 7.0f);
+        }
+        _foundCollectibleBefore = true;
     }
 
     private void HandleLeaveTutorial(object arg0)

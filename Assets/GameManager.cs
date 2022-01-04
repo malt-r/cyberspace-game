@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
     private GameObject _instantiatedPlayer;
     private Vector3Int _lastPassedRespawnPoint;
     private Minimap _minimap;
+    private int _totalCollectibleCount;
+    private int _collectedCount;
+    private CollectibleGuiController _collectibleGuiController;
     
     private bool _initializedScene = false;
     
@@ -29,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] 
     private bool ExtendedMinimapInFirstLevel;
 
+    [SerializeField] 
+    public bool ShowCollectiblesTimed;
+
     private bool _extendedMinimap;
     private bool _activateScanner;
     
@@ -37,8 +44,16 @@ public class GameManager : MonoBehaviour
     {
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
+        EventManager.StartListening("Collectible/Collect", HandleCollectible);
         
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private void HandleCollectible(object arg0)
+    {
+        Debug.Log("Collected collectible");
+        _collectedCount++;
+        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount, timed: ShowCollectiblesTimed);
     }
 
     // store door dock as last passed respawn point
@@ -105,6 +120,10 @@ public class GameManager : MonoBehaviour
                 SetScannerActive(_activateScanner);
             }
 
+            _totalCollectibleCount = _generator.PlacedCollectibles;
+            _collectibleGuiController = FindObjectOfType<CollectibleGuiController>();
+            _collectibleGuiController.UpdateGui(0, _totalCollectibleCount, false);
+            
             return true;
         }
 
