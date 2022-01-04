@@ -41,7 +41,6 @@ public class MinigameInteractor : MonoBehaviour
             {
                 currentMgStatus.SetDone();
                 disableMinigame();
-                // Tim hoerst du mich?
             }
         }
         
