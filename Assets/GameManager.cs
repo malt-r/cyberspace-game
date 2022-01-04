@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] 
     private bool ExtendedMinimapInFirstLevel;
 
+    [SerializeField] 
+    public bool ShowCollectiblesTimed;
+
     private bool _extendedMinimap;
     private bool _activateScanner;
     
@@ -50,7 +53,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Collected collectible");
         _collectedCount++;
-        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount);
+        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount, timed: false);
     }
 
     // store door dock as last passed respawn point

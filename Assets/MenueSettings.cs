@@ -56,7 +56,9 @@ public class MenueSettings : MonoBehaviour
     private void OnDisable()
     {
         var tmp = GameObject.FindObjectOfType<CollectibleGuiController>();
-        if (null != tmp)
+        var gm = GameObject.FindObjectOfType<GameManager>();
+        
+        if (null != tmp && gm != null && gm.ShowCollectiblesTimed)
         {
             tmp.HideGui();
         }
