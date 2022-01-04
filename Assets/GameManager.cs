@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Collected collectible");
         _collectedCount++;
-        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount, timed: false);
+        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount, timed: ShowCollectiblesTimed);
     }
 
     // store door dock as last passed respawn point
