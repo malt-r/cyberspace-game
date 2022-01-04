@@ -19,7 +19,7 @@ public class BulletWeapon : BaseWeapon
 
     public override void Use()
     {
-        if (!(deltaTime > atackSpeed)) return;
+        if (!CanAttack()) return;
         PlayUseSound();
         deltaTime = 0f;
         var bullet = Instantiate(bulletPrefab, Firepoint.position+Firepoint.forward*bulletPrefab.transform.localScale.z, Quaternion.LookRotation(Camera.forward,Vector3.up)).GetComponentInChildren<Bullet>();
@@ -27,4 +27,6 @@ public class BulletWeapon : BaseWeapon
         bullet.Ignite(Owner.gameObject.GetInstanceID());
 
     }
+
+    public override bool CanAttack() { return deltaTime > atackSpeed; }
 }

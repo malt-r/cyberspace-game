@@ -59,6 +59,8 @@ public class Laser : BaseWeapon
         shooted = true;
     }
 
+    public override bool CanAttack() { return true; }
+
     public void LateUpdate()
     {
         deltaTime += Time.deltaTime;

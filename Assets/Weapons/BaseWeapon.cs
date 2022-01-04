@@ -41,5 +41,7 @@ namespace Assets.Weapons
             Firepoint = firepoint;
             audioSource = GetComponent<AudioSource>();
         }
+
+        public abstract bool CanAttack();
     }
 }

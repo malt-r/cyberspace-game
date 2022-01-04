@@ -21,7 +21,7 @@ public class BombThrower : BaseWeapon
 
     public override void Use()
     {
-        if (!(deltaTime > atackSpeed)) return;
+        if (!CanAttack()) return;
         PlayUseSound();
         deltaTime = 0f;
         var forward = Camera.forward;
@@ -29,5 +29,10 @@ public class BombThrower : BaseWeapon
         bomb.GetComponent<Rigidbody>().AddForce(forward*throwingForceMultiplier,ForceMode.Impulse);
         bomb.Ignite();
 
+    }
+
+    public override bool CanAttack()
+    {
+        return deltaTime > atackSpeed;
     }
 }
