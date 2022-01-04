@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SnackbarManager : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class SnackbarManager : MonoBehaviour
   
   [SerializeField] private TMP_Text title;
   [SerializeField] private TMP_Text text;
+  [SerializeField] private Image backgroundImage;
 
   [SerializeField] private bool hasMessage;
 
@@ -23,15 +23,17 @@ public class SnackbarManager : MonoBehaviour
   private GameObject snackbarUI;
   void Start()
   {
-    CheckForSnackbarUI();
+    snackbarUI = GameObject.Find("SnackbarUI");
+    ResetSnackbarUI();
     if(snackbarUI){
       title.text = "";
       text.text = "";
+      backgroundImage.transform.gameObject.SetActive(false);
     }
   }
   private void Update()
   {
-    CheckForSnackbarUI();
+    ResetSnackbarUI();
     if (hasMessage)
     {
       currentTime += Time.deltaTime;
@@ -43,7 +45,7 @@ public class SnackbarManager : MonoBehaviour
     }
   }
 
-  private void CheckForSnackbarUI()
+  private void ResetSnackbarUI()
   {
     if (snackbarUI == null)
     {
@@ -52,8 +54,10 @@ public class SnackbarManager : MonoBehaviour
       {
         return;
       }
-      title = snackbarUI.transform.GetChild(0).GetComponent<TMP_Text>();
-      text = snackbarUI.transform.GetChild(1).GetComponent<TMP_Text>();
+      title = GameObject.Find("SnackbarUITitle").GetComponent<TMP_Text>();
+      text = GameObject.Find("SnackbarUIMessage").GetComponent<TMP_Text>();
+      backgroundImage = GameObject.Find("SnackbarUIBackground").GetComponent<Image>();
+      hideText();
     }
   }
 
@@ -63,6 +67,7 @@ public class SnackbarManager : MonoBehaviour
     text.text = "";
     hasMessage = false;
     currentTime = 0;
+    backgroundImage.transform.gameObject.SetActive(false);
   }
 
   public enum SnackbarMessageType
@@ -71,6 +76,7 @@ public class SnackbarManager : MonoBehaviour
   }
   public void DisplayMessage(string message, float time = 15f, SnackbarMessageType type =SnackbarMessageType.Information)
   {
+    backgroundImage.transform.gameObject.SetActive(true);
     if (title != null)
     { title.text = getDisplayStringOfEnum(type);}
     if (text != null) {text.text = message;}
