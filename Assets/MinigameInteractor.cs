@@ -50,6 +50,7 @@ public class MinigameInteractor : MonoBehaviour
             if (input.escape)
             {
                 disableMinigame();
+                input.escape = false;
             }
         }
     }
