@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         if (input.weaponSwitch.y != 0)
         {
@@ -31,8 +31,11 @@ public class Player : MonoBehaviour
  
         if (!input) { return; } 
         if (!input.shoot) { return; }
+
+        input.shoot = false;
         if (!weaponControl) { return; }
-        
+
+        input.shoot = true;
         weaponControl.UseWeapon();
     }
 
