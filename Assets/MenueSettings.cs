@@ -1,4 +1,6 @@
+using System;
 using StarterAssets;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +42,24 @@ public class MenueSettings : MonoBehaviour
         initSlider(musicVolumeSlider,"MusicVolume");
         initSlider(voiceVolumeSlider,"VoiceVolume");
         initSlider(soundeffectsVolumeSlider,"SoundeffectVolume");
+    }
+
+    void OnEnable()
+    {
+        var tmp = GameObject.FindObjectOfType<CollectibleGuiController>();
+        if (null != tmp)
+        {
+            tmp.ShowGui(false);
+        }
+    }
+
+    private void OnDisable()
+    {
+        var tmp = GameObject.FindObjectOfType<CollectibleGuiController>();
+        if (null != tmp)
+        {
+            tmp.HideGui();
+        }
     }
 
     private void initSlider(Slider slider, string mixerName)
