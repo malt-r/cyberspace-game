@@ -2,21 +2,17 @@ using UnityEngine;
 
 public class PlayerDetector : MonoBehaviour
 {
-    [SerializeField]
-    private Transform detectedPlayer;
-    public string TargetTag = "Player";
+    [SerializeField] private string targetTag = "Player";
+    
+    [SerializeField] private Transform detectedPlayer;
+    [SerializeField] private Transform reachablePlayer;
+    public Transform ReachablePlayer => reachablePlayer;
 
-    [SerializeField] private float range = 20f;
-    [SerializeField]
-    private Transform reachablePlayer;
-    public Transform ReachablePlayer { get => reachablePlayer; private set => reachablePlayer = value; }
-
-    [SerializeField]
-    private float distance;
+    [SerializeField] private float distance;
     public float Distance  => distance;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag(TargetTag))
+        if (other.gameObject.CompareTag(targetTag))
         {
             detectedPlayer = other.gameObject.transform;
         }
@@ -24,7 +20,7 @@ public class PlayerDetector : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag(TargetTag))
+        if (other.gameObject.CompareTag(targetTag))
         {
             detectedPlayer = null;
         }
@@ -32,30 +28,34 @@ public class PlayerDetector : MonoBehaviour
 
     private void Update()
     {
-        if (!detectedPlayer)
-        {
-            reachablePlayer = null;
-            return;
-        }
+        reachablePlayer = null;
+        if (!detectedPlayer) { return; }
+        
         var ownTransform = transform;
         var ownPosition = ownTransform.position;
-        var playerPosition = detectedPlayer.transform.position+ Vector3.up/2;
+
+        var canSeePlayer = checkIfPlayerIsVisible(ownPosition, out var playerPosition);
+        if (canSeePlayer)
+        {
+            distance = Vector3.Distance(ownPosition, playerPosition);
+            reachablePlayer = detectedPlayer;
+        }
+    }
+
+    bool checkIfPlayerIsVisible(Vector3 ownPosition, out Vector3 playerPosition)
+    {
+        
+        playerPosition = detectedPlayer.transform.position + Vector3.up * 1.5f;
         var targetVec = playerPosition - ownPosition;
-        targetVec.y += 1;
-
-
+        
         var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
+        
         Debug.DrawRay(ownPosition, targetVec, Color.red);
 
-        reachablePlayer = null;
-        if (!hitSomething) { return; }
-        //Debug.Log($"{hit.collider.tag},{hit.collider.name}");
-        if (!hit.collider.tag.Equals("Player")) { return;}
+        
+        if (!hitSomething) { return false; }
+        if (!hit.collider.tag.Equals("Player")) { return false; }
 
-        distance = Vector3.Distance(ownPosition, hit.transform.position);
-            
-        if (distance > range) { return; }
-
-        reachablePlayer = detectedPlayer;
+        return true;
     }
 }
