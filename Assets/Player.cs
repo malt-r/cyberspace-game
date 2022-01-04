@@ -34,11 +34,6 @@ public class Player : MonoBehaviour
         if (!weaponControl) { return; }
         
         weaponControl.UseWeapon();
-
-        if (input.escape)
-        {
-            
-        }
     }
 
     public void AddWeapon(BaseWeapon weapon)

@@ -41,7 +41,6 @@ public class MinigameInteractor : MonoBehaviour
             {
                 currentMgStatus.SetDone();
                 disableMinigame();
-                // Tim hoerst du mich?
             }
         }
         
@@ -50,6 +49,7 @@ public class MinigameInteractor : MonoBehaviour
             if (input.escape)
             {
                 disableMinigame();
+                input.escape = false;
             }
         }
     }

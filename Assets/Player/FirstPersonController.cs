@@ -186,6 +186,14 @@ namespace StarterAssets
 		{
 			if (!IsPlayerActionmapActive()) return;
 			CameraRotation();
+
+
+			if(!canJump){
+				_input.jump = false;
+			}
+			if(!canSprint){
+				_input.sprint = false;
+			}
 		}
 
 		private bool IsPlayerActionmapActive()
