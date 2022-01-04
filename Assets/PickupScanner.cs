@@ -13,7 +13,8 @@ public class PickupScanner : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
+    {
+        if (!other.tag.Equals("Player")) { return; }
         scanner.SetActive(true);
         SoundManager.PlaySound(Sound.ItemPickup);
         Destroy(gameObject);
