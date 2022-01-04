@@ -2010,7 +2010,7 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         var downScaled = globalCoord / CellSize;
         //return Vector3Int.RoundToInt(downScaled);
-        return Vector3Int.FloorToInt(downScaled);
+        return Vector3Int.FloorToInt(downScaled) * new Vector3Int(1, 0, 1);
     }
 
     // using own cell size
@@ -2018,7 +2018,8 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         var downScaled = globalCoord / CellSize;
         //return Vector3Int.RoundToInt(downScaled);
-        return Vector3Int.FloorToInt(downScaled);
+        //return Vector3Int.FloorToInt(downScaled);
+        return Vector3Int.FloorToInt(downScaled) * new Vector3Int(1, 0, 1);
     }
 
     // calculate the center of the cell
