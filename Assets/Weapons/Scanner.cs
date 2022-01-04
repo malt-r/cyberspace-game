@@ -135,6 +135,8 @@ namespace Assets.Weapons
             modes[currentMode].InitWeapon(owner,camera,firepoint);
         }
 
+        public override bool CanAttack() { return true; }
+
         public void AddSkill(BaseWeapon weapon)
         {
             
