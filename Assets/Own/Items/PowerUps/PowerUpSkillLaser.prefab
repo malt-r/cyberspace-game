@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCost: 25
   Material: {fileID: 2100000, guid: 58ddd6173786b644d93a25122c411681, type: 2}
-  damage: 10
+  damage: 5
   atackSpeed: 0.1
   range: 5
   shooted: 0
