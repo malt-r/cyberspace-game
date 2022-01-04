@@ -10,6 +10,7 @@ public class SoundManager : MonoBehaviour
   public static SoundManager Instance => _instance;
 
   public AudioMixer AudioMixer;
+  
 
 
   public AudioClip MenueSound;
@@ -61,20 +62,23 @@ public class SoundManager : MonoBehaviour
     if (sound == null) return;
     var soundGameObject = new GameObject(sound.ToString());
     var audioSource = soundGameObject.AddComponent<AudioSource>();
-    var audioClip = GetAudioClip(sound);
-    if (audioClip == null) return;
-    audioSource.PlayOneShot(GetAudioClip(sound));
+    var soundAudioClip = GetSoundAudioClip(sound);
+    if (soundAudioClip == null) return;
+
+    Instance.AudioMixer.GetFloat("SoundeffectVolume", out var volume);
+    var finalVolume = Mathf.Pow(10.0f, volume / 20.0f);
+    audioSource.PlayOneShot(soundAudioClip.clip,finalVolume);
     Destroy(soundGameObject,30);
   }
 
-  private static AudioClip GetAudioClip(Sound sound)
+  private static SoundAudioClip GetSoundAudioClip(Sound sound)
   {
     if (Instance == null) return null;
     foreach (var soundAudioclip in Instance.audioClips)
     {
       if (soundAudioclip.sound == sound)
       {
-        return soundAudioclip.clip;
+        return soundAudioclip;
       }
     }
 
@@ -112,4 +116,5 @@ public enum Sound
 public class SoundAudioClip {
   public Sound sound;
   public AudioClip clip;
+  public float volume;
 }
