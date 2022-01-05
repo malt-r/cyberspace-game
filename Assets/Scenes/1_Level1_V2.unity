@@ -3674,7 +3674,7 @@ PrefabInstance:
       objectReference: {fileID: 844481405}
     - target: {fileID: 1127050981, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_VersionIndex
-      value: 1604
+      value: 1610
       objectReference: {fileID: 0}
     - target: {fileID: 1862039245604673206, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_Mesh
@@ -3682,7 +3682,7 @@ PrefabInstance:
       objectReference: {fileID: 1109939979}
     - target: {fileID: 1862039245604673206, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_VersionIndex
-      value: 3242
+      value: 3248
       objectReference: {fileID: 0}
     - target: {fileID: 1862039245604673209, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_Mesh
@@ -3742,7 +3742,7 @@ PrefabInstance:
       objectReference: {fileID: 1049266511}
     - target: {fileID: 1862039246091238385, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_VersionIndex
-      value: 10367
+      value: 10373
       objectReference: {fileID: 0}
     - target: {fileID: 1862039246091238388, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_Mesh
@@ -3762,7 +3762,7 @@ PrefabInstance:
       objectReference: {fileID: 1250427208}
     - target: {fileID: 1862039246698601688, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_VersionIndex
-      value: 2388
+      value: 2394
       objectReference: {fileID: 0}
     - target: {fileID: 1862039246698601691, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
       propertyPath: m_Mesh
@@ -3772,10 +3772,6 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1250427208}
-    - target: {fileID: 5015111198027103700, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
-      propertyPath: Description
-      value: "Finde und erlerne die Spring-F\xE4higkeit"
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff08953b5ec30544f933a3010700a7d9, type: 3}
 --- !u!43 &844481405
@@ -3784,7 +3780,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-281486
+  m_Name: pb_Mesh-330832
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4160,7 +4156,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-281430
+  m_Name: pb_Mesh-330776
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4324,7 +4320,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-281460
+  m_Name: pb_Mesh-330806
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4652,7 +4648,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-281446
+  m_Name: pb_Mesh-330792
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
