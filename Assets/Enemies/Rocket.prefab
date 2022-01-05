@@ -77,7 +77,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 50
-  damage: 15
+  damage: 10
 --- !u!1 &8064135828365268202
 GameObject:
   m_ObjectHideFlags: 0
