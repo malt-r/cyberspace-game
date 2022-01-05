@@ -32,9 +32,11 @@ public class Absorber : BaseWeapon
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {
-            if(hit.distance<range){
-                lineRenderer.SetPosition(1, hit.point);
-            
+            lineRenderer.SetPosition(1, hit.point);
+            if(hit.distance>range){
+                lineRenderer.SetPosition(1,Camera.transform.position + Camera.forward * range);
+                return;
+            }   
             var item = hit.collider.GetComponent<BaseItem>();
 
                 if (item != null)
@@ -42,7 +44,7 @@ public class Absorber : BaseWeapon
                     handleItem(item);
                 }
             
-             }   
+           
         }
         else
         {
@@ -54,7 +56,7 @@ public class Absorber : BaseWeapon
     private void handleItem(BaseItem item)
     {
         var smooth = Vector3.zero;
-        var Speed = 0.2f;
+        var Speed = 0.5f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
         
         var distance = Vector3.Distance(transform.position, item.transform.position);

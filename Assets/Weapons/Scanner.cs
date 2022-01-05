@@ -114,7 +114,7 @@ namespace Assets.Weapons
             shooted = true;
         }
         
-        public void Update()
+        public void LateUpdate()
         {
             deltaTime += Time.deltaTime;
             handleHeatingAndCooling();
