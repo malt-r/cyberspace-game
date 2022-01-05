@@ -371,6 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyEventName: tut_leave
   marker: {fileID: 315986612219080510}
+  ActivateOnlyOnce: 1
   Collider: {fileID: 5213552167724617618}
   TriggerOnEnter: 0
 --- !u!1 &6464643567122763935
