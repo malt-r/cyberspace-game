@@ -18,6 +18,7 @@ namespace Statistics
     [Serializable]
     public struct GameStats
     {
+        public ulong sessionId;
         public LevelStats[] stats;
     }
     
@@ -124,7 +125,7 @@ public class GameManager : MonoBehaviour
         // why does this not persist?
         _levelStats = new Dictionary<int, Statistics.LevelStats>();
 
-        sessionID = GenerateSessionID(8);
+        sessionID = GenerateSessionID(10);
         
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
@@ -186,7 +187,6 @@ public class GameManager : MonoBehaviour
 
         _displayStats = true;
         DisplayStatsInStatsScene();
-        //DumpStats();
     }
 
     private void HandleCollectible(object arg0)
@@ -469,6 +469,7 @@ public class GameManager : MonoBehaviour
         var data = _levelStats.Values.ToArray();
         // wrap in serializable array wrapper
         GameStats stats = new GameStats();
+        stats.sessionId = sessionID;
         stats.stats = data;
         
         string dataAsJson = JsonUtility.ToJson(stats);
