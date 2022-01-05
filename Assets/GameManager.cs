@@ -1,12 +1,72 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
-using TMPro;
 using StarterAssets;
+using Statistics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // TODO: store stats about game-flow
+// - player movement
+// - number of deaths (with position)
+// - time for level completion
+// - time for minigame completion
+// - number of found collectibles
+namespace Statistics
+{
+    [Serializable]
+    public struct GameStats
+    {
+        public ulong sessionId;
+        public LevelStats[] stats;
+    }
+    
+    [Serializable]
+    public struct LevelStats
+    {
+        public string levelName;
+        public Vector3[] deaths;
+        public float timeForLevelInS;
+        public int foundCollectibles;
+        public int totalCollectibles;
+        public MinigameSolveDataPoint[] minigameData;
+        public MinimapType minimapType;
+        public MovementDataPoint[] movementData;
+    }
+
+    [Serializable]
+    public struct MovementDataPoint
+    {
+        public Vector3 position;
+        public string timestamp;
+        public MovementDataPointType type;
+    }
+
+    [Serializable]
+    public struct MinigameSolveDataPoint
+    {
+        public string minigameName;
+        public float time;
+    }
+
+    [Serializable]
+    public enum MinimapType
+    {
+        None, 
+        Basic,
+        Extended
+    }
+
+    [Serializable]
+    public enum MovementDataPointType
+    {
+        None,
+        Death,
+    }
+}
+
+
 public class GameManager : MonoBehaviour
 {
     // scene state
@@ -19,7 +79,18 @@ public class GameManager : MonoBehaviour
     private int _collectedCount;
     private CollectibleGuiController _collectibleGuiController;
     
+    // statistics
+    private Dictionary<int, Statistics.LevelStats> _levelStats;
+    private List<Statistics.MovementDataPoint> _movementDataPoints;
+    private List<Vector3> _deaths;
+    private List<MinigameSolveDataPoint> _minigameSolves;
+    private DateTime _levelStartTime;
+    private DateTime _minigameStartTime;
+    private string _currentMinigameName;
+    
     private bool _initializedScene = false;
+
+    private ulong sessionID = 0;
     
     [SerializeField]
     GameObject playerPrefab;
@@ -28,7 +99,13 @@ public class GameManager : MonoBehaviour
     private string startSceneName;
 
     [SerializeField] 
+    private string stasticsSceneName;
+
+    [SerializeField] 
     private string[] gameLevels;
+
+    [Header("Statistics")] [SerializeField]
+    private float movementRecordInterval = 1.0f;
 
     private int _gameLevelIdx = 0;
 
@@ -40,15 +117,76 @@ public class GameManager : MonoBehaviour
 
     private bool _extendedMinimap;
     private bool _activateScanner;
-    
+    private bool _displayStats;
+
     // Start is called before the first frame update
     void Start()
     {
+        // why does this not persist?
+        _levelStats = new Dictionary<int, Statistics.LevelStats>();
+
+        sessionID = GenerateSessionID(10);
+        
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
         EventManager.StartListening("Collectible/Collect", HandleCollectible);
+        EventManager.StartListening("Level/EndLevel", HandleEndLevel);
+        
+        // minigame
+        EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HandleStartMinigame);
+        EventManager.StartListening(MinigameInteractor.evt_FinishMinigame, HandleFinishMinigame);
         
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private ulong GenerateSessionID(int numDigits)
+    {
+        ulong buffer = 0;
+        for (int i = 0; i < numDigits; i++)
+        {
+            ulong tmp = 0;
+            while (tmp == 0)
+            {
+                tmp = (ulong) RNG.GetRand() % 10;
+            }
+            buffer += tmp * (ulong)Mathf.RoundToInt(Mathf.Pow(10, i));
+        }
+
+        return buffer;
+    }
+
+    private void HandleFinishMinigame(object arg0)
+    {
+        var status = arg0 as MinigameStatus;
+        string name = status.Name;
+        if (!name.Equals(_currentMinigameName))
+        {
+            Debug.Log("wtf");
+        }
+        else
+        {
+            MinigameSolveDataPoint point = new MinigameSolveDataPoint();
+            point.time = diffInS(DateTime.Now, _minigameStartTime);
+            point.minigameName = name;
+            _minigameSolves.Add(point);
+        }
+    }
+
+    private void HandleStartMinigame(object arg0)
+    {
+        var status = arg0 as MinigameStatus;
+        _currentMinigameName = status.Name;
+        _minigameStartTime = DateTime.Now;
+    }
+
+    private void HandleEndLevel(object arg0)
+    {
+        Debug.Log("HandleEndLevel");
+        FinalizeLevelStats();
+        SceneManager.LoadScene(stasticsSceneName);
+
+        _displayStats = true;
+        DisplayStatsInStatsScene();
     }
 
     private void HandleCollectible(object arg0)
@@ -89,6 +227,8 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
+            RecordDeath();
+            
             Debug.Log("Reviving Player");
             var combatant = actorObject.GetComponent<CombatParticipant>();
             combatant.Revive();
@@ -104,6 +244,11 @@ public class GameManager : MonoBehaviour
         if (!_initializedScene)
         {
             _initializedScene = InitializeScene();
+        }
+
+        if (_displayStats)
+        {
+            DisplayStatsInStatsScene();
         }
     }
 
@@ -128,11 +273,14 @@ public class GameManager : MonoBehaviour
             _collectibleGuiController = FindObjectOfType<CollectibleGuiController>();
             _collectibleGuiController.UpdateGui(0, _totalCollectibleCount, false);
             
+            InitializeStats();
+            
             return true;
         }
 
         return false;
     }
+
 
     private void InitFirstLevel()
     {
@@ -162,6 +310,7 @@ public class GameManager : MonoBehaviour
         {
             InitFirstLevel();
         }
+        
     }
 
     private void SetScannerActive(bool value)
@@ -211,7 +360,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Index is already at the end of gameLevel array");
+            //Debug.LogError("Index is already at the end of gameLevel array");
+            // finish game
+            DumpStats();
+            
+            // TODO: load endscreen
+            Application.Quit();
         }
     }
 
@@ -229,4 +383,100 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+    
+    #region Statistics
+
+    void FinalizeLevelStats()
+    {
+        // stop movement recording
+        CancelInvoke("RecordMovementStat");
+        
+        // finalize game stats
+        if (_levelStats.TryGetValue(_gameLevelIdx, out var stats))
+        {
+            stats.levelName = gameLevels[_gameLevelIdx - 1];
+            stats.foundCollectibles = _collectedCount;
+            stats.totalCollectibles = _totalCollectibleCount;
+            stats.deaths = _deaths.ToArray();
+            stats.minigameData = _minigameSolves.ToArray();
+            stats.movementData = _movementDataPoints.ToArray();
+            
+            stats.timeForLevelInS = diffInS(DateTime.Now, _levelStartTime);
+            
+            stats.minimapType = _extendedMinimap ? MinimapType.Extended : MinimapType.Basic;
+            _levelStats[_gameLevelIdx] = stats;
+        }
+    }
+
+    float diffInS(DateTime first, DateTime second)
+    {
+        var diff = first - second;
+        var ms = diff.TotalMilliseconds;
+        return (float)ms / (1000.0f);
+    }
+    
+    void InitializeStats()
+    {
+        // create new entry in game stats
+        _levelStats.Add(_gameLevelIdx, new LevelStats());
+        
+        _deaths = new List<Vector3>();
+        _minigameSolves = new List<MinigameSolveDataPoint>();
+        _movementDataPoints = new List<MovementDataPoint>();
+        _levelStartTime = DateTime.Now;
+        
+        InvokeRepeating("RecordMovementStat", 0.0f, movementRecordInterval);
+    }
+    
+    private void RecordMovementStat()
+    {
+        RecordMovementStat(MovementDataPointType.None);
+    }
+
+    private void RecordMovementStat(MovementDataPointType type)
+    {
+        MovementDataPoint point = new MovementDataPoint();
+        point.position = _instantiatedPlayer.transform.position;
+        point.timestamp = DateTime.Now.ToString("O");
+        point.type = type;
+        
+        _movementDataPoints.Add(point);
+    }
+
+    private void RecordDeath()
+    {
+        RecordMovementStat(MovementDataPointType.Death);
+        _deaths.Add(_instantiatedPlayer.transform.position);
+    }
+
+    private void DisplayStatsInStatsScene()
+    {
+        var statsMenu = GameObject.FindObjectOfType<StatsMenu>();
+        if (statsMenu != null)
+        {
+            var stats = _levelStats[_gameLevelIdx];
+            statsMenu.SetDeaths(stats.deaths.Length);
+            statsMenu.SetTime(stats.timeForLevelInS);
+            statsMenu.SetCollectibleCount(stats.foundCollectibles, stats.totalCollectibles);
+            statsMenu.SetSessionId(sessionID);
+            statsMenu.SetMinimapType(stats.minimapType);
+            _displayStats = false;
+        }
+    }
+
+    public void DumpStats()
+    {
+        var data = _levelStats.Values.ToArray();
+        // wrap in serializable array wrapper
+        GameStats stats = new GameStats();
+        stats.sessionId = sessionID;
+        stats.stats = data;
+        
+        string dataAsJson = JsonUtility.ToJson(stats);
+        string path = Application.persistentDataPath + "/LevelData.json";
+        
+        Debug.Log($"Dumping stats to {path}");
+        System.IO.File.WriteAllText(path, dataAsJson); 
+    }
+    #endregion
 }

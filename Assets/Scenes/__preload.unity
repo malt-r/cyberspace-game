@@ -170,8 +170,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 8446778818680392781, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
   startSceneName: 0_MainMenue
+  stasticsSceneName: __stats
   gameLevels:
   - 1_Level1_V2
+  movementRecordInterval: 1
   ExtendedMinimapInFirstLevel: 1
   ShowCollectiblesTimed: 1
 --- !u!114 &157760535

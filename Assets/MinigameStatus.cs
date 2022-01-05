@@ -1,13 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MinigameStatus : MonoBehaviour
 {
+    [SerializeField] private string name;
+    
     public bool isDone = false;
     private StoryTrigger _storyTrigger;
 
     private Animator _animator;
+
+    public string Name => name;
     
     // Start is called before the first frame update
     void Start()

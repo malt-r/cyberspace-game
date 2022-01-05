@@ -1302,7 +1302,8 @@ public partial class DungeonGenerator : MonoBehaviour
     {
         if (UseExternalEntropy)
         {
-            long seed = GetExternalSeed();
+            //long seed = GetExternalSeed();
+            long seed = RNG.GetRand();
             Random.InitState((int)seed);
             Debug.Log("Using seed " + seed + " for placement");
         }
@@ -2001,6 +2002,8 @@ public partial class DungeonGenerator : MonoBehaviour
 
     public static long GetExternalSeed()
     {
+        
+        
         var now = System.DateTime.Now;
         var notNow = now.AddDays((double)Random.Range(0.0f, 100.0f));
         return now.ToBinary() ^ notNow.ToBinary();
