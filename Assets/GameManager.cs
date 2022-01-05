@@ -1,12 +1,75 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
 using TMPro;
 using StarterAssets;
+using Statistics;
+using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 
 // TODO: store stats about game-flow
+// - player movement
+// - number of deaths (with position)
+// - time for level completion
+// - time for minigame completion
+// - number of found collectibles
+namespace Statistics
+{
+    [Serializable]
+    public struct GameStats
+    {
+        public LevelStats[] stats;
+    }
+    
+    [Serializable]
+    public struct LevelStats
+    {
+        public string levelName;
+        public Vector3[] deaths;
+        public float timeForLevelInS;
+        public int foundCollectibles;
+        public int totalCollectibles;
+        public MinigameSolveDataPoint[] minigameData;
+        public MinimapType minimapType;
+        public MovementDataPoint[] movementData;
+    }
+
+    [Serializable]
+    public struct MovementDataPoint
+    {
+        public Vector3 position;
+        public string timestamp;
+        public MovementDataPointType type;
+    }
+
+    [Serializable]
+    public struct MinigameSolveDataPoint
+    {
+        public string minigameName;
+        public float time;
+    }
+
+    [Serializable]
+    public enum MinimapType
+    {
+        None, 
+        Basic,
+        Extended
+    }
+
+    [Serializable]
+    public enum MovementDataPointType
+    {
+        None,
+        Death,
+    }
+}
+
+
 public class GameManager : MonoBehaviour
 {
     // scene state
@@ -19,6 +82,13 @@ public class GameManager : MonoBehaviour
     private int _collectedCount;
     private CollectibleGuiController _collectibleGuiController;
     
+    // statistics
+    private Dictionary<int, Statistics.LevelStats> _levelStats;
+    private List<Statistics.MovementDataPoint> _movementDataPoints;
+    private List<Vector3> _deaths;
+    private List<MinigameSolveDataPoint> _minigameSolves;
+    private DateTime _levelStartTime;
+
     private bool _initializedScene = false;
     
     [SerializeField]
@@ -29,6 +99,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] 
     private string[] gameLevels;
+
+    [Header("Statistics")] [SerializeField]
+    private float movementRecordInterval = 1.0f;
 
     private int _gameLevelIdx = 0;
 
@@ -44,11 +117,21 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _levelStats = new Dictionary<int, Statistics.LevelStats>();
+        
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
         EventManager.StartListening("Collectible/Collect", HandleCollectible);
+        EventManager.StartListening("Level/EndLevel", HandleEndLevel);
         
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private void HandleEndLevel(object arg0)
+    {
+        Debug.Log("HandleEndLevel");
+        FinalizeLevelStats();
+        DumpStats();
     }
 
     private void HandleCollectible(object arg0)
@@ -128,11 +211,14 @@ public class GameManager : MonoBehaviour
             _collectibleGuiController = FindObjectOfType<CollectibleGuiController>();
             _collectibleGuiController.UpdateGui(0, _totalCollectibleCount, false);
             
+            InitializeStats();
+            
             return true;
         }
 
         return false;
     }
+
 
     private void InitFirstLevel()
     {
@@ -162,6 +248,7 @@ public class GameManager : MonoBehaviour
         {
             InitFirstLevel();
         }
+        
     }
 
     private void SetScannerActive(bool value)
@@ -229,4 +316,68 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
+    
+    #region Statistics
+
+    void FinalizeLevelStats()
+    {
+        // stop movement recording
+        CancelInvoke("RecordMovementStat");
+        
+        // finalize game stats
+        if (_levelStats.TryGetValue(_gameLevelIdx, out var stats))
+        {
+            stats.levelName = gameLevels[_gameLevelIdx - 1];
+            stats.foundCollectibles = _collectedCount;
+            stats.totalCollectibles = _totalCollectibleCount;
+            stats.deaths = _deaths.ToArray();
+            stats.minigameData = _minigameSolves.ToArray();
+            stats.movementData = _movementDataPoints.ToArray();
+            
+            var diff = DateTime.Now - _levelStartTime;
+            var ms = diff.TotalMilliseconds;
+            stats.timeForLevelInS =  (float)ms / (1000.0f);
+            
+            stats.minimapType = _extendedMinimap ? MinimapType.Extended : MinimapType.Basic;
+            _levelStats[_gameLevelIdx] = stats;
+        }
+    }
+    
+    void InitializeStats()
+    {
+        // create new entry in game stats
+        _levelStats.Add(_gameLevelIdx, new LevelStats());
+        
+        _deaths = new List<Vector3>();
+        _minigameSolves = new List<MinigameSolveDataPoint>();
+        _movementDataPoints = new List<MovementDataPoint>();
+        _levelStartTime = DateTime.Now;
+        
+        InvokeRepeating("RecordMovementStat", 0.0f, movementRecordInterval);
+    }
+
+    private void RecordMovementStat()
+    {
+        MovementDataPoint point = new MovementDataPoint();
+        point.position = _instantiatedPlayer.transform.position;
+        point.timestamp = DateTime.Now.ToString("O");
+        point.type = MovementDataPointType.None;
+        
+        _movementDataPoints.Add(point);
+    }
+
+    public void DumpStats()
+    {
+        var data = _levelStats.Values.ToArray();
+        // wrap in serializable array wrapper
+        GameStats stats = new GameStats();
+        stats.stats = data;
+        
+        string dataAsJson = JsonUtility.ToJson(stats);
+        string path = Application.persistentDataPath + "/LevelData.json";
+        
+        Debug.Log($"Dumping stats to {path}");
+        System.IO.File.WriteAllText(path, dataAsJson); 
+    }
+    #endregion
 }
