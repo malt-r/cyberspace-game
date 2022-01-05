@@ -2,14 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Weapons;
-using TMPro;
 using StarterAssets;
 using Statistics;
-using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.InputSystem.Interactions;
-using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 
 // TODO: store stats about game-flow
@@ -93,12 +88,17 @@ public class GameManager : MonoBehaviour
     private string _currentMinigameName;
     
     private bool _initializedScene = false;
+
+    private ulong sessionID = 0;
     
     [SerializeField]
     GameObject playerPrefab;
 
     [SerializeField] 
     private string startSceneName;
+
+    [SerializeField] 
+    private string stasticsSceneName;
 
     [SerializeField] 
     private string[] gameLevels;
@@ -116,11 +116,15 @@ public class GameManager : MonoBehaviour
 
     private bool _extendedMinimap;
     private bool _activateScanner;
-    
+    private bool _displayStats;
+
     // Start is called before the first frame update
     void Start()
     {
+        // why does this not persist?
         _levelStats = new Dictionary<int, Statistics.LevelStats>();
+
+        sessionID = GenerateSessionID(8);
         
         EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
         EventManager.StartListening("Level/PassDoorMarker", HandlePassDoorMarker);
@@ -132,6 +136,22 @@ public class GameManager : MonoBehaviour
         EventManager.StartListening(MinigameInteractor.evt_FinishMinigame, HandleFinishMinigame);
         
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private ulong GenerateSessionID(int numDigits)
+    {
+        ulong buffer = 0;
+        for (int i = 0; i < numDigits; i++)
+        {
+            ulong tmp = 0;
+            while (tmp == 0)
+            {
+                tmp = (ulong) RNG.GetRand() % 10;
+            }
+            buffer += tmp * (ulong)Mathf.RoundToInt(Mathf.Pow(10, i));
+        }
+
+        return buffer;
     }
 
     private void HandleFinishMinigame(object arg0)
@@ -162,7 +182,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("HandleEndLevel");
         FinalizeLevelStats();
-        DumpStats();
+        SceneManager.LoadScene(stasticsSceneName);
+
+        _displayStats = true;
+        DisplayStatsInStatsScene();
+        //DumpStats();
     }
 
     private void HandleCollectible(object arg0)
@@ -220,6 +244,11 @@ public class GameManager : MonoBehaviour
         if (!_initializedScene)
         {
             _initializedScene = InitializeScene();
+        }
+
+        if (_displayStats)
+        {
+            DisplayStatsInStatsScene();
         }
     }
 
@@ -331,7 +360,12 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Index is already at the end of gameLevel array");
+            //Debug.LogError("Index is already at the end of gameLevel array");
+            // finish game
+            DumpStats();
+            
+            // TODO: load endscreen
+            Application.Quit();
         }
     }
 
@@ -413,6 +447,21 @@ public class GameManager : MonoBehaviour
     {
         RecordMovementStat(MovementDataPointType.Death);
         _deaths.Add(_instantiatedPlayer.transform.position);
+    }
+
+    private void DisplayStatsInStatsScene()
+    {
+        var statsMenu = GameObject.FindObjectOfType<StatsMenu>();
+        if (statsMenu != null)
+        {
+            var stats = _levelStats[_gameLevelIdx];
+            statsMenu.SetDeaths(stats.deaths.Length);
+            statsMenu.SetTime(stats.timeForLevelInS);
+            statsMenu.SetCollectibleCount(stats.foundCollectibles, stats.totalCollectibles);
+            statsMenu.SetSessionId(sessionID);
+            statsMenu.SetMinimapType(stats.minimapType);
+            _displayStats = false;
+        }
     }
 
     public void DumpStats()
