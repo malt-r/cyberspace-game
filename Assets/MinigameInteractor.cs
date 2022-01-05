@@ -23,6 +23,7 @@ public class MinigameInteractor : MonoBehaviour
 
     public const string evt_EnterCollider = "Minigame/EnterCollider";
     public const string evt_StartMinigame = "Minigame/StartMinigame";
+    public const string evt_FinishMinigame = "Minigame/FinishMinigame";
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +42,7 @@ public class MinigameInteractor : MonoBehaviour
             {
                 currentMgStatus.SetDone();
                 disableMinigame();
+                EventManager.TriggerEvent(evt_FinishMinigame, currentMgStatus);
             }
         }
         
@@ -86,7 +88,8 @@ public class MinigameInteractor : MonoBehaviour
             {
                 if (input.interact)
                 {
-                    EventManager.TriggerEvent(evt_StartMinigame, null);
+                    // start minigame 
+                    EventManager.TriggerEvent(evt_StartMinigame, currentMgStatus);
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                     input.interact = false;

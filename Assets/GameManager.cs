@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 
 // TODO: store stats about game-flow
@@ -88,7 +89,9 @@ public class GameManager : MonoBehaviour
     private List<Vector3> _deaths;
     private List<MinigameSolveDataPoint> _minigameSolves;
     private DateTime _levelStartTime;
-
+    private DateTime _minigameStartTime;
+    private string _currentMinigameName;
+    
     private bool _initializedScene = false;
     
     [SerializeField]
@@ -124,7 +127,35 @@ public class GameManager : MonoBehaviour
         EventManager.StartListening("Collectible/Collect", HandleCollectible);
         EventManager.StartListening("Level/EndLevel", HandleEndLevel);
         
+        // minigame
+        EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HandleStartMinigame);
+        EventManager.StartListening(MinigameInteractor.evt_FinishMinigame, HandleFinishMinigame);
+        
         SceneManager.LoadScene(startSceneName);
+    }
+
+    private void HandleFinishMinigame(object arg0)
+    {
+        var status = arg0 as MinigameStatus;
+        string name = status.Name;
+        if (!name.Equals(_currentMinigameName))
+        {
+            Debug.Log("wtf");
+        }
+        else
+        {
+            MinigameSolveDataPoint point = new MinigameSolveDataPoint();
+            point.time = diffInS(DateTime.Now, _minigameStartTime);
+            point.minigameName = name;
+            _minigameSolves.Add(point);
+        }
+    }
+
+    private void HandleStartMinigame(object arg0)
+    {
+        var status = arg0 as MinigameStatus;
+        _currentMinigameName = status.Name;
+        _minigameStartTime = DateTime.Now;
     }
 
     private void HandleEndLevel(object arg0)
@@ -172,6 +203,8 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
+            RecordDeath();
+            
             Debug.Log("Reviving Player");
             var combatant = actorObject.GetComponent<CombatParticipant>();
             combatant.Revive();
@@ -334,13 +367,18 @@ public class GameManager : MonoBehaviour
             stats.minigameData = _minigameSolves.ToArray();
             stats.movementData = _movementDataPoints.ToArray();
             
-            var diff = DateTime.Now - _levelStartTime;
-            var ms = diff.TotalMilliseconds;
-            stats.timeForLevelInS =  (float)ms / (1000.0f);
+            stats.timeForLevelInS = diffInS(DateTime.Now, _levelStartTime);
             
             stats.minimapType = _extendedMinimap ? MinimapType.Extended : MinimapType.Basic;
             _levelStats[_gameLevelIdx] = stats;
         }
+    }
+
+    float diffInS(DateTime first, DateTime second)
+    {
+        var diff = first - second;
+        var ms = diff.TotalMilliseconds;
+        return (float)ms / (1000.0f);
     }
     
     void InitializeStats()
@@ -355,15 +393,26 @@ public class GameManager : MonoBehaviour
         
         InvokeRepeating("RecordMovementStat", 0.0f, movementRecordInterval);
     }
-
+    
     private void RecordMovementStat()
+    {
+        RecordMovementStat(MovementDataPointType.None);
+    }
+
+    private void RecordMovementStat(MovementDataPointType type)
     {
         MovementDataPoint point = new MovementDataPoint();
         point.position = _instantiatedPlayer.transform.position;
         point.timestamp = DateTime.Now.ToString("O");
-        point.type = MovementDataPointType.None;
+        point.type = type;
         
         _movementDataPoints.Add(point);
+    }
+
+    private void RecordDeath()
+    {
+        RecordMovementStat(MovementDataPointType.Death);
+        _deaths.Add(_instantiatedPlayer.transform.position);
     }
 
     public void DumpStats()

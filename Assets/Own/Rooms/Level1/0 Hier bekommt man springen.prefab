@@ -10789,6 +10789,10 @@ PrefabInstance:
       propertyPath: marker
       value: 
       objectReference: {fileID: 5015111198027103700}
+    - target: {fileID: 7140178250658630675, guid: 6f291294f24b7d64ebb4088057118319, type: 3}
+      propertyPath: name
+      value: GetJump
+      objectReference: {fileID: 0}
     - target: {fileID: 8379017656081735455, guid: 6f291294f24b7d64ebb4088057118319, type: 3}
       propertyPath: m_Name
       value: MinigameBlock
