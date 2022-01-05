@@ -10647,6 +10647,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1862039246091238384}
     m_Modifications:
     - target: {fileID: 5015111197404185552, guid: bee12912903f27d45a6e2964a202d16d, type: 3}
+      propertyPath: Description
+      value: "Finde und erlerne die Sprung-F\xE4higkeit"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5015111197404185552, guid: bee12912903f27d45a6e2964a202d16d, type: 3}
       propertyPath: DependantBarrierMarker
       value: 
       objectReference: {fileID: 0}

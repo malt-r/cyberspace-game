@@ -107,6 +107,7 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
                 
                 EventManager.StartListening("Collectible/Collect", HandleCollectible);
+                EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
             }
         }
 
@@ -114,6 +115,11 @@ public class TutorialManager : MonoBehaviour
         {
             ImplementFirstTutorial();
         }
+    }
+
+    private void HandlePlayerDeath(object arg0)
+    {
+        DisplayPopup("Du bist gestorben", 3.0f);
     }
 
     private void HandleCollectible(object arg0)

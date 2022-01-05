@@ -12,6 +12,12 @@ public class StoryTrigger : MonoBehaviour
     [SerializeField] 
     private StoryMarker marker;
 
+    [SerializeField] 
+    private bool ActivateOnlyOnce = true;
+
+    private bool _wasActivated;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,17 +65,29 @@ public class StoryTrigger : MonoBehaviour
 
     public void Activate()
     {
-        if (_marker != null && !_marker.AccomplishedMarker)
+        if (!_wasActivated)
         {
-            _marker.AccomplishedMarker = true;
+            if (_marker != null && !_marker.AccomplishedMarker)
+            {
+                _marker.AccomplishedMarker = true;
+                
+                // standard event for story progression
+                var storyData = CreateEventData(StoryManager.evt_StoryMarkerActivated);
+                EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, storyData);
+            }
             
-            // standard event for story progression
-            var storyData = CreateEventData(StoryManager.evt_StoryMarkerActivated);
-            EventManager.TriggerEvent(StoryManager.evt_StoryMarkerActivated, storyData);
+            // custom event for triggering of specific response
+            if (!string.IsNullOrEmpty(storyEventName))
+            {
+                var data = CreateEventData(storyEventName);
+                EventManager.TriggerEvent(storyEventName, data);
+            }
+            
+            // remember activation
+            if (ActivateOnlyOnce)
+            {
+                _wasActivated = true;
+            }
         }
-        
-        // custom event for triggering of specific response
-        var data = CreateEventData(storyEventName);
-        EventManager.TriggerEvent(storyEventName, data);
     }
 }

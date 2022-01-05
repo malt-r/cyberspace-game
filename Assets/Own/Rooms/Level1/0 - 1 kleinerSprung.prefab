@@ -43,8 +43,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 9.873647, y: 5.1884584, z: 1.0163504}
-  m_Center: {x: -0.3775096, y: 1.4549346, z: -0.008175194}
+  m_Size: {x: 9.873647, y: 5.1884584, z: 2.2393525}
+  m_Center: {x: -0.3775096, y: 1.4549346, z: 0.56930256}
 --- !u!114 &6760826671571924613
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyEventName: Story/SmallJump
   marker: {fileID: 5693374954301404744}
+  ActivateOnlyOnce: 1
   Collider: {fileID: 5309544546365127617}
   TriggerOnEnter: 1
 --- !u!1 &7720980764881288548
