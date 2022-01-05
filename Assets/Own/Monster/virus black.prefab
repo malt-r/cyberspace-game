@@ -5313,7 +5313,7 @@ MonoBehaviour:
   rotationSpeed: 0.25
   inverse: 1
   dropableItems:
-  - {fileID: 6787548328456421411, guid: 4830eebd955d7b94a981bc297c4565e9, type: 3}
+  - {fileID: 4401327599903897349, guid: faa4273689d3d614b8aa203f72c16b0d, type: 3}
   - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
   ForceIdle: 0
 --- !u!195 &8582998886141264356
