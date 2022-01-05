@@ -49,7 +49,7 @@ MonoBehaviour:
   Material: {fileID: 0}
   damage: 10
   atackSpeed: 0.1
-  range: 500
+  range: 15
   shooted: 1
   overHeated: 0
   deltaTime: 0

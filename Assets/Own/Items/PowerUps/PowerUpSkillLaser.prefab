@@ -93,7 +93,7 @@ MonoBehaviour:
   Material: {fileID: 2100000, guid: 58ddd6173786b644d93a25122c411681, type: 2}
   damage: 10
   atackSpeed: 0.1
-  range: 500
+  range: 5
   shooted: 0
   overHeated: 0
   deltaTime: 0
