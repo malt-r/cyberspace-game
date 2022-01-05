@@ -93,7 +93,7 @@ MonoBehaviour:
   Material: {fileID: 2100000, guid: 58ddd6173786b644d93a25122c411681, type: 2}
   damage: 5
   atackSpeed: 0.1
-  range: 5
+  range: 10
   shooted: 0
   overHeated: 0
   deltaTime: 0
@@ -399,7 +399,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 7, y: 7, z: 7}
+  m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2800512722918460161
 MonoBehaviour:
