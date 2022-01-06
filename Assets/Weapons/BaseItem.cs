@@ -7,6 +7,9 @@ public abstract class BaseItem : MonoBehaviour
 {
     //List<UnityAction> pickupCallbacks = new List<UnityAction>();
     UnityEvent pickupEvent = new UnityEvent();
+    
+    public const string evt_pickupItem = "BaseItem/Pickup";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +23,7 @@ public abstract class BaseItem : MonoBehaviour
     }
 
     public abstract void Visit(Transform player);
+    
     public void RegisterPickupCallback(UnityAction action)
     {
         pickupEvent.AddListener(action);
@@ -33,6 +37,7 @@ public abstract class BaseItem : MonoBehaviour
 
     protected void OnPickup()
     {
+        EventManager.TriggerEvent(evt_pickupItem, this);
         pickupEvent.Invoke();
     }
 }

@@ -29,12 +29,29 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnWalk = "Nutze #icon{ICONS/W}#icon{ICONS/A}#icon{ICONS/S}#icon{ICONS/D}, um dich zu bewegen";
     private const string msg_learnSprint = "Nutze die linke Umschalt-Taste (#icon{ICONS/SHIFT}), um zu sprinten";
     private const string msg_learnJump = "Nutze die Leertaste (#icon{ICONS/SPACE}), um zu springen";
-    private const string msg_learnScan = "Der Scanner erlaubt das Aufsaugen von Items, feuere ihn mit der linken Maustaste";
+    private const string msg_learnScan = "Der Scanner kann Items aufsaugen, nutze hierfür #icon{ICONS/MOUSE_LEFTCLICK}";
+    private const string msg_learnLaser = "Du hast den Laser-Modus gefunden. Nutze #icon{ICONS/MOUSE_WHEEL} um Modi zu wechseln.";
+    private const string msg_learnLaser2 = "Der Laser verbraucht Energie. Die aktuelle Energie wird rechts unten angezeigt.";
+    private const string msg_learnBomb  = "Du hast die Bombe eingesammelt. Sie richtet sehr viel Schaden gegen einen besonderen Gegner an.";
+    private const string msg_pickupHealth = "Du hast Gesundheit aufgesammelt. Deine Gesundheit wird links unten angezeigt.";
+    
+    
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
     private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
     private const string msg_collectible = "Du hast ein Collectible gefunden, finde sie alle!";
 
+    private bool pickupUpHealth;
+    private bool pickedUpLaser;
+    private bool pickedUpBomb;
+
+    public const string evt_learnHealth = "Story/Health";
+    public const string evt_learnLaser = "Story/Laser";
+    public const string evt_learnBomb = "Story/Bomb";
+
     private bool _readyForNextStage = true;
+
+    [SerializeField]
+    private float DefaultTutorialPopupLength = 5.0f;
 
     public void SignalReadyForNextStage()
     {
@@ -108,6 +125,11 @@ public class TutorialManager : MonoBehaviour
                 
                 EventManager.StartListening("Collectible/Collect", HandleCollectible);
                 EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
+                EventManager.StartListening("Story/GotScanner", HandleGetScanner);
+                
+                EventManager.StartListening(Absorber.evt_pickupBomb, HandlePickupBomb);
+                EventManager.StartListening(Absorber.evt_pickupHealth, HandlePickupHealth);
+                EventManager.StartListening(Absorber.evt_pickupLaser, HandleGetLaser);
             }
         }
 
@@ -115,6 +137,47 @@ public class TutorialManager : MonoBehaviour
         {
             ImplementFirstTutorial();
         }
+    }
+
+    private void HandlePickupHealth(object arg0)
+    {
+        if (!pickupUpHealth)
+        {
+            EventManager.TriggerEvent(evt_learnHealth, new StoryEventData().SetEventName(evt_learnHealth));
+            DisplayPopup(msg_pickupHealth, DefaultTutorialPopupLength);
+            pickupUpHealth = true;
+        }
+    }
+
+    private void HandlePickupBomb(object arg0)
+    {
+        if (!pickedUpBomb)
+        {
+            EventManager.TriggerEvent(evt_learnBomb, new StoryEventData().SetEventName(evt_learnBomb));
+            DisplayPopup(msg_learnBomb, DefaultTutorialPopupLength);
+            pickedUpBomb = true;
+        }
+    }
+
+    private void HandleGetLaser(object arg0)
+    {
+        if (!pickedUpLaser)
+        {
+            pickedUpLaser = true;
+            EventManager.TriggerEvent(evt_learnLaser, new StoryEventData().SetEventName(evt_learnLaser));
+            DisplayPopup(msg_learnLaser, DefaultTutorialPopupLength);
+            Invoke("ContinueLaser", DefaultTutorialPopupLength + 0.5f);
+        }
+    }
+
+    private void ContinueLaser()
+    {
+        DisplayPopup(msg_learnLaser2, DefaultTutorialPopupLength);
+    }
+
+    private void HandleGetScanner(object arg0)
+    {
+        DisplayPopup(msg_learnScan);
     }
 
     private void HandlePlayerDeath(object arg0)
@@ -126,7 +189,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (!_foundCollectibleBefore && messageOnFirstCollectible)
         {
-            DisplayPopup(msg_collectible, 7.0f);
+            DisplayPopup(msg_collectible, DefaultTutorialPopupLength);
         }
         _foundCollectibleBefore = true;
     }
@@ -229,13 +292,13 @@ public class TutorialManager : MonoBehaviour
     void HandleLearnJump(object arg)
     {
         _playerController.canJump = true;
-        DisplayPopup(msg_learnJump, 7);
+        DisplayPopup(msg_learnJump, DefaultTutorialPopupLength);
     }
     
     private void HandleLearnSprint(object arg0)
     {
         _playerController.canSprint = true;
-        DisplayPopup(msg_learnSprint, 7);
+        DisplayPopup(msg_learnSprint, DefaultTutorialPopupLength);
     }
     
     private void HandleInteractPrompt(object arg0)

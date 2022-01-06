@@ -10,6 +10,10 @@ public class Absorber : BaseWeapon
     private LineRenderer lineRenderer;
     public float deltaTime;
 
+    public const string evt_pickupHealth = "Pickup/Health";
+    public const string evt_pickupBomb = "Pickup/Bomb";
+    public const string evt_pickupLaser = "Pickup/Laser";
+
     public Coroutine coroutine;
     void Awake()
     {
@@ -44,8 +48,6 @@ public class Absorber : BaseWeapon
                 {
                     handleItem(item);
                 }
-            
-           
         }
         else
         {
@@ -57,6 +59,9 @@ public class Absorber : BaseWeapon
     private void handleItem(BaseItem item)
     {
         if (item is Collectible) { return;}
+        
+        ThrowSpecificPickupEvent(item);
+        
         var smooth = Vector3.zero;
         var Speed = 0.5f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
@@ -66,6 +71,30 @@ public class Absorber : BaseWeapon
             item.Visit(Owner);
         }
     }
+    
+    private void ThrowSpecificPickupEvent(BaseItem item)
+    {
+        if (item != null)
+        {
+            if (item is PowerUpWeapon)
+            {
+                var pu = item as PowerUpWeapon;
+                if (pu.weapon is Laser)
+                {
+                    EventManager.TriggerEvent(evt_pickupLaser, null);
+                } else if (pu.weapon is BombThrower)
+                {
+                    EventManager.TriggerEvent(evt_pickupBomb, null);
+                }
+            }
+            else if (item is PowerUpHealth)
+            {
+                EventManager.TriggerEvent(evt_pickupHealth, null);
+            }
+        }
+    }
+    
+    
     public override void Use()
     {
         shooted = true;
