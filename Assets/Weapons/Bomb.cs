@@ -34,7 +34,7 @@ public class Bomb : MonoBehaviour
         for (int i = 0; i < foundColliders; i++)
         {
             var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, true);
             Debug.Log($" Bomb damages , {hitColliders[i].name} {damage} points");
         }
 

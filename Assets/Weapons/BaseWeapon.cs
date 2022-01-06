@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Weapons
@@ -19,7 +21,7 @@ namespace Assets.Weapons
 
         [SerializeField]
         protected float damage =10f;
-        public float Damage => damage;
+        public virtual float Damage => damage;
         
         [SerializeField]
         protected float atackSpeed =10f;
@@ -29,7 +31,7 @@ namespace Assets.Weapons
 
         protected AudioSource audioSource;
 
-        protected void PlayUseSound()
+        protected virtual void PlayUseSound()
         {
             audioSource.volume=0.5f;
             audioSource.PlayOneShot(audioSource.clip);
@@ -43,5 +45,7 @@ namespace Assets.Weapons
         }
 
         public abstract bool CanAttack();
+        
+        
     }
 }

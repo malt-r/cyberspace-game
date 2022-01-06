@@ -23,7 +23,7 @@ public class Laser : BaseWeapon
     {
         if (!shooted || overHeated){
             lineRenderer.enabled = false;
-            audioSource.volume = 0;
+            audioSource.Stop();;
             return; 
         }
         if(!audioSource.isPlaying){
@@ -65,5 +65,11 @@ public class Laser : BaseWeapon
     {
         deltaTime += Time.deltaTime;
         UpdateRoute();
+    }
+    
+    protected override void PlayUseSound()
+    {
+        audioSource.volume=0.5f;
+        audioSource.Play();
     }
 }

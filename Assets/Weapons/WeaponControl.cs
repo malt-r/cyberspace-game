@@ -1,3 +1,4 @@
+using System.Collections;
 using Assets.Weapons;
 using UnityEngine;
 
@@ -38,7 +39,11 @@ public class WeaponControl : MonoBehaviour
         if (CurrentWeapon == null) return;
         
         CurrentWeapon.Use();
+        
     }
+    
+    
+   
 
     public void SwitchWeapon(int indexDelta)
     {

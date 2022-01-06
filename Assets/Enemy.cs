@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -23,9 +24,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private List<Transform> dropableItems;
 
     [Tooltip("Forces the enemy to be idle and not attack")]
+    
+    
     [SerializeField] private bool ForceIdle;
 
     private NavMeshAgent navMeshAgent;
+
+    private AnimationController animator;
     
     void Start()
     {
@@ -34,6 +39,7 @@ public class Enemy : MonoBehaviour
         weaponControl = GetComponent<WeaponControl>();
         aggroParticleSystem.Stop();
         stats.OnHealthReachedZero += dropItems;
+        animator = GetComponentInChildren<AnimationController>();
     }
 
     private void dropItems()
@@ -81,8 +87,18 @@ public class Enemy : MonoBehaviour
         if (!enemyWantsToAttack) { return; }
 
         var canAttack = weaponControl.CurrentWeapon.CanAttack();
-        if(canAttack){ weaponControl.UseWeapon(); }
+        if (canAttack)
+        {
+            if(animator)
+            animator.Trigger("Attack");
+            weaponControl.UseWeapon();
         }
+        }
+    
+
+ 
+    
+    
 
     private void updateAppearance()
     {
@@ -102,20 +118,39 @@ public class Enemy : MonoBehaviour
     {
         if (playerDetector.ReachablePlayer == null) {
             aggroParticleSystem.Stop();
+            if(animator)
+            animator.ChangeAnimationState("Idle");
             return; 
         }
         var player = playerDetector.ReachablePlayer;
         aggroParticleSystem.Play();
+        
 
         isFollowing = false;
-        
         var distanceToPlayer = playerDetector.Distance;
-        
-        if (distanceToPlayer > maxFollowDistance) { return; }
-        var playerPosition = player.position;
+
+        if (distanceToPlayer > maxFollowDistance)
+        {
+            if(animator)
+            animator.ChangeAnimationState("Idle");
+            return;
+        }
+       
+        // var playerPosition = player.position;
+        // Vector3 targetPostition = new Vector3( player.position.x, 
+        //     this.transform.position.y, 
+        //     player.position.z ) ;
+        // this.transform.LookAt( targetPostition ) ;
         transform.LookAt(player);
-        if (distanceToPlayer < minFollowDistance) { return; }
+        if (distanceToPlayer < minFollowDistance)
+        {
+            if(animator)
+            animator.ChangeAnimationState("Idle");
+            return;
+        }
+        if(animator)
+        animator.ChangeAnimationState("Walk");
         isFollowing = true;
-        navMeshAgent.SetDestination(playerPosition);
+        navMeshAgent.SetDestination(player.position);
     }
 }

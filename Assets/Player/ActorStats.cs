@@ -9,12 +9,19 @@ public class ActorStats : MonoBehaviour
 	public event Action OnHealthReachedZero;
 	public float CurrentHealth { get { return currentHealth; } }
 
+	public bool onlyBombsCanDamageMe;
     public void Awake()
     {
 		currentHealth = maxHealth;
-    }  
-    public void TakeDamage(float damage)
-	{
+    }
+
+    public virtual void TakeDamage(float damage, bool bomb = false)
+    {
+	    if (onlyBombsCanDamageMe && !bomb)
+	    {
+		    Debug.Log("I can only be killed by bombs");
+		    return;
+	    }
 		currentHealth -= damage;
 		Debug.Log(transform.name + " takes " + damage + " damage.");
 

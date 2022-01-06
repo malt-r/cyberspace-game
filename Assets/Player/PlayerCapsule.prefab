@@ -2427,6 +2427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  onlyBombsCanDamageMe: 0
 --- !u!114 &184695297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2748,6 +2749,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1528218345}
     m_Modifications:
+    - target: {fileID: 8357294418749300870, guid: 5d443f9feaeaf1e47b02d5d6575c74e0, type: 3}
+      propertyPath: regenerationRate
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 8390676163428856372, guid: 5d443f9feaeaf1e47b02d5d6575c74e0, type: 3}
       propertyPath: m_RootOrder
       value: 0

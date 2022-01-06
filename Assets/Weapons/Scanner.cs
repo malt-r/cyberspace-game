@@ -31,7 +31,7 @@ namespace Assets.Weapons
 
         [SerializeField]
         private int currentMode = 0;
-        
+        public override float Damage => modes[currentMode].Damage;
         public void SwitchMode(int index)
         {
             currentMode += index;
