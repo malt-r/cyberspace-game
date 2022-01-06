@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Assets.Weapons
         
         public float regenerationRate = 10f;
         public float cooldownTime = 5;
+        private float timeSinceoverheat = 0f;
         
         private float deltaTime;
         public bool shooted = false;
@@ -48,6 +50,17 @@ namespace Assets.Weapons
         
         private void handleHeatingAndCooling()
         {
+            if (overHeated)
+            {
+                shooted = false;
+                if(timeSinceoverheat > cooldownTime){
+                    overHeated = false;
+                    timeSinceoverheat = 0;
+                }
+
+                timeSinceoverheat += Time.deltaTime;
+                return;
+            }
             if (shooted && !overHeated)
             {
                 condition -= Time.deltaTime*modes[currentMode].UseCost;
@@ -55,7 +68,7 @@ namespace Assets.Weapons
                 {
                     condition = 0;
                     overHeated = true;
-                    StartCoroutine(StartWeaponCooldown());
+                    PlayOverheatSound();
                 }
             }
             else if(!shooted && condition<maxCondition && !overHeated)
@@ -69,7 +82,15 @@ namespace Assets.Weapons
        
                
         }
-    
+
+        public void Reset()
+        {
+            overHeated = false;
+            timeSinceoverheat = 0;
+            UpdateOverheatDrawParticleSystem();
+            condition = maxCondition;
+
+        }
 
         private void UpdateOverheatDrawParticleSystem()
         {
@@ -81,14 +102,6 @@ namespace Assets.Weapons
             {
                 overheatParticleSystem.Stop();
             }
-        }
-
-        IEnumerator StartWeaponCooldown()
-        {
-            PlayOverheatSound();
-            shooted = false;
-            yield return new WaitForSeconds(cooldownTime); 
-            overHeated = false;
         }
 
         private void PlayOverheatSound()
