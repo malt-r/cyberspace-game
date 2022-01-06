@@ -242,8 +242,12 @@ public class GameManager : MonoBehaviour
             actorObject.transform.position = _lastPassedRespawnPoint;
             _instantiatedPlayer.GetComponent<FirstPersonController>().ForceLookAt(_lastPassedDoorMarkerPos);
             actorObject.SetActive(true);
+            
             var scanner =actorObject.GetComponent<WeaponControl>().CurrentWeapon as Scanner;
-            scanner.Reset();
+            if (scanner != null)
+            {
+                scanner.Reset();
+            }
         }
     }
 
