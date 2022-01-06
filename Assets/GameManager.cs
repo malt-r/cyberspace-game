@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Assets.Weapons;
 using StarterAssets;
@@ -496,11 +497,22 @@ public class GameManager : MonoBehaviour
         stats.stats = data;
         
         string dataAsJson = JsonUtility.ToJson(stats);
-        string path = Application.persistentDataPath + "/LevelData.json";
+        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        if (Directory.Exists(folderPath))
+        {
+            string path = folderPath + "/LevelData.json";
+            Debug.Log($"Dumping stats to {path}");
+            File.WriteAllText(path, dataAsJson);
+            return path;
+        }
+        else
+        {
+            string path = Application.persistentDataPath + "/LevelData.json";
+            Debug.Log($"Dumping stats to {path}");
+            File.WriteAllText(path, dataAsJson);
+            return path;
+        }
         
-        Debug.Log($"Dumping stats to {path}");
-        System.IO.File.WriteAllText(path, dataAsJson);
-        return path;
     }
     
     #endregion
