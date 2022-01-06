@@ -41,6 +41,7 @@ public class Bullet : MonoBehaviour
         if (otherIsBulletOwner) { return; }
         
         var target = other.GetComponent<CombatParticipant>();
+        if (!target.tag.Equals("Player")) { return;}
         target.TakeDamage(this.damage);
         
         gameObject.GetInstanceID();
