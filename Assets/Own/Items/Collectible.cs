@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Collectible : BaseItem
 {
+    void Start()
+    {
+        Absorbable = false;
+    }
     public override void Visit(Transform player)
     {
         handlePickup();
