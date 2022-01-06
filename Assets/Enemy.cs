@@ -89,6 +89,7 @@ public class Enemy : MonoBehaviour
         var canAttack = weaponControl.CurrentWeapon.CanAttack();
         if (canAttack)
         {
+            if(animator)
             animator.Trigger("Attack");
             weaponControl.UseWeapon();
         }
@@ -117,6 +118,7 @@ public class Enemy : MonoBehaviour
     {
         if (playerDetector.ReachablePlayer == null) {
             aggroParticleSystem.Stop();
+            if(animator)
             animator.ChangeAnimationState("Idle");
             return; 
         }
@@ -129,6 +131,7 @@ public class Enemy : MonoBehaviour
 
         if (distanceToPlayer > maxFollowDistance)
         {
+            if(animator)
             animator.ChangeAnimationState("Idle");
             return;
         }
@@ -141,9 +144,11 @@ public class Enemy : MonoBehaviour
         transform.LookAt(player);
         if (distanceToPlayer < minFollowDistance)
         {
+            if(animator)
             animator.ChangeAnimationState("Idle");
             return;
         }
+        if(animator)
         animator.ChangeAnimationState("Walk");
         isFollowing = true;
         navMeshAgent.SetDestination(player.position);

@@ -1118,7 +1118,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2800512722224875070, guid: c9d9f027848105f408c80cad902bb4a0, type: 3}
       propertyPath: damage
-      value: 3
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2800512722224875070, guid: c9d9f027848105f408c80cad902bb4a0, type: 3}
+      propertyPath: useCost
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2800512722918460162, guid: c9d9f027848105f408c80cad902bb4a0, type: 3}
       propertyPath: m_RootOrder
@@ -1229,6 +1233,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 6352733569575658135, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
+      propertyPath: WeaponHolder
+      value: 
+      objectReference: {fileID: 5337062666886992172}
     - target: {fileID: 6352733569575658217, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
       propertyPath: m_Name
       value: virus blue melee
@@ -1237,6 +1245,10 @@ PrefabInstance:
       propertyPath: model
       value: 
       objectReference: {fileID: 25562766}
+    - target: {fileID: 6352733569575658218, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
+      propertyPath: rotationSpeed
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6352733569575658218, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
       propertyPath: playerDetector
       value: 
@@ -1793,15 +1805,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a1300bdb124b6a40b38b9d3250ea324, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.814282
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a1300bdb124b6a40b38b9d3250ea324, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.89
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a1300bdb124b6a40b38b9d3250ea324, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.086391
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a1300bdb124b6a40b38b9d3250ea324, type: 3}
       propertyPath: m_LocalRotation.w
