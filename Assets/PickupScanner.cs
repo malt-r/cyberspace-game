@@ -19,11 +19,11 @@ public class PickupScanner : BaseItem
 
     private void OnTriggerEnter(Collider other)
     {
-        var player = GameObject.FindGameObjectWithTag("Player");
-        scanner = player.transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
         if (!other.tag.Equals("Player")) { return; }
+        scanner = other.transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
         scanner.SetActive(true);
-        player.GetComponent<WeaponControl>().enabled = true;
+        base.OnPickup();
+        other.GetComponent<WeaponControl>().enabled = true;
         base.OnPickup();
         SoundManager.PlaySound(Sound.ItemPickup);
         Destroy(gameObject);
