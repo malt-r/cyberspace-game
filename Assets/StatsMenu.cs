@@ -1,3 +1,4 @@
+using System;
 using Statistics;
 using TMPro;
 using UnityEditor;
@@ -50,7 +51,7 @@ public class StatsMenu : MonoBehaviour
 
     public void SetTime(float timeInS)
     {
-        TimeField.text = $"{timeInS} Sekunden";
+        TimeField.text = $"{timeInS.ToString("F")} s";
     }
 
     public void SetSessionId(ulong id)
