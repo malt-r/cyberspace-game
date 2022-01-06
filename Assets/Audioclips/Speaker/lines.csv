@@ -22,5 +22,8 @@ player_get_bomb,"Dass du die Bombe hast beunruhigt mich gar nicht. Wirklich nich
 player_die_virus_1,"Ha! Nimm das!"
 player_die_virus_2,"Damit hast du nicht gerechnet, oder?"
 player_die_virus_3,"Versteh doch endlich, dass du nicht gewinnen kannst."
+player_die_bomb_1,"Ha! Nimm das!"
+player_die_bomb_2,"Bumm!"
+player_die_bomb_3,"Oh, bist du explodiert? Das tut mir jetzt Leid."
 player_reach_end_2,"Dann muss ich mich wohl selbst um dich kümmern."
 kill_first_virus,"Weißt du eigentlich was das alles kostet? Nein, tust du natürlich nicht. Hier geht es ja immer nur um dich, dich, dich."

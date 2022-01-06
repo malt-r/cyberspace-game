@@ -34,7 +34,11 @@ public class ActorStats : MonoBehaviour
 		{
 			if (byEnemy)
 			{
-				EventManager.TriggerEvent("Death/ByEnemy", null);
+				EventManager.TriggerEvent("Death/ByEnemy", new StoryEventData().SetEventName("Death/ByEnemy"));
+			}
+			if (bomb)
+			{
+				EventManager.TriggerEvent("Death/ByBomb", new StoryEventData().SetEventName("Death/ByBomb"));
 			}
 			EventManager.TriggerEvent("Combat/PlayerDied", this.gameObject);
 		}
