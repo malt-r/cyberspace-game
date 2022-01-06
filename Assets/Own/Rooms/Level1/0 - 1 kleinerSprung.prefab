@@ -309,7 +309,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3513
+  m_VersionIndex: 3555
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11125,7 +11125,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 13577
+  m_VersionIndex: 13619
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -11379,7 +11379,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: Description
-      value: "Spring \xFCber den Abgrund"
+      value: "Finde den Abgrund und \xFCberwinde ihn, um weiter im Level voranzukommen"
       objectReference: {fileID: 0}
     - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: IndexInStory

@@ -27846,6 +27846,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 6464643568029691342}
     m_Modifications:
     - target: {fileID: 315986612908538075, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
+      propertyPath: Description
+      value: Verlasse den Startraum
+      objectReference: {fileID: 0}
+    - target: {fileID: 315986612908538075, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: IndexInStory
       value: 1
       objectReference: {fileID: 0}
