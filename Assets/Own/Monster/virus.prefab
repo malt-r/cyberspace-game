@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420751265672024476}
-  m_LocalRotation: {x: -0.4069485, y: 0.5782672, z: 0.57826716, w: 0.40694842}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -43,7 +43,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 20
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &420751265672024450
 MonoBehaviour:
@@ -57,9 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34ccd5cb47e4fdc4dbc25203869cb745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
   detectedPlayer: {fileID: 0}
-  TargetTag: Player
-  range: 20
   reachablePlayer: {fileID: 0}
   distance: 0
 --- !u!1 &420751265687685197
@@ -316,13 +315,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420751267007239899}
-  m_LocalRotation: {x: -0.40694848, y: 0.5782673, z: 0.5782671, w: 0.40694845}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 420751267569082092}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &420751267007239902
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5112,6 +5111,7 @@ GameObject:
   - component: {fileID: 420751267569082002}
   - component: {fileID: 420751267569082093}
   - component: {fileID: 1187815524}
+  - component: {fileID: 323179403735876005}
   m_Layer: 6
   m_Name: virus
   m_TagString: Untagged
@@ -5205,17 +5205,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5184ec5e40e3b8543b223c00a6c3da27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 30
   minFollowDistance: 5
   maxFollowDistance: 40
+  attackAngle: 15
+  attackRange: 20
   isFollowing: 0
-  distance: 0
-  ParticleSystem: {fileID: 420751267007239902}
+  playerDetector: {fileID: 420751265672024450}
+  aggroParticleSystem: {fileID: 420751267007239902}
   model: {fileID: 170141114185451145}
   rotationSpeed: 0.25
   inverse: 1
   dropableItems:
-  - {fileID: 6787548328456421411, guid: 4830eebd955d7b94a981bc297c4565e9, type: 3}
+  - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
   - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
   ForceIdle: 0
 --- !u!195 &1187815524
@@ -5240,6 +5241,22 @@ NavMeshAgent:
   m_BaseOffset: 0.96
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &323179403735876005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420751267569082094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_IgnoreFromBuild: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &420751267230114146
 PrefabInstance:
   m_ObjectHideFlags: 0

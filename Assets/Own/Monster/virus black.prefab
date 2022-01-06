@@ -192,7 +192,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 20
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5207154606368001108
 MonoBehaviour:
@@ -206,8 +206,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34ccd5cb47e4fdc4dbc25203869cb745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
   detectedPlayer: {fileID: 0}
-  TargetTag: Player
+  reachablePlayer: {fileID: 0}
+  distance: 0
 --- !u!1 &5207154606703021004
 GameObject:
   m_ObjectHideFlags: 0
@@ -5300,18 +5302,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5184ec5e40e3b8543b223c00a6c3da27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 30
   minFollowDistance: 5
   maxFollowDistance: 40
+  attackAngle: 15
+  attackRange: 20
   isFollowing: 0
-  distance: 0
-  ParticleSystem: {fileID: 5207154607170833160}
+  playerDetector: {fileID: 5207154606368001108}
+  aggroParticleSystem: {fileID: 5207154607170833160}
   model: {fileID: 5749195650201901919}
   rotationSpeed: 0.25
   inverse: 1
   dropableItems:
-  - {fileID: 6787548328456421411, guid: 4830eebd955d7b94a981bc297c4565e9, type: 3}
+  - {fileID: 4401327599903897349, guid: faa4273689d3d614b8aa203f72c16b0d, type: 3}
   - {fileID: 2538784549802852659, guid: dc4954fbcbb484b4aa6c873a85bb2338, type: 3}
+  ForceIdle: 0
 --- !u!195 &8582998886141264356
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -114,7 +114,7 @@ namespace Assets.Weapons
             shooted = true;
         }
         
-        public void Update()
+        public void LateUpdate()
         {
             deltaTime += Time.deltaTime;
             handleHeatingAndCooling();
@@ -134,6 +134,8 @@ namespace Assets.Weapons
             base.InitWeapon(owner,camera,firepoint);
             modes[currentMode].InitWeapon(owner,camera,firepoint);
         }
+
+        public override bool CanAttack() { return true; }
 
         public void AddSkill(BaseWeapon weapon)
         {

@@ -29,7 +29,7 @@ public class MeleeWeapon : BaseWeapon
 
     public override void Use()
     {
-        if ((deltaTime < atackSpeed)) return;
+        if (!CanAttack()) return;
         deltaTime = 0f;
         //TODO: Work with layers to get enemies more performant
         Collider[] hitColliders = new Collider[maxEnemies];
@@ -45,6 +45,8 @@ public class MeleeWeapon : BaseWeapon
             Debug.Log($" Attack , {hitColliders[i].name}");
         }
     }
+
+    public override bool CanAttack() { return deltaTime > AttackSpeed; }
 
     private void OnDrawGizmosSelected()
     {

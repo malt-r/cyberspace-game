@@ -34,7 +34,12 @@ public class Laser : BaseWeapon
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))
         {
+            
             lineRenderer.SetPosition(1, hit.point);
+            if(hit.distance>range){
+                lineRenderer.SetPosition(1,Camera.transform.position + Camera.forward * range);
+                return;
+            }   
             var enemy = hit.collider.gameObject.GetComponent<CombatParticipant>();
             if (!enemy) { return; }
             var parent = Owner.GetComponent<CombatParticipant>();
@@ -53,6 +58,8 @@ public class Laser : BaseWeapon
     {
         shooted = true;
     }
+
+    public override bool CanAttack() { return true; }
 
     public void LateUpdate()
     {
