@@ -75,7 +75,6 @@ public class StatsMenu : MonoBehaviour
         Debug.Log("Awesome Logic");
         GameObject.FindObjectOfType<GameManager>().LoadNextGameLevel();
         
-        
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }

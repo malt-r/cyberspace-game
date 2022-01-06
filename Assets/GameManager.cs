@@ -102,6 +102,9 @@ public class GameManager : MonoBehaviour
     private string stasticsSceneName;
 
     [SerializeField] 
+    private string endSceneName;
+
+    [SerializeField] 
     private string[] gameLevels;
 
     [Header("Statistics")] [SerializeField]
@@ -118,6 +121,9 @@ public class GameManager : MonoBehaviour
     private bool _extendedMinimap;
     private bool _activateScanner;
     private bool _displayStats;
+
+    private string _dumpPath;
+    private bool _displayEndScreen;
 
     // Start is called before the first frame update
     void Start()
@@ -250,6 +256,12 @@ public class GameManager : MonoBehaviour
         {
             DisplayStatsInStatsScene();
         }
+
+        if (_displayEndScreen)
+        {
+            DisplayEndScreen();
+        }
+            
     }
 
     bool InitializeScene()
@@ -360,12 +372,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //Debug.LogError("Index is already at the end of gameLevel array");
             // finish game
-            DumpStats();
-            
-            // TODO: load endscreen
-            Application.Quit();
+            _dumpPath = DumpStats();
+            SceneManager.LoadScene(endSceneName);
+            _displayEndScreen = true;
+            DisplayEndScreen();
         }
     }
 
@@ -448,6 +459,16 @@ public class GameManager : MonoBehaviour
         RecordMovementStat(MovementDataPointType.Death);
         _deaths.Add(_instantiatedPlayer.transform.position);
     }
+    
+    private void DisplayEndScreen()
+    {
+        var endScreen = GameObject.FindObjectOfType<EndScreen>();
+        if (endScreen != null)
+        {
+            endScreen.SetPath(_dumpPath);
+            _displayEndScreen = false;
+        }
+    }
 
     private void DisplayStatsInStatsScene()
     {
@@ -464,7 +485,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void DumpStats()
+    public string DumpStats()
     {
         var data = _levelStats.Values.ToArray();
         // wrap in serializable array wrapper
@@ -476,7 +497,9 @@ public class GameManager : MonoBehaviour
         string path = Application.persistentDataPath + "/LevelData.json";
         
         Debug.Log($"Dumping stats to {path}");
-        System.IO.File.WriteAllText(path, dataAsJson); 
+        System.IO.File.WriteAllText(path, dataAsJson);
+        return path;
     }
+    
     #endregion
 }
