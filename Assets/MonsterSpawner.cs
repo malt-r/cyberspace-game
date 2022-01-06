@@ -18,7 +18,10 @@ public class MonsterSpawner : MonoBehaviour
         {
             deltaTime = 0;
             var index = Random.Range(0, spawnList.Count-1);
-            Instantiate(spawnList[index],transform.position, Quaternion.identity);
+            var randX = Random.Range(-15, 15);
+            var randz = Random.Range(-15, 15);
+            var spawnPos = new Vector3(randX, 0, randz);
+            Instantiate(spawnList[index],spawnPos, Quaternion.identity);
         }
     }
 }
