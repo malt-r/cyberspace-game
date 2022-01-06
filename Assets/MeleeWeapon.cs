@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Weapons;
@@ -15,6 +14,7 @@ public class MeleeWeapon : BaseWeapon
     // Start is called before the first frame update
 
     public  LayerMask lm;
+    
     void Start()
     {
         Type = WeaponType.MELEE;
@@ -32,21 +32,49 @@ public class MeleeWeapon : BaseWeapon
         if (!CanAttack()) return;
         deltaTime = 0f;
         //TODO: Work with layers to get enemies more performant
+        var self = Owner.GetComponent<CombatParticipant>();
+        var hasEnemies = enemyInRange(out var enemies, self);
+        foreach (var enemy in enemies)
+        {
+            
+            StartCoroutine(DelayForDamage(enemy, self));
+            
+        }
+
+        if (hasEnemies)
+        {
+            PlayUseSound();
+        }
+    }
+    private IEnumerator DelayForDamage(CombatParticipant enemy, CombatParticipant self){
+        yield return new WaitForSeconds(0.2f);
+        enemy.TakeDamage(self);
+        
+    }
+    private bool enemyInRange(out List<CombatParticipant> enemies, CombatParticipant owner)
+    {
+        enemies = new List<CombatParticipant>();
         Collider[] hitColliders = new Collider[maxEnemies];
         int foundColliders = Physics.OverlapSphereNonAlloc(this.transform.position, attackRadius, hitColliders,lm);
         for (int i = 0; i < foundColliders; i++)
         {
            
             var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-            var self = Owner.GetComponent<CombatParticipant>();
-            if (enemy == null || Owner ==  null || enemy == self) continue;
-            enemy.TakeDamage(self);
-            PlayUseSound();
+            
+            if (enemy == null || Owner ==  null || enemy == owner) continue;
+            enemies.Add(enemy);
+
             Debug.Log($" Attack , {hitColliders[i].name}");
         }
+
+        return enemies.Count > 0;
     }
 
-    public override bool CanAttack() { return deltaTime > AttackSpeed; }
+    public override bool CanAttack()
+    {
+        var self = Owner.GetComponent<CombatParticipant>();
+        return deltaTime > AttackSpeed && enemyInRange(out var dummy ,self);
+    }
 
     private void OnDrawGizmosSelected()
     {

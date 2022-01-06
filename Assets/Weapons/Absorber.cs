@@ -9,7 +9,8 @@ public class Absorber : BaseWeapon
     public bool overHeated = false;
     private LineRenderer lineRenderer;
     public float deltaTime;
-    
+
+    public Coroutine coroutine;
     void Awake()
     {
         Type = WeaponType.ABSORBER;
@@ -20,14 +21,14 @@ public class Absorber : BaseWeapon
     {
         if (!shooted || overHeated){
             lineRenderer.enabled = false;
-            audioSource.volume = 0;
+            audioSource.Stop();
             return; 
         }
 
         shooted = false;
         lineRenderer.enabled = true; 
         if(!audioSource.isPlaying){
-           PlayUseSound();
+            PlayUseSound();
         }
         lineRenderer.SetPosition(0, Firepoint.position);
         if (Physics.Raycast(Camera.position, Camera.forward, out var hit))

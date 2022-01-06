@@ -89,9 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7112931cf53a609428b176438ad3bd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useCost: 25
+  useCost: 30
   Material: {fileID: 2100000, guid: 58ddd6173786b644d93a25122c411681, type: 2}
-  damage: 5
+  damage: 1
   atackSpeed: 0.1
   range: 10
   shooted: 0
@@ -215,7 +215,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2436203743654749915, guid: c65776e92fd4bcc47b1482e9b3920499, type: 2}
-  m_audioClip: {fileID: 8300000, guid: b9888631f7109014c804809c4fa70d6e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c7a51b081786535489efe6eba068c717, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.496
   m_Pitch: 1

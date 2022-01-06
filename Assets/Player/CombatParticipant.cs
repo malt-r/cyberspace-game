@@ -32,9 +32,9 @@ public class CombatParticipant : MonoBehaviour
         stats.TakeDamage(enemy.weaponControl.Damage);
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, bool bomb = false)
     {
-        stats.TakeDamage(amount);
+        stats.TakeDamage(amount,bomb);
     }
 
     public void Revive()
