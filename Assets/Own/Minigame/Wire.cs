@@ -11,6 +11,7 @@ public class Wire : MonoBehaviour,
    public Color CustomColor;
    
    private Image _image;
+   private Text _text;
    private LineRenderer _lineRenderer;
    
    private Canvas _canvas;
@@ -20,6 +21,7 @@ public class Wire : MonoBehaviour,
    
    private void Awake() {
       _image = GetComponent<Image>();
+      _text = GetComponentInChildren<Text>();
       _lineRenderer = GetComponent<LineRenderer>();
       _canvas = GetComponentInParent<Canvas>();
       _wireTask = GetComponentInParent<WireTask>();
@@ -59,7 +61,9 @@ public class Wire : MonoBehaviour,
       }
    }
  
-   public void SetColor(Color color) {
+   public void SetColor(Color color, string letter)
+   {
+      _text.text = letter;
       _image.color = color;
       _lineRenderer.startColor = color;
       _lineRenderer.endColor = color;
