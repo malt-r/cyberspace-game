@@ -18,12 +18,24 @@ public class MenueSettings : MonoBehaviour
     private Slider mouseSensitivitySlider;
 
     [SerializeField] private Button backButton;
-    
+
+
+    void Awake()
+    {
+        Debug.Log("Awake");
+    }
     
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Start");
         //Sound
+        initSlider(mainVolumeSlider, "MainVolume");
+        initSlider(musicVolumeSlider,"MusicVolume");
+        initSlider(voiceVolumeSlider,"VoiceVolume");
+        initSlider(soundeffectsVolumeSlider,"SoundeffectVolume");
+        
+        
         mainVolumeSlider.onValueChanged.AddListener((float newValue) => { handleSoundSettings(mainVolumeSlider, newValue); });
         musicVolumeSlider.onValueChanged.AddListener((float newValue) => { handleSoundSettings(musicVolumeSlider, newValue); });
         voiceVolumeSlider.onValueChanged.AddListener((float newValue) => { handleSoundSettings(voiceVolumeSlider, newValue); });
@@ -38,10 +50,7 @@ public class MenueSettings : MonoBehaviour
             menueInteractor.DisableMenue();
         });
 
-        initSlider(mainVolumeSlider, "MainVolume");
-        initSlider(musicVolumeSlider,"MusicVolume");
-        initSlider(voiceVolumeSlider,"VoiceVolume");
-        initSlider(soundeffectsVolumeSlider,"SoundeffectVolume");
+        
     }
 
     void OnEnable()
@@ -67,7 +76,7 @@ public class MenueSettings : MonoBehaviour
     private void initSlider(Slider slider, string mixerName)
     {
         SoundManager.Instance.AudioMixer.GetFloat(mixerName, out var newMixerVolume);
-        slider.value = newMixerVolume;
+        slider.value = SoundManager.dbToLinear(newMixerVolume);
 
     }
     private void handleMouseSettings(Slider slider, float newValue)

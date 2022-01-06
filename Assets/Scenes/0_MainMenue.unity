@@ -656,9 +656,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3462548357142202362, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3462548357142202362, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 247006244}
+    - target: {fileID: 3462548357420483356, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3462548357420483356, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -726,6 +734,10 @@ PrefabInstance:
     - target: {fileID: 3462548358190174799, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3462548358203876912, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3462548358203876912, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -814,6 +826,10 @@ PrefabInstance:
     - target: {fileID: 3508789068387427173, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0.7058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 4312601762922660711, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4312601762922660711, guid: b9b19f9e75743a04590bbe1ce13ed8a2, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target

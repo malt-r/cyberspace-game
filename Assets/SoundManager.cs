@@ -39,24 +39,38 @@ public class SoundManager : MonoBehaviour
 
   public void SetMainVolume(float newVolume)
   {
-    AudioMixer.SetFloat("MainVolume", newVolume);
+    AudioMixer.SetFloat("MainVolume", linearToDb(newVolume));
   }
   public void SetMusicVolume(float newVolume)
   {
-    AudioMixer.SetFloat("MusicVolume", newVolume);
+    AudioMixer.SetFloat("MusicVolume",linearToDb(newVolume));
   }
   
   public void SetVoiceVolume(float newVolume)
   {
-    AudioMixer.SetFloat("VoiceVolume", newVolume);
+    AudioMixer.SetFloat("VoiceVolume", linearToDb(newVolume));
   }
   
   public void SetSoundEffectVolume(float newVolume)
   {
-    AudioMixer.SetFloat("SoundeffectVolume", newVolume);
+    AudioMixer.SetFloat("SoundeffectVolume", linearToDb(newVolume));
+  }
+
+  public static float linearToDb(float linearVolume)
+  {
+    var dbVolume = Mathf.Log10(linearVolume) * 20;
+    if (linearVolume == 0.0f)
+    {
+      dbVolume = -80.0f;
+    }
+
+    return dbVolume;
   }
   
-  
+  public static float dbToLinear(float linearVolume)
+  {
+    return Mathf.Pow(10.0f, linearVolume / 20.0f);;
+  }
   public static void PlaySound(Sound sound)
   {
     if (sound == null) return;
@@ -66,7 +80,7 @@ public class SoundManager : MonoBehaviour
     if (soundAudioClip == null) return;
 
     Instance.AudioMixer.GetFloat("SoundeffectVolume", out var volume);
-    var finalVolume = Mathf.Pow(10.0f, volume / 20.0f);
+    var finalVolume = dbToLinear(volume);
     audioSource.PlayOneShot(soundAudioClip.clip,finalVolume);
     Destroy(soundGameObject,30);
   }
