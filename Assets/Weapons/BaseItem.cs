@@ -7,9 +7,6 @@ public abstract class BaseItem : MonoBehaviour
 {
     //List<UnityAction> pickupCallbacks = new List<UnityAction>();
     UnityEvent pickupEvent = new UnityEvent();
-
-    public bool Absorbable = true;
-
     // Start is called before the first frame update
     void Start()
     {

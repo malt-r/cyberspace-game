@@ -56,7 +56,7 @@ public class Absorber : BaseWeapon
 
     private void handleItem(BaseItem item)
     {
-        if (!item.Absorbable) { return;}
+        if (item is Collectible) { return;}
         var smooth = Vector3.zero;
         var Speed = 0.5f;
         item.transform.position = Vector3.SmoothDamp( transform.position,item.transform.position, ref smooth, Speed*Time.deltaTime);
