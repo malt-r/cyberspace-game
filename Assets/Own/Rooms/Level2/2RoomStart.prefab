@@ -5379,6 +5379,10 @@ PrefabInstance:
       propertyPath: IsBarrier
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 315986612908538075, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
+      propertyPath: Description
+      value: Hebe den Scanner auf
+      objectReference: {fileID: 0}
     - target: {fileID: 315986612908538076, guid: 3f7a293ca4ecbcd48bd82176ae07932b, type: 3}
       propertyPath: m_Name
       value: StoryMarkerStandard
@@ -5535,7 +5539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a62f8317a6c7304ca4619f865bc5481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  storyEventName: 
+  storyEventName: Story/GotScanner
   marker: {fileID: 315986612299076750}
   ActivateOnlyOnce: 1
   ItemToWatch: {fileID: 4749958497048836081}
