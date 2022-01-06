@@ -146,6 +146,6 @@ public class Enemy : MonoBehaviour
         }
         animator.ChangeAnimationState("Walk");
         isFollowing = true;
-        navMeshAgent.SetDestination(playerPosition);
+        navMeshAgent.SetDestination(player.position);
     }
 }
