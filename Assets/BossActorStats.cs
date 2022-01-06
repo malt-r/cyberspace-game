@@ -10,14 +10,13 @@ public class BossActorStats : ActorStats
 
     public GameObject ownShield;
 
-    public override void TakeDamage(float damage, bool bomb = false)
+    public override void TakeDamage(float damage, bool bomb = false, bool byEnemy = false)
     {
         
         var allDestroyed = shields.TrueForAll(generator => !generator.shieldActive);
         if (allDestroyed)
         {
-            
-            base.TakeDamage(damage, bomb);
+            base.TakeDamage(damage, bomb, byEnemy);
         }
     }
 

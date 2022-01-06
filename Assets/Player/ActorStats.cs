@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.Diagnostics.Tracing;
+using UnityEngine.EventSystems;
 
 public class ActorStats : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class ActorStats : MonoBehaviour
 		currentHealth = maxHealth;
     }
 
-    public virtual void TakeDamage(float damage, bool bomb = false)
+    public virtual void TakeDamage(float damage, bool bomb = false, bool byEnemy = false)
     {
 	    if (onlyBombsCanDamageMe && !bomb)
 	    {
@@ -30,6 +32,10 @@ public class ActorStats : MonoBehaviour
 		gameObject.SetActive(false);
 		if (gameObject.CompareTag("Player"))
 		{
+			if (byEnemy)
+			{
+				EventManager.TriggerEvent("Death/ByEnemy", null);
+			}
 			EventManager.TriggerEvent("Combat/PlayerDied", this.gameObject);
 		}
 		else
