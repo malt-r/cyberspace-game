@@ -8,17 +8,20 @@ public class Doormechanism : MonoBehaviour
     [SerializeField] 
     public doorNavMarker[] Doors;
 
+    [SerializeField] 
+    private bool StartWithDoorsOpen = true;
+
     public GameObject[] enemies;
 
     private bool done = false;
-
-    private 
         
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        openDoors();
-        
+        if (!StartWithDoorsOpen) // door will start in open state (set by animator)
+        {
+            closeDoors();
+        }
     }
 
     // Update is called once per frame
@@ -36,7 +39,6 @@ public class Doormechanism : MonoBehaviour
 
         other.GetComponent<ActorStats>().OnHealthReachedZero += openDoors;
         closeDoors();
-        
     }
 
     public void OnTriggerExit(Collider other)
@@ -62,7 +64,7 @@ public class Doormechanism : MonoBehaviour
     {
         foreach (var door in Doors)
         {
-            door.setDoorActive(false);
+            door.GetComponent<Animator>().SetTrigger("Open");
         }
     }
 
@@ -71,6 +73,7 @@ public class Doormechanism : MonoBehaviour
         foreach (var door in Doors)
         {
             door.setDoorActive(true);
+            door.GetComponent<Animator>().SetTrigger("Close");
         }
     }
 
