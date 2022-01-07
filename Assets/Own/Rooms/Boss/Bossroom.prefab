@@ -5369,6 +5369,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5678454597210470212}
     - target: {fileID: 592956085306022136, guid: 283a833f34cefc84dab9bc58531eb58d, type: 3}
+      propertyPath: Door2
+      value: 
+      objectReference: {fileID: 5678454597210470212}
+    - target: {fileID: 592956085306022136, guid: 283a833f34cefc84dab9bc58531eb58d, type: 3}
       propertyPath: enemies.Array.size
       value: 1
       objectReference: {fileID: 0}
