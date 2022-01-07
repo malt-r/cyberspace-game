@@ -87,7 +87,7 @@ Material:
     - _ZWrite: 1
     - _isToggled: 0
     m_Colors:
-    - _Color: {r: 5.5399294, g: 0.8710581, b: 0, a: 1}
+    - _Color: {r: 0.91385627, g: 0, b: 2.9960785, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FlowDirection: {r: 1, g: 0, b: 1, a: 0}
   m_BuildTextureStacks: []
