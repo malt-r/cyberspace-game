@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class StoryTrigger : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class StoryTrigger : MonoBehaviour
 
     [SerializeField] 
     private bool ActivateOnlyOnce = true;
+
+    public Action OnActivateTrigger;
 
     private bool _wasActivated;
     
@@ -81,6 +85,11 @@ public class StoryTrigger : MonoBehaviour
             {
                 var data = CreateEventData(storyEventName);
                 EventManager.TriggerEvent(storyEventName, data);
+            }
+
+            if (OnActivateTrigger != null)
+            {
+                OnActivateTrigger.Invoke();
             }
             
             // remember activation

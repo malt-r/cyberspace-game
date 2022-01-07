@@ -129,7 +129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-30594
+  m_Name: pb_Mesh-53656
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4468,6 +4468,53 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &850020663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 850020664}
+  - component: {fileID: 850020665}
+  m_Layer: 0
+  m_Name: DoorOpener
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &850020664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850020663}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1415195808}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &850020665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850020663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 909fb6c61fa5f8546b892306a0ec4393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Doors:
+  - {fileID: 1415195810}
+  enemies: []
+  triggerToListenTo: {fileID: 1415195809}
 --- !u!43 &910653728
 Mesh:
   m_ObjectHideFlags: 0
@@ -7036,8 +7083,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 40322218}
     - target: {fileID: 1442562778013629547, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+      propertyPath: marker
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442562778013629547, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442562778013629547, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+      propertyPath: storyEventName
+      value: Minigame/GetLaser
       objectReference: {fileID: 0}
     - target: {fileID: 1743835218367235524, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_Mesh
@@ -7105,7 +7160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5174143129720920121, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5410470700622545690, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_Mesh
@@ -7167,6 +7222,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 40322218}
+    - target: {fileID: 7140178249556206835, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+      propertyPath: name
+      value: GetLaser
+      objectReference: {fileID: 0}
     - target: {fileID: 8294962548865951931, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -7234,6 +7293,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 071a0e1d3c297c54a8c1c4bd77b84f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1415195808 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5653661628602312262, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+  m_PrefabInstance: {fileID: 1415195804}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1415195809 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1442562778013629547, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+  m_PrefabInstance: {fileID: 1415195804}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b611a477785a02e49806d03930aa1efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1415195810 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4535691719004698388, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
+  m_PrefabInstance: {fileID: 1415195804}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2084e10007202d429d33f92fb7cf088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!43 &1442337240
@@ -9853,7 +9939,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-30552
+  m_Name: pb_Mesh-53614
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
