@@ -5537,6 +5537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyEventName: 
   marker: {fileID: 315986612299076750}
+  ActivateOnlyOnce: 1
   ItemToWatch: {fileID: 4749958497048836081}
 --- !u!1001 &4918921804024311625
 PrefabInstance:
