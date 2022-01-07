@@ -84,11 +84,13 @@ public class Minimap : MonoBehaviour
             GetCurrentLocation(out var roomIdx, out var cellIdx);
             UpdateVisibility(roomIdx, cellIdx);
             
-            // TODO: this should not be depentent on the minimap
-            if (_prevCellIdx != cellIdx && _dungeonGrid[cellIdx].type == CellType.Door)
+            // 
+            if (_prevCellIdx != cellIdx && _dungeonGrid[cellIdx].type == CellType.DoorDock)
             {
-                var marker = _dungeonGrid[cellIdx].doorMarkers.First();
-                EventManager.TriggerEvent("Level/PassDoorMarker", marker);
+                // get the dock position in global coords and pass to event
+                var dockPosition = _generator.CellIdxToGlobal(cellIdx);
+                var dockPositionInt = Vector3Int.RoundToInt(dockPosition);
+                EventManager.TriggerEvent("Level/PassDoorMarker", dockPositionInt);
             }
             
             if (enableWayfinding)

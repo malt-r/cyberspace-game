@@ -506,6 +506,7 @@ public partial class DungeonGenerator : MonoBehaviour
                 _grid[dockCell].type = CellType.DoorDock;
                 //associate the dockcell with the room
                 _grid[dockCell].roomIdx = _grid[doorCells[0]].roomIdx;
+                
             }
         }
 
@@ -1925,6 +1926,11 @@ public partial class DungeonGenerator : MonoBehaviour
         }
 
         return doorDockCells;
+    }
+
+    public Vector3Int GetDoorCellPositionOfDoorDock(Vector3Int doorDockCell)
+    {
+        return _grid[doorDockCell].doorCellOfDoorDock;
     }
 
     public List<Vector3Int> GetDoorDockCells(List<Vector3Int> doorCells)

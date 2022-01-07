@@ -206,22 +206,15 @@ public class GameManager : MonoBehaviour
     // store door dock as last passed respawn point
     private void HandlePassDoorMarker(object data)
     {
-        var marker = data as DoorMarker;
-        _lastPassedDoorMarkerPos = marker.transform.position;
-        Debug.Log("Passed door marker");
-        _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.RoundToInt(marker.transform.position)}).First();
-        if (_lastPassedRespawnPoint == null)
+        // data contains the global position of the passed door dock
+        if (data is Vector3Int)
         {
-            _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.CeilToInt(marker.transform.position)}).First();
-            if (_lastPassedRespawnPoint == null)
-            {
-                _lastPassedRespawnPoint = _generator.GetDoorDockCellsRawCoords(new List<Vector3Int>() {Vector3Int.FloorToInt(marker.transform.position)}).First();
-                if (_lastPassedRespawnPoint == null)
-                {
-                    Debug.LogError("Invalid door marker position, can't find corresponding door dock");
-                }
-            }
+            _lastPassedRespawnPoint = (Vector3Int) data;
+            var dockCellIdx = _generator.GlobalToCellIdx(_lastPassedRespawnPoint);
+            var doorCellIdx = _generator.GetDoorCellPositionOfDoorDock(dockCellIdx);
+            _lastPassedDoorMarkerPos = _generator.CellIdxToGlobal(doorCellIdx);
         }
+        Debug.Log("Passed door marker");
     }
     
     // respawn player at last passed respawn point
