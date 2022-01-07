@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &33738428736732043
 Transform:
   m_ObjectHideFlags: 0
@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 4858273384683112092}
   - component: {fileID: 1389774798601459100}
   - component: {fileID: 4535691718600626157}
+  - component: {fileID: 8993082690935469887}
   m_Layer: 6
   m_Name: Door Nav
   m_TagString: Untagged
@@ -157,3 +158,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2084e10007202d429d33f92fb7cf088, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &8993082690935469887
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118615929962921738}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7a31a89a004b8fb488a0c25dade06ac4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
