@@ -5330,6 +5330,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InstantiationIndex: -1
+--- !u!1 &9097829884164344508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5794435492457890409}
+  - component: {fileID: 2309938851297835762}
+  m_Layer: 0
+  m_Name: Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5794435492457890409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9097829884164344508}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5693374954737427605}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2309938851297835762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9097829884164344508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31eca2b5d62da18448a39ff026ef43a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyEventName: Story/KillFirstVirus
+  marker: {fileID: 0}
+  ActivateOnlyOnce: 1
+  enemiesToWatch:
+  - {fileID: 7940494132057951535}
 --- !u!1001 &89848205
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5500,6 +5548,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2339392089154269336}
     m_Modifications:
+    - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
+      propertyPath: Description
+      value: Besiege den Computervirus, um weiterzukommen
+      objectReference: {fileID: 0}
     - target: {fileID: 5693374955369745419, guid: 3d6865f9282e4614aacb211a5ed03d15, type: 3}
       propertyPath: IndexInStory
       value: 3
@@ -5693,14 +5745,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
---- !u!1 &7940494132057951535 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6352733569575658217, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
-  m_PrefabInstance: {fileID: 3898776776220012486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7940494132057951533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6352733569575658219, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
+  m_PrefabInstance: {fileID: 3898776776220012486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7940494132057951535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6352733569575658217, guid: dc7f8e2c64c4a1b4391b94163de3f388, type: 3}
   m_PrefabInstance: {fileID: 3898776776220012486}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8970272168425803781

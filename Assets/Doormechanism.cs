@@ -1,24 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.ProBuilder.Shapes;
 
 public class Doormechanism : MonoBehaviour
 {
-    public doorNavMarker Door1;
-    public doorNavMarker Door2;
+    [SerializeField] 
+    public doorNavMarker[] Doors;
+
+    [SerializeField] 
+    private bool StartWithDoorsOpen = true;
 
     public GameObject[] enemies;
 
     private bool done = false;
-
-    private 
+    private bool open = true;
+    private bool audioActive = true;
+    private bool registeredOnTriggerEnter = false;
         
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        openDoors();
-        
+        if (!StartWithDoorsOpen) // door will start in open state (set by animator)
+        {
+            closeDoors(true);
+        }
     }
 
     // Update is called once per frame
@@ -34,9 +42,23 @@ public class Doormechanism : MonoBehaviour
             return;
         }
 
-        other.GetComponent<ActorStats>().OnHealthReachedZero += openDoors;
-        closeDoors();
+        if (areAllEnemiesDead())
+        {
+            return;
+        }
+
+        if (!registeredOnTriggerEnter)
+        {
+            other.GetComponent<ActorStats>().OnHealthReachedZero += openDoors;
+            registeredOnTriggerEnter = true;
+        }
         
+        closeDoors();
+    }
+
+    public void openDoors()
+    {
+        openDoors(false);
     }
 
     public void OnTriggerExit(Collider other)
@@ -45,6 +67,12 @@ public class Doormechanism : MonoBehaviour
         {
             return;
         }
+
+        if (open)
+        {
+            return;
+        }
+        
         openDoors();
     }
 
@@ -58,16 +86,51 @@ public class Doormechanism : MonoBehaviour
         }
     }
 
-    private void openDoors()
+    private void SetAudioState(bool deactivateAudio)
     {
-        Door1.setDoorActive(false);
-        Door2.setDoorActive(false);
+        if (audioActive && deactivateAudio)
+        {
+            foreach (var door in Doors)
+            {
+                door.GetComponent<AudioSource>().enabled = false;
+            }
+
+            audioActive = false;
+        }
+        else if (!audioActive && !deactivateAudio)
+        {
+            foreach (var door in Doors)
+            {
+                door.GetComponent<AudioSource>().enabled = true;
+            }
+
+            audioActive = true;
+        }
     }
 
-    private void closeDoors()
+    public void openDoors(bool deactivateAudio = false)
     {
-        Door1.setDoorActive(true);
-        Door2.setDoorActive(true);
+        SetAudioState(deactivateAudio);
+        
+        foreach (var door in Doors)
+        {
+            door.GetComponent<Animator>().SetTrigger("Open");
+        }
+
+        open = true;
+    }
+
+    public void closeDoors(bool deactivateAudio = false)
+    {
+        SetAudioState(deactivateAudio);
+        
+        foreach (var door in Doors)
+        {
+            door.setDoorActive(true);
+            door.GetComponent<Animator>().SetTrigger("Close");
+        }
+
+        open = false;
     }
 
     private bool areAllEnemiesDead()

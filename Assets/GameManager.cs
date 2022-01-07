@@ -281,11 +281,11 @@ public class GameManager : MonoBehaviour
                 SetScannerActive(_activateScanner);
             }
 
+            InitializeStats();
+            
             _totalCollectibleCount = _generator.PlacedCollectibles;
             _collectibleGuiController = FindObjectOfType<CollectibleGuiController>();
             _collectibleGuiController.UpdateGui(0, _totalCollectibleCount, false);
-            
-            InitializeStats();
             
             return true;
         }
@@ -435,6 +435,8 @@ public class GameManager : MonoBehaviour
         _minigameSolves = new List<MinigameSolveDataPoint>();
         _movementDataPoints = new List<MovementDataPoint>();
         _levelStartTime = DateTime.Now;
+        _collectedCount = 0;
+        _totalCollectibleCount = 0;
         
         InvokeRepeating("RecordMovementStat", 0.0f, movementRecordInterval);
     }

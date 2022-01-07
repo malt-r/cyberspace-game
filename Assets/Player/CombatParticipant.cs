@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(ActorStats))]
 public class CombatParticipant : MonoBehaviour
@@ -29,12 +30,12 @@ public class CombatParticipant : MonoBehaviour
     public void TakeDamage(CombatParticipant enemy)
     {
         Debug.Log("Getting Damage");
-        stats.TakeDamage(enemy.weaponControl.Damage);
+        stats.TakeDamage(enemy.weaponControl.Damage, byEnemy: true);
     }
 
-    public void TakeDamage(float amount, bool bomb = false)
+    public void TakeDamage(float amount, bool bomb = false, bool byEnemy = false)
     {
-        stats.TakeDamage(amount,bomb);
+        stats.TakeDamage(amount,bomb, byEnemy);
     }
 
     public void Revive()

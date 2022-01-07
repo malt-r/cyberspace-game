@@ -85,8 +85,6 @@ public class StoryManager : MonoBehaviour
         {
             Debug.Log("Audio Source is null");
         }
-        
-
     }
 
     private void OnDisable()
@@ -107,6 +105,12 @@ public class StoryManager : MonoBehaviour
         // this could be done with yet another dictionary, but realistically we won't have more than 30 markers or so, so 
         // a little bit of linear time won't hurt
         // TODO: account for story markers, which's index is not -1 but which are also not relevant for the wayfinder
+        
+        // ignore marker, if index in story is lower than currently active index
+        if (marker.IndexInStory < _currentStoryMarker.IndexInStory)
+        {
+            return;
+        }
 
         for (int i = 0; i < _markerIdxs.Length; i++)
         {
@@ -126,6 +130,11 @@ public class StoryManager : MonoBehaviour
         }
         //_currentStoryMarker = _storyMarkers[_markerIdxs[_sequentialMarkerIdx]].First();
         
+        UpdateStoryUI();
+    }
+
+    private void UpdateStoryUI()
+    {
         // update task description in UI
         storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
         storyTextlabel.text = _currentStoryMarker.Description;
@@ -185,6 +194,7 @@ public class StoryManager : MonoBehaviour
             if (_readRooms)
             {
                 Console.WriteLine("Read rooms");
+                UpdateStoryUI();
             }
         }
     }
