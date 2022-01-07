@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Doormechanism : MonoBehaviour
 {
-    public doorNavMarker Door1;
-    public doorNavMarker Door2;
+    [SerializeField] 
+    public doorNavMarker[] Doors;
 
     public GameObject[] enemies;
 
@@ -58,16 +58,20 @@ public class Doormechanism : MonoBehaviour
         }
     }
 
-    private void openDoors()
+    public void openDoors()
     {
-        Door1.setDoorActive(false);
-        Door2.setDoorActive(false);
+        foreach (var door in Doors)
+        {
+            door.setDoorActive(false);
+        }
     }
 
-    private void closeDoors()
+    public void closeDoors()
     {
-        Door1.setDoorActive(true);
-        Door2.setDoorActive(true);
+        foreach (var door in Doors)
+        {
+            door.setDoorActive(true);
+        }
     }
 
     private bool areAllEnemiesDead()
