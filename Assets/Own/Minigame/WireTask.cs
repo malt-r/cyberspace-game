@@ -7,6 +7,7 @@ public class WireTask : MonoBehaviour {
    public List<Color> _wireColors = new List<Color>();
    public List<Wire> _leftWires = new List<Wire>(); 
    public List<Wire> _rightWires = new List<Wire>();
+   public List<string> _letters = new List<string>();
    
    public Wire CurrentDraggedWire;
    public Wire CurrentHoveredWire;
@@ -16,12 +17,14 @@ public class WireTask : MonoBehaviour {
    private List<Color> _availableColors;
    private List<int> _availableLeftWireIndex;
    private List<int> _availableRightWireIndex;
+   private List<string> _availableLetters;
 
    private Coroutine coroutine;
 
    public void StartMinigame()
    {
       _availableColors = new List<Color>(_wireColors);
+      _availableLetters = new List<string>(_letters);
       _availableLeftWireIndex = new List<int>();
       _availableRightWireIndex = new List<int>();
      
@@ -37,20 +40,23 @@ public class WireTask : MonoBehaviour {
  
       while (_availableColors.Count > 0 && 
              _availableLeftWireIndex.Count > 0 && 
-             _availableRightWireIndex.Count > 0) {
-         Color pickedColor = 
-            _availableColors[Random.Range(0, _availableColors.Count)];
+             _availableRightWireIndex.Count > 0)
+      {
+         var tmp = Random.Range(0, _availableColors.Count);
+         Color pickedColor = _availableColors[tmp];
+         string pickedLetter = _availableLetters[tmp];
   
          int pickedLeftWireIndex = Random.Range(0,
             _availableLeftWireIndex.Count);
          int pickedRightWireIndex = Random.Range(0,
             _availableRightWireIndex.Count);
          _leftWires[_availableLeftWireIndex[pickedLeftWireIndex]]
-            .SetColor(pickedColor);
+            .SetColor(pickedColor, pickedLetter);
          _rightWires[_availableRightWireIndex[pickedRightWireIndex]]
-            .SetColor(pickedColor);
+            .SetColor(pickedColor, pickedLetter);
        
          _availableColors.Remove(pickedColor);
+         _availableLetters.Remove(pickedLetter);
          _availableLeftWireIndex.RemoveAt(pickedLeftWireIndex);
          _availableRightWireIndex.RemoveAt(pickedRightWireIndex);
       }
