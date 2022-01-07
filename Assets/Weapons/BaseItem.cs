@@ -7,7 +7,6 @@ public abstract class BaseItem : MonoBehaviour
 {
     //List<UnityAction> pickupCallbacks = new List<UnityAction>();
     UnityEvent pickupEvent = new UnityEvent();
-
     // Start is called before the first frame update
     void Start()
     {

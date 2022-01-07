@@ -8,19 +8,25 @@ public class BossActorStats : ActorStats
 {
     public List<ShieldGenerator> shields;
 
+    public GameObject ownShield;
 
     public override void TakeDamage(float damage, bool bomb = false)
     {
+        
         var allDestroyed = shields.TrueForAll(generator => !generator.shieldActive);
-
         if (allDestroyed)
         {
+            
             base.TakeDamage(damage, bomb);
         }
     }
 
     private void Update()
     {
-        
+        var allDestroyed = shields.TrueForAll(generator => !generator.shieldActive);
+        if (allDestroyed)
+        {
+            ownShield.SetActive(false);
+        }
     }
 }

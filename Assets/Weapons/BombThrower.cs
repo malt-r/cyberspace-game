@@ -27,7 +27,7 @@ public class BombThrower : BaseWeapon
         var forward = Camera.forward;
         var bomb = Instantiate(bombPrefab, Firepoint.position, Quaternion.LookRotation(forward,Vector3.up)).GetComponentInChildren<Bomb>();
         bomb.GetComponent<Rigidbody>().AddForce(forward*throwingForceMultiplier,ForceMode.Impulse);
-        bomb.Ignite();
+        bomb.Ignite(this.Owner.gameObject);
 
     }
 

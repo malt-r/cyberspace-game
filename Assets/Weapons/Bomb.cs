@@ -20,9 +20,12 @@ public class Bomb : MonoBehaviour
 
     [SerializeField] 
     private Transform logicBombPrefab;
+
+    private GameObject owner;
     
-    public void Ignite()
+    public void Ignite(GameObject owner)
     {
+        this.owner = owner;
         StartCoroutine(igniteBomb());
     }
 
@@ -33,9 +36,23 @@ public class Bomb : MonoBehaviour
         int foundColliders = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders,attackLayers);
         for (int i = 0; i < foundColliders; i++)
         {
-            var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-            enemy.TakeDamage(damage, true);
+            if (owner.tag.Equals("Player"))
+            {
+                var enemy = hitColliders[i].GetComponent<CombatParticipant>();
+                enemy.TakeDamage(damage, true);
+            }
+            else
+            {
+                var enemyIsPlayer = hitColliders[i].tag.Equals("Player");
+                if (!enemyIsPlayer) { continue; }
+
+                var enemy = hitColliders[i].GetComponent<CombatParticipant>();
+                enemy.TakeDamage(damage, true);
+                
+            }
             Debug.Log($" Bomb damages , {hitColliders[i].name} {damage} points");
+            
+            
         }
 
 
