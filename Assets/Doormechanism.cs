@@ -18,6 +18,7 @@ public class Doormechanism : MonoBehaviour
     private bool done = false;
     private bool open = true;
     private bool audioActive = true;
+    private bool registeredOnTriggerEnter = false;
         
     // Start is called before the first frame update
     protected void Start()
@@ -46,7 +47,12 @@ public class Doormechanism : MonoBehaviour
             return;
         }
 
-        other.GetComponent<ActorStats>().OnHealthReachedZero += openDoors;
+        if (!registeredOnTriggerEnter)
+        {
+            other.GetComponent<ActorStats>().OnHealthReachedZero += openDoors;
+            registeredOnTriggerEnter = true;
+        }
+        
         closeDoors();
     }
 
