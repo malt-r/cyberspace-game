@@ -2093,7 +2093,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-121476
+  m_Name: pb_Mesh-371484
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5848,7 +5848,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-122058
+  m_Name: pb_Mesh-372066
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -6893,7 +6893,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-122042
+  m_Name: pb_Mesh-372050
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7148,7 +7148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5015111197733623500, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: Description
-      value: "Finde den Lasermodus f\xFCr den Scanner"
+      value: "Finde den Lasermodus f\xFCr den Scanner (ein roter W\xFCrfel)"
       objectReference: {fileID: 0}
     - target: {fileID: 5174143129720920121, guid: 3a9b165d18987c84b9e942365217f728, type: 3}
       propertyPath: m_IsActive
@@ -7833,6 +7833,10 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 621806212}
+    - target: {fileID: 1122310626968626336, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1122310626968626339, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: tutorialDelayMultiplier
       value: 2
@@ -9889,7 +9893,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-121184
+  m_Name: pb_Mesh-371192
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
