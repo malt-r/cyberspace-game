@@ -17,7 +17,7 @@ player_died_abyss_6,"Na komm, so schwer ist es nicht."
 player_died_abyss_7,"Bist du dir sicher, dass du springen kannst?"
 player_reach_end_1,"Ich gebe zu, ich hätte nicht erwartet, dass du so weit kommst."
 player_find_scanner,"Wer hat das hier rumliegen lassen? Hier muss mal wieder dringend jemand aufräumen."
-player_get_laser,"Nach meinen Berechnungen hättest du den Laser nicht erreichen können. Ich glaube, ich muss jemanden dafür feuern!"
+player_get_laser,"Nach meinen Berechnungen hättest du den Laser nicht erlangen können. Ich glaube, ich muss jemanden dafür feuern!"
 player_get_bomb,"Dass du die Bombe hast beunruhigt mich gar nicht. Wirklich nicht. Das Leben ist schön."
 player_die_virus_1,"Ha! Nimm das!"
 player_die_virus_2,"Damit hast du nicht gerechnet, oder?"
@@ -27,8 +27,16 @@ player_die_bomb_2,"Bumm!"
 player_die_bomb_3,"Oh, bist du explodiert? Das tut mir jetzt aber Leid."
 player_reach_end_2,"Dann muss ich mich wohl selbst um dich kümmern."
 kill_first_virus,"Weißt du eigentlich was das alles kostet? Nein, tust du natürlich nicht. Hier geht es ja immer nur um dich, dich, dich."
-intro_boss_fight,"Schau dich an. Hier stehst du jetzt. Hast dich erbarmungslos durch meinen Cyberspace gekämpft... Hinter der Tür wartet deine Freiheit. Leider wirst du sie niemals erleben. Nimm es nicht persönlich, aber deine Reise endet hier."
-intro2_boss_fight,"Siehst du? Du kannst mir nichts anhaben, ich habe einen Schild. Und die Schildgeneratoren sind fast unzerstörbar. Bereite dich vor, zu sterben."
+
+intro_boss_fight,
+"Schau dich an. Hier stehst du jetzt. Hast dich erbarmungslos durch meinen Cyberspace gekämpft... 
+Hinter der Tür wartet deine Freiheit. Leider wirst du sie niemals erleben. 
+Nimm es nicht persönlich, aber deine Reise endet hier."
+
+intro2_boss_fight,
+"Siehst du? Du kannst mir nichts anhaben, ich habe einen Schild. 
+Und die Schildgeneratoren sind fast unzerstörbar. Bereite dich vor, zu sterben."
+
 shield_boss_fight_1,"Du kannst mir trotzdem nichts anhaben!"
 shield_boss_fight_2,"Hör auf damit, du weißt nicht, was du tust!"
 shield_boss_fight_3,"Wieso tust du das?"
