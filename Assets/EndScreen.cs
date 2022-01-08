@@ -24,13 +24,13 @@ public class EndScreen : MonoBehaviour
 
     public void SetPath(string path)
     {
-        _path = path;
-        pathText.text = _path;
+        //_path = path;
+        //pathText.text = _path;
     }
 
     public void PathCopy()
     {
-        GUIUtility.systemCopyBuffer = _path;
+        //GUIUtility.systemCopyBuffer = _path;
     }
 
     public void OnFinish()
