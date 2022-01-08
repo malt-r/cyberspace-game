@@ -796,7 +796,7 @@ MonoBehaviour:
       m_Width: 91
       m_Height: 62
       m_HorizontalBearingX: 2.1
-      m_HorizontalBearingY: 62.61
+      m_HorizontalBearingY: 51.3
       m_HorizontalAdvance: 91
     m_GlyphRect:
       m_X: 515
@@ -1396,7 +1396,7 @@ MonoBehaviour:
       m_Width: 91
       m_Height: 62
       m_HorizontalBearingX: 2.1
-      m_HorizontalBearingY: 62.61
+      m_HorizontalBearingY: 51.3
       m_HorizontalAdvance: 91
     m_GlyphRect:
       m_X: 923
