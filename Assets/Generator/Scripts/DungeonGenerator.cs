@@ -1724,12 +1724,23 @@ public partial class DungeonGenerator : MonoBehaviour
             _generationSuccessfull = true;
             
             success = true;
+            
+            DeactivateTemplates();
         }
         if (currentTries >= MaxDungeonTries)
         {
             Debug.LogError("Could not generate dungeon, maybe the grid should be expanded");
         }
     }
+
+    private void DeactivateTemplates()
+    {
+        for (int i = 0; i < _roomTemplates.Count; i++)
+        {
+            _roomTemplates[i].GameObject.SetActive(false);
+        }
+    }
+
     #endregion
 
     #region cell 'management'
