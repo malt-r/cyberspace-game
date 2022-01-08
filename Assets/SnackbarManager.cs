@@ -76,7 +76,7 @@ public class SnackbarManager : MonoBehaviour
   }
   public void DisplayMessage(string message, float time = 15f, SnackbarMessageType type =SnackbarMessageType.Information)
   {
-    backgroundImage.transform.gameObject.SetActive(true);
+    if (backgroundImage != null) { backgroundImage.transform.gameObject.SetActive(true); }
     if (title != null)
     { title.text = getDisplayStringOfEnum(type);}
     if (text != null) {text.text = message;}
