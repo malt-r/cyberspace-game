@@ -173,8 +173,8 @@ MonoBehaviour:
   stasticsSceneName: __stats
   endSceneName: __endscreen
   gameLevels:
-  - Level2_Test
   - 1_Level1_V2
+  - Level2_Test
   movementRecordInterval: 1
   ExtendedMinimapInFirstLevel: 1
   ShowCollectiblesTimed: 1
