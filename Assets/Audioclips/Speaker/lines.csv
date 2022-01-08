@@ -3,11 +3,11 @@ tut_init,"Willkommen im Cyberspace. Mein Name ist Marcy und du bist mein Gefange
 tut_see,"Ich sagte 'für immer in Dunkelheit'."
 tut_lookAround,"Halt, hör auf dich umzusehen, das solltest du gar nicht können."
 tut_walk,"Wieso kannst du dich bewegen?! Ich gebe zu: das war anders geplant."
-voice_seeVirus,"Schau sie dir genau an! Die perfekte Killermaschine. Ihr werdet euch gut kennenlernen, falls du so weitermachst."
+voice_seeVirus,"Schau sie dir genau an! Die perfekten Killermaschinen. Ihr werdet euch gut kennenlernen, falls du so weitermachst."
 tut_leave,"Versuch nur zu entkommen. Du kannst ja nichtmal springen! Dass ich nicht lache!"
 tut_learn_jump,"Wie ich sehe, kannst du jetzt springen. Wie fast alle Menschen vor dir. Toll gemacht, ich bin stolz auf dich! Das war übrigens Ironie."
 story_jump,"Bild dir nichts darauf ein, dass du es über diesen Abgrund geschafft hast. So groß war der gar nicht."
-tut_learn_sprint,"So, du kannst jetzt schneller laufen als vorher. Meine Berechnungen haben ergeben, dass du immer noch langsamer bist, als der Durchschnittsmensch. Oh, sogar viel langsamer. Das habe ich mir nicht ausgedacht, das steht hier so."
+tut_learn_sprint,"Soso, du kannst jetzt schneller laufen als vorher. Meine Berechnungen haben ergeben, dass du immer noch langsamer bist, als der Durchschnittsmensch. Oh, sogar viel langsamer. Das habe ich mir nicht ausgedacht, das steht hier so."
 player_died_abyss_1,"Na? Kannst du nicht weit genug springen?"
 player_died_abyss_2,"Weißt du, das Ziel ist eigentlich ÜBER den Abgrund zu springen."
 player_died_abyss_3,"Du solltest dir mehr Mühe geben, wenn du entkommen willst."
@@ -16,14 +16,30 @@ player_died_abyss_5,"Zum Mitschreiben: Der. Abgrund. Ist. Böse."
 player_died_abyss_6,"Na komm, so schwer ist es nicht."
 player_died_abyss_7,"Bist du dir sicher, dass du springen kannst?"
 player_reach_end_1,"Ich gebe zu, ich hätte nicht erwartet, dass du so weit kommst."
-player_find_scanner,"Wer hat das hier rumliegen lassen? Ich muss hier dringend mal wieder aufräumen."
-player_get_laser,"Nach meinen Berechnungen konntest du den Laser nicht erreichen. Ich glaube, ich muss jemanden dafür feuern!"
+player_find_scanner,"Wer hat das hier rumliegen lassen? Hier muss mal wieder dringend jemand aufräumen."
+player_get_laser,"Nach meinen Berechnungen hättest du den Laser nicht erlangen können. Ich glaube, ich muss jemanden dafür feuern!"
 player_get_bomb,"Dass du die Bombe hast beunruhigt mich gar nicht. Wirklich nicht. Das Leben ist schön."
 player_die_virus_1,"Ha! Nimm das!"
 player_die_virus_2,"Damit hast du nicht gerechnet, oder?"
 player_die_virus_3,"Versteh doch endlich, dass du nicht gewinnen kannst."
 player_die_bomb_1,"Ha! Nimm das!"
 player_die_bomb_2,"Bumm!"
-player_die_bomb_3,"Oh, bist du explodiert? Das tut mir jetzt Leid."
+player_die_bomb_3,"Oh, bist du explodiert? Das tut mir jetzt aber Leid."
 player_reach_end_2,"Dann muss ich mich wohl selbst um dich kümmern."
 kill_first_virus,"Weißt du eigentlich was das alles kostet? Nein, tust du natürlich nicht. Hier geht es ja immer nur um dich, dich, dich."
+
+intro_boss_fight,
+"Schau dich an. Hier stehst du jetzt. Hast dich erbarmungslos durch meinen Cyberspace gekämpft... 
+Hinter der Tür wartet deine Freiheit. Leider wirst du sie niemals erleben. 
+Nimm es nicht persönlich, aber deine Reise endet hier."
+
+intro2_boss_fight,
+"Siehst du? Du kannst mir nichts anhaben, ich habe einen Schild. 
+Und die Schildgeneratoren sind fast unzerstörbar. Bereite dich vor, zu sterben."
+
+shield_boss_fight_1,"Du kannst mir trotzdem nichts anhaben!"
+shield_boss_fight_2,"Hör auf damit, du weißt nicht, was du tust!"
+shield_boss_fight_3,"Wieso tust du das?"
+shield_boss_fight_4,"Das kann doch gar nicht passieren!"
+shield_boss_fight_all,"Na gut, Du oder ich!"
+boss_fight_boss_die,"Neeeeeein!"
