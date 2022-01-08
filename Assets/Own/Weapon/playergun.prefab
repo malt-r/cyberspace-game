@@ -5178,15 +5178,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCost: 0
   Material: {fileID: 0}
-  damage: 10
+  damage: 0
   atackSpeed: 0
   modes:
   - {fileID: 5305516546972341848}
   condition: 100
   maxCondition: 100
   overHeated: 0
-  regenerationRate: 10
-  cooldownTime: 5
+  regenerationRate: 15
+  cooldownTime: 3
   shooted: 0
   modesTransform: {fileID: 8357294418386022295}
   modeIndicator: {fileID: 3441215709751398382}
