@@ -1,24 +1,22 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
-public class BossEnemy : Enemy
+public class BossEnemy : Enemy 
 {
     [SerializeField] protected int maxConcurrentMobs =3;
-    [SerializeField] private List<Enemy> mobList;
-    [SerializeField] private float timeSinceLastMonsterSpawn;
-    [SerializeField] private float spawnDelay=15f;
+    [SerializeField] List<Enemy> mobList;
+    [SerializeField] float timeSinceLastMonsterSpawn;
+    [SerializeField] float spawnDelay=15f;
     
-    [SerializeField] private WeaponControl weaponControl;
-
-
-
-    [SerializeField] private List<ShieldGenerator> shields;
+    [SerializeField] List<ShieldGenerator> shields;
     
-    private MonsterSpawner spawner;
+    MonsterSpawner spawner;
+
+    [SerializeField]
+    private Collider spawnArea;
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         base.Start();
         mobList = new List<Enemy>();
@@ -31,14 +29,14 @@ public class BossEnemy : Enemy
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         spawnMobs();
     }
 
 
-    private void spawnMobs()
+    void spawnMobs()
     {
         if(mobList.Count == maxConcurrentMobs) { return; }
         
@@ -46,7 +44,7 @@ public class BossEnemy : Enemy
         if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
         {
             timeSinceLastMonsterSpawn = 0;
-            var monster = spawner.SpawnRandomMonster();
+            var monster = spawner.SpawnRandomMonster(spawnArea.bounds);
             mobList.Add(monster);
             monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
 

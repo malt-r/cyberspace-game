@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected bool isFollowing = false;
     private ActorStats stats;
     [SerializeField] protected PlayerDetector playerDetector;
-    private WeaponControl weaponControl;
+    [SerializeField] protected WeaponControl weaponControl;
     [SerializeField] protected ParticleSystem aggroParticleSystem;
     
     [SerializeField] protected Transform model;
