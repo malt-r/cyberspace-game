@@ -12,6 +12,7 @@ public class BossEnemy : Enemy
     [SerializeField] List<ShieldGenerator> shields;
     
     MonsterSpawner spawner;
+    private LavaController lavaController;
 
     [SerializeField]
     private Collider spawnArea;
@@ -22,6 +23,7 @@ public class BossEnemy : Enemy
         mobList = new List<Enemy>();
         spawner = GetComponent <MonsterSpawner>();
         weaponControl = GetComponent<WeaponControl>();
+        lavaController = GetComponent<LavaController>();
         foreach (var shield in shields)
         {
             shield.OnShieldDestroy += handleShieldDestroyed;
@@ -57,30 +59,38 @@ public class BossEnemy : Enemy
     void deleteMobFromList(Enemy mob)
     {
         mobList.Remove(mob);
-        //TODO MR Voiceline on death of mobs? 
     }
     
     void handleShieldDestroyed()
     {
-        //TODO MR Voiceline shield destroyes
-
         var shieldThatAreActive = shields.Count(shield => shield.shieldActive);
         
         switch (shieldThatAreActive)
         {
             case 3:
-                Debug.Log("Den Schild brauche ich nicht, ich hab noch mehr als genug.");
+                EventManager.TriggerEvent("boss/3shields-left",new StoryEventData().SetEventName("boss/3shields-left"));
                 break;
             case 2:
-                Debug.Log("Du hälst dich für ganz schlau oder?");
+                EventManager.TriggerEvent("boss/2shields-left",new StoryEventData().SetEventName("boss/2shields-left"));
                 break;
             case 1:
-                Debug.Log("Einer reicht auch");
+                EventManager.TriggerEvent("boss/1shields-left",new StoryEventData().SetEventName("boss/1shields-left"));
                 break;
             case 0:
-                Debug.Log("Wie konnte das passiere, ich habe keinen Schutz mehr... Ich meine ich besiege dich auch so.");
+                EventManager.TriggerEvent("boss/0shields-left",new StoryEventData().SetEventName("boss/0shields-left"));
                 weaponControl.SwitchWeapon(1);
                 break;
         }
     }
+
+    void showLava()
+    {
+        lavaController.ShowLava();
+    }
+
+    void hideLava()
+    {
+        lavaController.HideLava();
+    }
+    
 }

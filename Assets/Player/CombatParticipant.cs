@@ -33,9 +33,9 @@ public class CombatParticipant : MonoBehaviour
         stats.TakeDamage(enemy.weaponControl.Damage, byEnemy: true);
     }
 
-    public void TakeDamage(float amount, bool bomb = false, bool byEnemy = false)
+    public void TakeDamage(float amount, bool bomb = false, bool byEnemy = false, bool byLava = false)
     {
-        stats.TakeDamage(amount,bomb, byEnemy);
+        stats.TakeDamage(amount,bomb, byEnemy, byLava);
     }
 
     public void Revive()
