@@ -136,6 +136,7 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening(Absorber.evt_pickupLaser, HandleGetLaser);
                 
                 EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
+                EventManager.StartListening("Boss/EnterBossLevel", HandleBossEnterLevel);
             }
         }
 
@@ -149,6 +150,15 @@ public class TutorialManager : MonoBehaviour
             {
                 ImplementFirstTutorial();
             }
+        }
+    }
+
+    private void HandleBossEnterLevel(object arg0)
+    {
+        var enemies = FindObjectsOfType<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            enemy.SetForceIdle(true);
         }
     }
 

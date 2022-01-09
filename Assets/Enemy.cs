@@ -53,6 +53,11 @@ public class Enemy : MonoBehaviour
             Instantiate(item,transform.position,Quaternion.identity);
         }
     }
+
+    public void SetForceIdle(bool value)
+    {
+        ForceIdle = value;
+    }
     
     protected void Update()
     {
