@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BossEnemy : Enemy 
 {
@@ -10,10 +11,15 @@ public class BossEnemy : Enemy
     [SerializeField] float spawnDelay=15f;
     
     [SerializeField] List<ShieldGenerator> shields;
+
+    [SerializeField] private AudioClip shieldActivationSound;
     
     MonsterSpawner spawner;
     [SerializeField]
     private LavaController lavaController;
+    [SerializeField]
+    private GameObject ownShieldGameObject;
+
     [SerializeField]
     private Collider spawnArea;
 
@@ -33,6 +39,17 @@ public class BossEnemy : Enemy
         {
             shield.OnShieldDestroy += handleShieldDestroyed;
         }
+
+        if (ownShieldGameObject != null)
+        {
+            ownShieldGameObject.SetActive(false);
+        }
+    }
+
+    public void ActivateShieldGameObject()
+    {
+        ownShieldGameObject.SetActive(true);
+        GetComponent<AudioSource>().PlayOneShot(shieldActivationSound);
     }
 
     // Update is called once per frame

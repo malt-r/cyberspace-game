@@ -7,7 +7,7 @@ public class BossMusicManager : MonoBehaviour
 {
     [SerializeField] private AudioMixerGroup outputGroup;
 
-    [SerializeField] private int crossFadeTime = 20;
+    const int crossFadeTime = 20;
 
     [SerializeField] private AudioClip droneClip;
     [SerializeField] private AudioClip transitionClip;
@@ -29,10 +29,13 @@ public class BossMusicManager : MonoBehaviour
         action
     }
 
+    private TrackType currentFollowUpTrack;
+
     public struct TrackInfo
     {
         public AudioClip clip;
         public float volume;
+        public TrackType followUpTrack;
     }
 
     public int CrossFadeTime => crossFadeTime;
@@ -49,6 +52,7 @@ public class BossMusicManager : MonoBehaviour
             case TrackType.transition:
                 info.clip = transitionClip;
                 info.volume = volumeTransition;
+                info.followUpTrack = TrackType.action;
                 break;
             case TrackType.action:
                 info.clip = actionClip;
@@ -77,10 +81,16 @@ public class BossMusicManager : MonoBehaviour
         aud[0].loop = true;
         aud[1].loop = true;
     }
+
+    public void TransitionToFollowUp()
+    {
+        newSoundtrack(currentFollowUpTrack, 0);
+        currentFollowUpTrack = TrackType.none;
+    }
  
     //use this method to start a new soundtrack, with a reference to the AudioClip that you want to use
     //    such as:        newSoundtrack((AudioClip)Resources.Load("Audio/soundtracks/track01"));
-    public void newSoundtrack (TrackType type) {
+    public void newSoundtrack (TrackType type, int transitionDuration = crossFadeTime) {
         //This ?: operator is short hand for an if/else statement, eg.
         //
         //      if (activeMusicSource) {
@@ -101,20 +111,35 @@ public class BossMusicManager : MonoBehaviour
         //If a transition is already happening, we stop it here to prevent our new Coroutine from competing
         if (musicTransition != null)
             StopCoroutine(musicTransition);
+
+        if (info.followUpTrack != TrackType.none)
+        {
+            currentFollowUpTrack = info.followUpTrack;
+            var currentLength = info.clip.length;
+            var scheduledFollowUpTime = currentLength; //+ (crossFadeTime / 2) / 10.0f;
+            Invoke("TransitionToFollowUp", scheduledFollowUpTime);
+        }
  
         aud[nextSource].clip = info.clip;
         aud[nextSource].Play();
  
-        musicTransition = transition(crossFadeTime, info.volume); //20 is the equivalent to 2 seconds (More than 3 seconds begins to overlap for a bit too long)
+        musicTransition = transition(transitionDuration, info.volume); //20 is the equivalent to 2 seconds (More than 3 seconds begins to overlap for a bit too long)
         StartCoroutine(musicTransition);
     }
  
         //  'transitionDuration' is how many tenths of a second it will take, eg, 10 would be equal to 1 second
     IEnumerator transition(int transitionDuration, float volume) {
- 
         for (int i = 0; i < transitionDuration+1; i++) {
-            aud[0].volume = activeMusicSource ? (transitionDuration - i) * (1f / transitionDuration) : (0 + i) * (1f / transitionDuration);
-            aud[1].volume = !activeMusicSource ? (transitionDuration - i) * (1f / transitionDuration) : (0 + i) * (1f / transitionDuration);
+            if (transitionDuration == 0)
+            {
+                aud[0].volume = activeMusicSource ? 0 : 1;
+                aud[1].volume = !activeMusicSource ? 0 : 1;
+            }
+            else
+            {
+                aud[0].volume = activeMusicSource ? (transitionDuration - i) * (1f / transitionDuration) : (0 + i) * (1f / transitionDuration);
+                aud[1].volume = !activeMusicSource ? (transitionDuration - i) * (1f / transitionDuration) : (0 + i) * (1f / transitionDuration);
+            }
  
             //  Here I have a global variable to control maximum volume.
             //  options.musicVolume is a float that ranges from 0f - 1.0f

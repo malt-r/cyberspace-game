@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using StarterAssets;
 using Unity.VisualScripting;
@@ -13,6 +14,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private bool messageOnFirstCollectible;
 
     [SerializeField] private float bossTransitionLenght = 27.5f;
+    [SerializeField] private float shieldActivationDelay = 18.0f;
+    [SerializeField] private float shieldActivationDistanceInS = 2.5f;
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
@@ -175,13 +178,32 @@ public class TutorialManager : MonoBehaviour
         EventManager.TriggerEvent(evt_startBossIntroVoiceLine, new StoryEventData().SetEventName(evt_startBossIntroVoiceLine).SetSender(this));
         _currentStageFiredMessage = false;
         _bossFight = true;
+        _readyForNextStage = false;
     }
 
     void TransitionToNextStage()
     {
         _readyForNextStage = true;
     }
-    
+
+    void ActivateNextShield()
+    {
+        var shieldGens = GameObject.FindObjectsOfType<ShieldGenerator>();
+        var inactiveCount = shieldGens.Count(gen => !gen.wasActivated);
+        if (inactiveCount == 0)
+        {
+            // activate shield of boss
+            var boss = GameObject.FindObjectOfType<BossEnemy>();
+            boss.ActivateShieldGameObject();
+            
+            CancelInvoke("ActivateNextShield");
+        }
+        else
+        {
+            var notActive = shieldGens.First(gen => !gen.wasActivated);
+            notActive.PlayStartupAnimation();
+        }
+    }
     
     void ImplementBossFight()
     {
@@ -196,17 +218,17 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.bossTransition:
-                if (!_currentStageFiredMessage && _readyForNextStage)
+                if (!_currentStageFiredMessage)
                 {
                     FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.transition);
                     
                     // TODO: trigger Animation of Boss enemy
                     FindObjectOfType<BossEnemy>().transform.GetComponent<Animator>().SetTrigger("Rise");
                     
-                    //TODO: trigger shield animation
-                    
                     Invoke("TransitionToNextStage", bossTransitionLenght);
+                    InvokeRepeating("ActivateNextShield", shieldActivationDelay, shieldActivationDistanceInS);
                     _currentStageFiredMessage = true;
+                    _readyForNextStage = false;
                 }
                 
                 if (_readyForNextStage) // TODO: fire event
@@ -217,26 +239,24 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.bossFight:
-                if (!_currentStageFiredMessage && _readyForNextStage)
+                if (!_currentStageFiredMessage)
                 {
                     _playerController.canMove = true;
                     _playerController.canJump = true;
                     _playerController.canSprint = true;
                     
-                    DisplayPopup("Besiege den Computer");
+                    StoryManager.UpdateStoryUI("Besiege den Computer");
                     _currentStageFiredMessage = true;
-                }
-                
-                if (_readyForNextStage) // TODO: fire event
-                {
-                    _snackBar.HideMessage();
-                    _playerController.canLookAround = true;
-                    _currentTutorialStage = TutorialStage.learnWalk;
-                    _currentStageFiredMessage = false;
                     _readyForNextStage = false;
-                    _prevMove = _input.move;
+                    
+                    
+                    var enemies = FindObjectsOfType<Enemy>();
+                    foreach (var enemy in enemies)
+                    {
+                        enemy.SetForceIdle(false);
+                    }
+                    
                 }
-                _prevLook = _input.look;
                 break;
         }
     }
