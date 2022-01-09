@@ -13,7 +13,7 @@ public class MonsterSpawner : MonoBehaviour
         var randz = Random.Range(bounds.min.z, bounds.max.z);
         var randomOffset = new Vector3(randX, 0, randz);
 
-        var spawnPos = transform.position + randomOffset;
+        var spawnPos = randomOffset;
         return Instantiate(spawnList[index],spawnPos, Quaternion.identity).GetComponent<Enemy>();
     }
 }
