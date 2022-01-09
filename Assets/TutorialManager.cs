@@ -66,13 +66,17 @@ public class TutorialManager : MonoBehaviour
         learnSee = 1,
         learnLook = 2,
         learnWalk = 3,
-        free = 4
+        free = 4,
+        bossIntro = 5,
+        bossTransition = 6,
+        bossFight = 7
     }
 
     private HashSet<TutorialStage> shownMessages = new HashSet<TutorialStage>();
 
     private TutorialStage _currentTutorialStage = TutorialStage.init;
     private StarterAssetsInputs _input;
+    private bool _bossFight;
 
     // Start is called before the first frame update
     void Start()
@@ -130,14 +134,88 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening(Absorber.evt_pickupBomb, HandlePickupBomb);
                 EventManager.StartListening(Absorber.evt_pickupHealth, HandlePickupHealth);
                 EventManager.StartListening(Absorber.evt_pickupLaser, HandleGetLaser);
+                
+                EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
             }
         }
 
         if (_initialized)
         {
-            ImplementFirstTutorial();
+            if (_bossFight)
+            {
+                ImplementBossFight();
+            }
+            else
+            {
+                ImplementFirstTutorial();
+            }
         }
     }
+
+    private void HandleBossIntro(object arg0)
+    {
+        //_snackBar.HideMessage();
+        _playerController.canMove = false;
+        _playerController.canJump = false;
+        _playerController.canSprint = false;
+        _currentTutorialStage = TutorialStage.bossIntro;
+        //EventManager.TriggerEvent("tut_walk", new StoryEventData().SetEventName("tut_walk").SetSender(this));
+        _currentStageFiredMessage = false;
+        _bossFight = true;
+    }
+    
+    
+    void ImplementBossFight()
+    {
+        switch (_currentTutorialStage) // do stages with statemachine pattern? refactor
+        {
+            case TutorialStage.bossIntro:
+                if (_readyForNextStage)
+                {
+                    _readyForNextStage = false;
+                    _currentTutorialStage = TutorialStage.bossTransition;
+                    _currentStageFiredMessage = false;
+                }
+                break;
+            case TutorialStage.bossTransition:
+                if (!_currentStageFiredMessage && _readyForNextStage)
+                {
+                    DisplayPopup(msg_learnSee);
+                    _currentStageFiredMessage = true;
+                }
+                
+                // left mouse button
+                if (Input.GetMouseButtonDown(0) && _readyForNextStage) // TODO: fire event
+                {
+                    _snackBar.HideMessage();
+                    _playerController.canSee = true;
+                    _currentTutorialStage = TutorialStage.bossFight;
+                    _currentStageFiredMessage = false;
+                    _prevLook = _input.look;
+                    _readyForNextStage = false;
+                }
+                break;
+            case TutorialStage.bossFight:
+                if (!_currentStageFiredMessage && _readyForNextStage)
+                {
+                    DisplayPopup(msg_learnLook);
+                    _currentStageFiredMessage = true;
+                }
+                
+                if (_prevLook != _input.look && _readyForNextStage) // TODO: fire event
+                {
+                    _snackBar.HideMessage();
+                    _playerController.canLookAround = true;
+                    _currentTutorialStage = TutorialStage.learnWalk;
+                    _currentStageFiredMessage = false;
+                    _readyForNextStage = false;
+                    _prevMove = _input.move;
+                }
+                _prevLook = _input.look;
+                break;
+        }
+    }
+    
 
     private void HandlePickupHealth(object arg0)
     {
@@ -201,6 +279,7 @@ public class TutorialManager : MonoBehaviour
     }
 
 
+    
     void ImplementFirstTutorial()
     {
         switch (_currentTutorialStage) // do stages with statemachine pattern? refactor

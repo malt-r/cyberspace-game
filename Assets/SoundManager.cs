@@ -112,6 +112,11 @@ public class SoundManager : MonoBehaviour
     }
     audioSource.Play();
   }
+
+  public void StopBackgroundMusic()
+  {
+    audioSource.Stop();
+  }
 }
 
 //Obacht: Das ändern der Enumreihenfolge macht die Zuordnung in der Szene kaputt!
