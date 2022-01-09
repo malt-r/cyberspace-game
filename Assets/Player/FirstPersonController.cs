@@ -178,7 +178,6 @@ namespace StarterAssets
 
 		private void handleMoveSounds()
 		{
-
 			if (_input.sprint && _controller.isGrounded && _controller.velocity.magnitude > 2.0f &!audioSource.isPlaying)
 			{
 				audioSource.clip = runningSound;

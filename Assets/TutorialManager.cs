@@ -48,6 +48,8 @@ public class TutorialManager : MonoBehaviour
     public const string evt_learnLaser = "Story/Laser";
     public const string evt_learnBomb = "Story/Bomb";
 
+    public const string evt_startBossIntroVoiceLine = "Boss/StartIntroVoiceLine";
+
     private bool _readyForNextStage = true;
 
     [SerializeField]
@@ -164,12 +166,11 @@ public class TutorialManager : MonoBehaviour
 
     private void HandleBossIntro(object arg0)
     {
-        //_snackBar.HideMessage();
         _playerController.canMove = false;
         _playerController.canJump = false;
         _playerController.canSprint = false;
         _currentTutorialStage = TutorialStage.bossIntro;
-        //EventManager.TriggerEvent("tut_walk", new StoryEventData().SetEventName("tut_walk").SetSender(this));
+        EventManager.TriggerEvent(evt_startBossIntroVoiceLine, new StoryEventData().SetEventName(evt_startBossIntroVoiceLine).SetSender(this));
         _currentStageFiredMessage = false;
         _bossFight = true;
     }
@@ -190,7 +191,12 @@ public class TutorialManager : MonoBehaviour
             case TutorialStage.bossTransition:
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
-                    DisplayPopup(msg_learnSee);
+                    // TODO: trigger Animation of Boss enemy
+                    // TODO: trigger sound transition
+                    FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.transition);
+                    
+                    
+                    //DisplayPopup(msg_learnSee);
                     _currentStageFiredMessage = true;
                 }
                 

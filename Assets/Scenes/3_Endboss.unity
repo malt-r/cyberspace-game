@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1122310626968626339, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: eventReactions.Array.data[4].eventName
-      value: Boss/TriggerIntro
+      value: Boss/StartIntroVoiceLine
       objectReference: {fileID: 0}
     - target: {fileID: 1189335178268482154, guid: f902758fe65e8884a9a4c087ae35b833, type: 3}
       propertyPath: text
