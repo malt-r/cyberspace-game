@@ -151,7 +151,11 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
                 EventManager.StartListening("Boss/EnterBossLevel", HandleBossEnterLevel);
                 EventManager.StartListening("Boss/Death", HandleBossDeath);
-                EventManager.StartListening("boss/on3shields-left", DeactivateHelpInvokation);
+                
+                EventManager.StartListening("Boss/Death", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/3shields-left", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/2shields-left", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/1shields-left", DeactivateHelpInvokation);
             }
         }
 

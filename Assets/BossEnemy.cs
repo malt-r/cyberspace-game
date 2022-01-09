@@ -58,8 +58,12 @@ public class BossEnemy : Enemy
     new void Update()
     {
         base.Update();
-        spawnMobs();
-        handleLava();
+
+        if (!ForceIdle)
+        {
+            spawnMobs();
+            handleLava();
+        }
     }
 
     private void handleLava()
@@ -82,7 +86,7 @@ public class BossEnemy : Enemy
     void spawnMobs()
     {
         if(mobList.Count == maxConcurrentMobs) { return; }
-        
+
         timeSinceLastMonsterSpawn += Time.deltaTime;
         if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
         {
