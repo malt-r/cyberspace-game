@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BossEnemy : Enemy 
 {
@@ -10,10 +11,15 @@ public class BossEnemy : Enemy
     [SerializeField] float spawnDelay=15f;
     
     [SerializeField] List<ShieldGenerator> shields;
+
+    [SerializeField] private AudioClip shieldActivationSound;
     
     MonsterSpawner spawner;
     [SerializeField]
     private LavaController lavaController;
+    [SerializeField]
+    private GameObject ownShieldGameObject;
+
     [SerializeField]
     private Collider spawnArea;
 
@@ -33,14 +39,31 @@ public class BossEnemy : Enemy
         {
             shield.OnShieldDestroy += handleShieldDestroyed;
         }
+
+        if (ownShieldGameObject != null)
+        {
+            ownShieldGameObject.SetActive(false);
+        }
+        
+        GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
+    }
+
+    public void ActivateShieldGameObject()
+    {
+        ownShieldGameObject.SetActive(true);
+        GetComponent<AudioSource>().PlayOneShot(shieldActivationSound);
     }
 
     // Update is called once per frame
     new void Update()
     {
         base.Update();
-        spawnMobs();
-        handleLava();
+
+        if (!ForceIdle)
+        {
+            spawnMobs();
+            handleLava();
+        }
     }
 
     private void handleLava()
@@ -63,7 +86,7 @@ public class BossEnemy : Enemy
     void spawnMobs()
     {
         if(mobList.Count == maxConcurrentMobs) { return; }
-        
+
         timeSinceLastMonsterSpawn += Time.deltaTime;
         if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
         {
@@ -71,11 +94,15 @@ public class BossEnemy : Enemy
             var monster = spawner.SpawnRandomMonster(spawnArea.bounds);
             mobList.Add(monster);
             monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
-
         }
     }
     protected override void updateAppearance(){
         //Dont scale boss
+    }
+
+    void throwDeathEvent()
+    {
+        EventManager.TriggerEvent("Boss/Death", new StoryEventData().SetEventName("Boss/Death"));
     }
 
     void deleteMobFromList(Enemy mob)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using StarterAssets;
 using Unity.VisualScripting;
@@ -12,7 +13,14 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private bool disableMinimapOnStart;
     [SerializeField] private bool messageOnFirstCollectible;
 
+    [Header("Bossfight")]
     [SerializeField] private float bossTransitionLenght = 27.5f;
+    [SerializeField] private float shieldActivationDelay = 18.0f;
+    [SerializeField] private float shieldActivationDistanceInS = 2.5f;
+    [SerializeField] private float activateAllEnemiesDelay = 1.0f;
+    [SerializeField] private float transitionToDroneDelay = 1.5f;
+    [SerializeField] private float helpMessageDelay = 60.0f;
+    
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
@@ -36,7 +44,8 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnLaser2 = "Der Laser verbraucht Energie. Die aktuelle Energie wird rechts unten angezeigt.";
     private const string msg_learnBomb  = "Du hast die Bombe eingesammelt. Sie richtet sehr viel Schaden gegen einen besonderen Gegner an.";
     private const string msg_pickupHealth = "Du hast Gesundheit aufgesammelt. Deine Gesundheit wird links unten angezeigt.";
-    
+
+    private const string msg_helpBossFight = "Der Computer und die Schildgeneratoren können nur mit Bomben zerstört werden.";
     
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
     private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
@@ -141,6 +150,12 @@ public class TutorialManager : MonoBehaviour
                 
                 EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
                 EventManager.StartListening("Boss/EnterBossLevel", HandleBossEnterLevel);
+                EventManager.StartListening("Boss/Death", HandleBossDeath);
+                
+                EventManager.StartListening("Boss/Death", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/3shields-left", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/2shields-left", DeactivateHelpInvokation);
+                EventManager.StartListening("boss/1shields-left", DeactivateHelpInvokation);
             }
         }
 
@@ -155,6 +170,33 @@ public class TutorialManager : MonoBehaviour
                 ImplementFirstTutorial();
             }
         }
+    }
+
+    private void DisplayBossFightHelp()
+    {
+        DisplayPopup(msg_helpBossFight);
+    }
+
+    private void DeactivateHelpInvokation(object arg0)
+    {
+        CancelInvoke("DisplayBossFightHelp");
+    }
+
+    private void HandleBossDeath(object arg0)
+    {
+        _currentTutorialStage = TutorialStage.free;
+        _currentStageFiredMessage = true;
+        _bossFight = false;
+        _readyForNextStage = false;
+        
+        StoryManager.UpdateStoryUI("Verlasse den Cyberspace");
+        
+        Invoke("TransitionToDrone", transitionToDroneDelay);
+    }
+
+    private void TransitionToDrone()
+    {
+        FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.drone);
     }
 
     private void HandleBossEnterLevel(object arg0)
@@ -175,13 +217,32 @@ public class TutorialManager : MonoBehaviour
         EventManager.TriggerEvent(evt_startBossIntroVoiceLine, new StoryEventData().SetEventName(evt_startBossIntroVoiceLine).SetSender(this));
         _currentStageFiredMessage = false;
         _bossFight = true;
+        _readyForNextStage = false;
     }
 
     void TransitionToNextStage()
     {
         _readyForNextStage = true;
     }
-    
+
+    void ActivateNextShield()
+    {
+        var shieldGens = GameObject.FindObjectsOfType<ShieldGenerator>();
+        var inactiveCount = shieldGens.Count(gen => !gen.wasActivated);
+        if (inactiveCount == 0)
+        {
+            // activate shield of boss
+            var boss = GameObject.FindObjectOfType<BossEnemy>();
+            boss.ActivateShieldGameObject();
+            
+            CancelInvoke("ActivateNextShield");
+        }
+        else
+        {
+            var notActive = shieldGens.First(gen => !gen.wasActivated);
+            notActive.PlayStartupAnimation();
+        }
+    }
     
     void ImplementBossFight()
     {
@@ -196,17 +257,17 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.bossTransition:
-                if (!_currentStageFiredMessage && _readyForNextStage)
+                if (!_currentStageFiredMessage)
                 {
                     FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.transition);
                     
                     // TODO: trigger Animation of Boss enemy
                     FindObjectOfType<BossEnemy>().transform.GetComponent<Animator>().SetTrigger("Rise");
                     
-                    //TODO: trigger shield animation
-                    
                     Invoke("TransitionToNextStage", bossTransitionLenght);
+                    InvokeRepeating("ActivateNextShield", shieldActivationDelay, shieldActivationDistanceInS);
                     _currentStageFiredMessage = true;
+                    _readyForNextStage = false;
                 }
                 
                 if (_readyForNextStage) // TODO: fire event
@@ -217,27 +278,29 @@ public class TutorialManager : MonoBehaviour
                 }
                 break;
             case TutorialStage.bossFight:
-                if (!_currentStageFiredMessage && _readyForNextStage)
+                if (!_currentStageFiredMessage)
                 {
                     _playerController.canMove = true;
                     _playerController.canJump = true;
                     _playerController.canSprint = true;
                     
-                    DisplayPopup("Besiege den Computer");
+                    StoryManager.UpdateStoryUI("Besiege den Computer");
                     _currentStageFiredMessage = true;
-                }
-                
-                if (_readyForNextStage) // TODO: fire event
-                {
-                    _snackBar.HideMessage();
-                    _playerController.canLookAround = true;
-                    _currentTutorialStage = TutorialStage.learnWalk;
-                    _currentStageFiredMessage = false;
                     _readyForNextStage = false;
-                    _prevMove = _input.move;
+                    
+                    Invoke("ActivateAllEnemies", activateAllEnemiesDelay);
+                    Invoke("DisplayBossFightHelp", helpMessageDelay);
                 }
-                _prevLook = _input.look;
                 break;
+        }
+    }
+
+    private void ActivateAllEnemies()
+    {
+        var enemies = FindObjectsOfType<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            enemy.SetForceIdle(false);
         }
     }
     

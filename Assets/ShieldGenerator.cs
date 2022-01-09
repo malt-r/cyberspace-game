@@ -6,7 +6,12 @@ using UnityEngine;
 
 public class ShieldGenerator : MonoBehaviour
 {
+    [SerializeField] private AudioClip startupSound;
+    
     public bool shieldActive = true;
+
+    public bool wasActivated = false;
+    
     public GameObject activeShield;
     public GameObject inactiveShield;
 
@@ -21,6 +26,12 @@ public class ShieldGenerator : MonoBehaviour
             OnShieldDestroy?.Invoke();
             inactiveShield.gameObject.SetActive(true);
         };
-        
+    }
+
+    public void PlayStartupAnimation()
+    {
+        GetComponent<Animator>().SetTrigger("Startup");
+        GetComponent<AudioSource>().PlayOneShot(startupSound);
+        wasActivated = true;
     }
 }

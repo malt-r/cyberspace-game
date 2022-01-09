@@ -143,6 +143,16 @@ public class StoryManager : MonoBehaviour
             .SetTrigger("TriggerAnimation");
     }
 
+    public static void UpdateStoryUI(string text)
+    {
+        // update task description in UI
+        var storyTextlabel = GameObject.Find("StoryUI").transform.Find("Task").GetComponent<TMP_Text>();
+        storyTextlabel.text = text;
+        
+        GameObject.Find("StoryUI").transform.Find("Task").GetComponent<Animator>()
+            .SetTrigger("TriggerAnimation");
+    }
+
     private void FinishLevel(object data)
     {
         Debug.Log("Finishing the Level");
