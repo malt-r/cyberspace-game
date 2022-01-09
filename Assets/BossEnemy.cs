@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class BossEnemy : Enemy 
 {
@@ -26,6 +25,8 @@ public class BossEnemy : Enemy
     [SerializeField]  private float lavaInterfall = 15f;
     private float timeSinceLastLavaSpawn;
 
+    [SerializeField]
+    private bool inIntro = true;
    
     // Start is called before the first frame update
     new void Start()
@@ -39,6 +40,8 @@ public class BossEnemy : Enemy
         {
             shield.OnShieldDestroy += handleShieldDestroyed;
         }
+
+        GetComponent<BossActorStats>().OnHealthReachedZero += cleanUpRoom;
 
         if (ownShieldGameObject != null)
         {
@@ -54,9 +57,19 @@ public class BossEnemy : Enemy
         GetComponent<AudioSource>().PlayOneShot(shieldActivationSound);
     }
 
+    void cleanUpRoom()
+    {
+        //TODO: MR change music
+        hideLava();
+        foreach (var mob in mobList)
+        {
+            mob.GetComponent<CombatParticipant>().TakeDamage(float.MaxValue);
+        }
+    }
     // Update is called once per frame
     new void Update()
     {
+        if (inIntro) { return; }
         base.Update();
 
         if (!ForceIdle)
@@ -85,6 +98,7 @@ public class BossEnemy : Enemy
 
     void spawnMobs()
     {
+        
         if(mobList.Count == maxConcurrentMobs) { return; }
 
         timeSinceLastMonsterSpawn += Time.deltaTime;
@@ -94,6 +108,7 @@ public class BossEnemy : Enemy
             var monster = spawner.SpawnRandomMonster(spawnArea.bounds);
             mobList.Add(monster);
             monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+
         }
     }
     protected override void updateAppearance(){
