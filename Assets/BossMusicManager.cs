@@ -48,6 +48,7 @@ public class BossMusicManager : MonoBehaviour
             case TrackType.drone:
                 info.clip = droneClip;
                 info.volume = volumeDrone;
+                info.followUpTrack = TrackType.none;
                 break;
             case TrackType.transition:
                 info.clip = transitionClip;
@@ -57,6 +58,7 @@ public class BossMusicManager : MonoBehaviour
             case TrackType.action:
                 info.clip = actionClip;
                 info.volume = volumeAction;
+                info.followUpTrack = TrackType.none;
                 break;
         }
 
@@ -91,6 +93,7 @@ public class BossMusicManager : MonoBehaviour
     //use this method to start a new soundtrack, with a reference to the AudioClip that you want to use
     //    such as:        newSoundtrack((AudioClip)Resources.Load("Audio/soundtracks/track01"));
     public void newSoundtrack (TrackType type, int transitionDuration = crossFadeTime) {
+        CancelInvoke("TransitionToFollowUp");
         //This ?: operator is short hand for an if/else statement, eg.
         //
         //      if (activeMusicSource) {
@@ -177,7 +180,7 @@ public class BossMusicManager : MonoBehaviour
         if (transToAction)
         {
             Debug.Log("To Action");
-            newSoundtrack(TrackType.transition);
+            newSoundtrack(TrackType.action);
             transToAction = false;
         }
 

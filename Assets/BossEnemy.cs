@@ -44,6 +44,8 @@ public class BossEnemy : Enemy
         {
             ownShieldGameObject.SetActive(false);
         }
+        
+        GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
     }
 
     public void ActivateShieldGameObject()
@@ -88,11 +90,15 @@ public class BossEnemy : Enemy
             var monster = spawner.SpawnRandomMonster(spawnArea.bounds);
             mobList.Add(monster);
             monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
-
         }
     }
     protected override void updateAppearance(){
         //Dont scale boss
+    }
+
+    void throwDeathEvent()
+    {
+        EventManager.TriggerEvent("Boss/Death", new StoryEventData().SetEventName("Boss/Death"));
     }
 
     void deleteMobFromList(Enemy mob)
