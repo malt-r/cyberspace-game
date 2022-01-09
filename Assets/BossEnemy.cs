@@ -12,10 +12,15 @@ public class BossEnemy : Enemy
     [SerializeField] List<ShieldGenerator> shields;
     
     MonsterSpawner spawner;
+    [SerializeField]
     private LavaController lavaController;
-
     [SerializeField]
     private Collider spawnArea;
+
+    [SerializeField]  private float lavaInterfall = 15f;
+    private float timeSinceLastLavaSpawn;
+
+   
     // Start is called before the first frame update
     new void Start()
     {
@@ -24,7 +29,6 @@ public class BossEnemy : Enemy
         mobList = new List<Enemy>();
         spawner = GetComponent<MonsterSpawner>();
         weaponControl = GetComponent<WeaponControl>();
-        lavaController = GetComponent<LavaController>();
         foreach (var shield in shields)
         {
             shield.OnShieldDestroy += handleShieldDestroyed;
@@ -36,6 +40,23 @@ public class BossEnemy : Enemy
     {
         base.Update();
         spawnMobs();
+        handleLava();
+    }
+
+    private void handleLava()
+    {
+        timeSinceLastLavaSpawn += Time.deltaTime;
+
+        if (timeSinceLastLavaSpawn < lavaInterfall) { return; }
+        timeSinceLastLavaSpawn = 0;
+            
+        if(lavaController.LavaIsActive){
+            lavaController.HideLava();
+        }
+        else
+        {
+            lavaController.ShowLava();
+        }
     }
 
 

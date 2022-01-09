@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 8993082690935469887}
   - component: {fileID: 554487969545514759}
   - component: {fileID: 5529522456630043001}
+  - component: {fileID: 6746015674670181117}
   m_Layer: 6
   m_Name: Door Nav
   m_TagString: Untagged
@@ -290,3 +291,16 @@ MonoBehaviour:
   openSound: {fileID: 8300000, guid: 55058d755fc272a4986b3785c160a928, type: 3}
   closeSound: {fileID: 8300000, guid: bf9fa8c1171028b48848e8307ebb10be, type: 3}
   source: {fileID: 554487969545514759}
+--- !u!65 &6746015674670181117
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118615929962921738}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
