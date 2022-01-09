@@ -49,6 +49,8 @@ public class BossEnemy : Enemy
         }
         
         GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
+
+        EventManager.StartListening("Boss/Ready", arg0 => inIntro = false);
     }
 
     public void ActivateShieldGameObject()
@@ -59,8 +61,6 @@ public class BossEnemy : Enemy
 
     void cleanUpRoom()
     {
-        //TODO: MR change music
-        hideLava();
         foreach (var mob in mobList)
         {
             mob.GetComponent<CombatParticipant>().TakeDamage(float.MaxValue);
@@ -75,7 +75,7 @@ public class BossEnemy : Enemy
         if (!ForceIdle)
         {
             spawnMobs();
-            handleLava();
+            //handleLava();
         }
     }
 
@@ -104,12 +104,25 @@ public class BossEnemy : Enemy
         timeSinceLastMonsterSpawn += Time.deltaTime;
         if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
         {
-            timeSinceLastMonsterSpawn = 0;
-            var monster = spawner.SpawnRandomMonster(spawnArea.bounds);
-            mobList.Add(monster);
-            monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+            spawnMob(null);
 
         }
+    }
+    
+    public void spawnInitialMobs()
+    {
+        spawnMob(0);
+        spawnMob(1);
+        spawnMob(2);
+    }
+
+
+    void spawnMob(int? index)
+    {
+        timeSinceLastMonsterSpawn = 0;
+        var monster = spawner.SpawnMonster(spawnArea.bounds, index);
+        mobList.Add(monster);
+        monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
     }
     protected override void updateAppearance(){
         //Dont scale boss
@@ -147,14 +160,17 @@ public class BossEnemy : Enemy
         }
     }
 
-    void showLava()
+    public void ShowLava()
     {
         lavaController.ShowLava();
     }
 
-    void hideLava()
+    public void HideLava()
     {
         lavaController.HideLava();
+        
+        spawnInitialMobs();
+
     }
     
 }

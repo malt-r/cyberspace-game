@@ -5112,6 +5112,7 @@ GameObject:
   - component: {fileID: 420751267569082093}
   - component: {fileID: 1187815524}
   - component: {fileID: 323179403735876005}
+  - component: {fileID: 2004013011681617898}
   m_Layer: 6
   m_Name: virus
   m_TagString: Untagged
@@ -5212,6 +5213,7 @@ MonoBehaviour:
   attackRange: 20
   isFollowing: 0
   playerDetector: {fileID: 420751265672024450}
+  weaponControl: {fileID: 0}
   aggroParticleSystem: {fileID: 420751267007239902}
   model: {fileID: 1573598465054481901}
   rotationSpeed: 0
@@ -5258,6 +5260,19 @@ MonoBehaviour:
   m_Area: 0
   m_IgnoreFromBuild: 1
   m_AffectedAgents: ffffffff
+--- !u!65 &2004013011681617898
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 420751267569082094}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: -0.55, z: 0}
 --- !u!1001 &819953173
 PrefabInstance:
   m_ObjectHideFlags: 0
