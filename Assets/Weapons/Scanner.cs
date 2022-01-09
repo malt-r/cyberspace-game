@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Assets.Weapons
 {
@@ -22,7 +23,7 @@ namespace Assets.Weapons
         private float timeSinceoverheat = 0f;
         
         private float deltaTime;
-        public bool shooted = false;
+        [FormerlySerializedAs("shooted")] public bool wasShot = false;
 
         public Transform modesTransform;
         
@@ -52,7 +53,7 @@ namespace Assets.Weapons
         {
             if (overHeated)
             {
-                shooted = false;
+                wasShot = false;
                 if(timeSinceoverheat > cooldownTime){
                     overHeated = false;
                     timeSinceoverheat = 0;
@@ -61,7 +62,7 @@ namespace Assets.Weapons
                 timeSinceoverheat += Time.deltaTime;
                 return;
             }
-            if (shooted && !overHeated)
+            if (wasShot && !overHeated)
             {
                 condition -= Time.deltaTime*modes[currentMode].UseCost;
                 if (condition < 0)
@@ -71,7 +72,7 @@ namespace Assets.Weapons
                     PlayOverheatSound();
                 }
             }
-            else if(!shooted && condition<maxCondition && !overHeated)
+            else if(!wasShot && condition<maxCondition && !overHeated)
             {
                 condition += Time.deltaTime*regenerationRate;
                 if (condition > maxCondition)
@@ -94,6 +95,11 @@ namespace Assets.Weapons
 
         private void UpdateOverheatDrawParticleSystem()
         {
+            if (overheatParticleSystem == null)
+            {
+                return;
+            }
+            
             if (overHeated && overheatParticleSystem.isStopped)
             {
                 overheatParticleSystem.Play();
@@ -124,16 +130,16 @@ namespace Assets.Weapons
 
         public override void Use()
         {
-            shooted = true;
+            wasShot = true;
         }
         
         public void LateUpdate()
         {
             deltaTime += Time.deltaTime;
             handleHeatingAndCooling();
-            if (shooted)
+            if (wasShot)
             {
-                shooted = false;
+                wasShot = false;
                 if(!overHeated){
                     deltaTime = 0f;
                     modes[currentMode].Use();
@@ -152,7 +158,6 @@ namespace Assets.Weapons
 
         public void AddSkill(BaseWeapon weapon)
         {
-            
             var alreadyExists= modes.Any(item => item.Type == weapon.Type);
             if (alreadyExists) { return;}
             weapon.InitWeapon(Owner,Camera,Firepoint);

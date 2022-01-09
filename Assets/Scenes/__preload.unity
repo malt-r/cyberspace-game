@@ -172,9 +172,11 @@ MonoBehaviour:
   startSceneName: 0_MainMenue
   stasticsSceneName: __stats
   endSceneName: __endscreen
+  EndBossSceneName: 3_EndBoss
   gameLevels:
   - 1_Level1_V2
   - Level2_Test
+  startWithBossScene: 1
   movementRecordInterval: 1
   ExtendedMinimapInFirstLevel: 1
   ShowCollectiblesTimed: 1
