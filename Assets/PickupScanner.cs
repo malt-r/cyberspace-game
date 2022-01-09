@@ -20,7 +20,9 @@ public class PickupScanner : BaseItem
     private void OnTriggerEnter(Collider other)
     {
         if (!other.tag.Equals("Player")) { return; }
+        
         scanner = other.transform.GetChild(1).GetChild(0).GetChild(0).gameObject;
+        
         scanner.SetActive(true);
         base.OnPickup();
         other.GetComponent<WeaponControl>().enabled = true;

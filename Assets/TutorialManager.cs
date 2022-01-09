@@ -201,11 +201,6 @@ public class TutorialManager : MonoBehaviour
 
     private void HandleBossEnterLevel(object arg0)
     {
-        var enemies = FindObjectsOfType<Enemy>();
-        foreach (var enemy in enemies)
-        {
-            enemy.SetForceIdle(true);
-        }
     }
 
     private void HandleBossIntro(object arg0)
@@ -285,6 +280,8 @@ public class TutorialManager : MonoBehaviour
                     _playerController.canSprint = true;
                     
                     StoryManager.UpdateStoryUI("Besiege den Computer");
+                    GameObject.FindObjectOfType<GameManager>().SetScannerControlActive(true);
+                    
                     _currentStageFiredMessage = true;
                     _readyForNextStage = false;
                     
@@ -295,13 +292,9 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    private void ActivateAllEnemies()
+    public void ActivateAllEnemies()
     {
-        var enemies = FindObjectsOfType<Enemy>();
-        foreach (var enemy in enemies)
-        {
-            enemy.SetForceIdle(false);
-        }
+        GameManager.ActivateAllEnemies();
     }
     
 

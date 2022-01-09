@@ -106,7 +106,13 @@ public class GameManager : MonoBehaviour
     private string endSceneName;
 
     [SerializeField] 
+    private string EndBossSceneName;
+
+    [SerializeField] 
     private string[] gameLevels;
+
+    [SerializeField] 
+    private bool startWithBossScene = false;
 
     [Header("Statistics")] [SerializeField]
     private float movementRecordInterval = 1.0f;
@@ -125,6 +131,8 @@ public class GameManager : MonoBehaviour
 
     private string _dumpPath;
     private bool _displayEndScreen;
+    private bool _initializedEndBossScene;
+    private bool _inBossScene;
 
     // Start is called before the first frame update
     void Start()
@@ -144,6 +152,11 @@ public class GameManager : MonoBehaviour
         EventManager.StartListening(MinigameInteractor.evt_FinishMinigame, HandleFinishMinigame);
         
         SceneManager.LoadScene(startSceneName);
+
+        if (startWithBossScene)
+        {
+            _gameLevelIdx = gameLevels.Length + 1;
+        }
     }
 
     private ulong GenerateSessionID(int numDigits)
@@ -188,12 +201,20 @@ public class GameManager : MonoBehaviour
 
     private void HandleEndLevel(object arg0)
     {
-        Debug.Log("HandleEndLevel");
-        FinalizeLevelStats();
-        SceneManager.LoadScene(stasticsSceneName);
+        if (!_inBossScene)
+        {
+            Debug.Log("HandleEndLevel");
+            FinalizeLevelStats();
+            
+            SceneManager.LoadScene(stasticsSceneName);
 
-        _displayStats = true;
-        DisplayStatsInStatsScene();
+            _displayStats = true;
+            DisplayStatsInStatsScene();
+        }
+        else
+        {
+            LoadNextGameLevel();
+        }
     }
 
     private void HandleCollectible(object arg0)
@@ -227,27 +248,42 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
-            RecordDeath();
-            
-            Debug.Log("Reviving Player");
-            var combatant = actorObject.GetComponent<CombatParticipant>();
-            combatant.Revive();
-            actorObject.transform.position = _lastPassedRespawnPoint;
-            _instantiatedPlayer.GetComponent<FirstPersonController>().ForceLookAt(_lastPassedDoorMarkerPos);
-            actorObject.SetActive(true);
-            
-            var scanner =actorObject.GetComponent<WeaponControl>().CurrentWeapon as Scanner;
-            if (scanner != null)
+            if (!_inBossScene)
             {
-                scanner.Reset();
+                RecordDeath();
+                RevivePlayer(actorObject, _lastPassedRespawnPoint, _lastPassedDoorMarkerPos);
             }
+            else
+            {
+                var respawnTransform = GameObject.FindObjectOfType<SpawnPoint>().transform;
+                var lookDirection = respawnTransform.position + respawnTransform.forward * 1;
+                RevivePlayer(actorObject, respawnTransform.position, lookDirection);
+            }
+            
         }
     }
+
+    private void RevivePlayer(GameObject actorObject, Vector3 respawnPoint, Vector3 lookDirection)
+    {
+        Debug.Log("Reviving Player");
+        var combatant = actorObject.GetComponent<CombatParticipant>();
+        combatant.Revive();
+        actorObject.transform.position = respawnPoint;
+        _instantiatedPlayer.GetComponent<FirstPersonController>().ForceLookAt(lookDirection);
+        actorObject.SetActive(true);
+        
+        var scanner =actorObject.GetComponent<WeaponControl>().CurrentWeapon as Scanner;
+        if (scanner != null)
+        {
+            scanner.Reset();
+        }
+    }
+    
 
     // Update is called once per frame
     void Update()
     {
-        if (!_initializedScene)
+        if (!_initializedScene && !_inBossScene)
         {
             _initializedScene = InitializeScene();
         }
@@ -261,7 +297,66 @@ public class GameManager : MonoBehaviour
         {
             DisplayEndScreen();
         }
-            
+
+        if (_inBossScene && !_initializedEndBossScene)
+        {
+            _initializedEndBossScene = InitializeEndBossScene();
+        }
+    }
+
+    private bool InitializeEndBossScene()
+    {
+        _instantiatedPlayer = GameObject.FindObjectOfType<FirstPersonController>().gameObject;
+        
+        // TODO: deactivate minimap gui
+        var minimapPanel = GameObject.Find("GUI").transform.Find("MinimapUIPanel").gameObject;
+        if (minimapPanel != null)
+        {
+            minimapPanel.SetActive(false);
+        }
+        
+        // TODO: activate scanner
+        var scanner = GameObject.FindObjectOfType<Scanner>();
+        if (scanner == null)
+        {
+            return false;
+        }
+        //scanner.gameObject.SetActive(true);
+        
+        // TODO: Deactivate scanner weapon control
+        SetScannerControlActive(false);
+        
+        // TODO: bestow the weapon modes upon the player
+        var powerUpsToApplyAtStart = GameObject.Find("ScannerModesInit").gameObject.GetComponentsInChildren<PowerUpWeapon>();
+
+        foreach (var powerUp in powerUpsToApplyAtStart)
+        {
+            var weapon = powerUp.weapon;
+            scanner.AddSkill(weapon);
+            Destroy(powerUp.gameObject);
+        }
+        
+        DeactivateAllEnemies();
+
+        return true;
+    }
+    
+    public static void DeactivateAllEnemies()
+    {
+        var enemies = FindObjectsOfType<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            enemy.SetForceIdle(true);
+        }
+    }
+
+    public static void ActivateAllEnemies()
+    {
+        var enemies = FindObjectsOfType<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            enemy.SetForceIdle(false);
+        }
     }
 
     bool InitializeScene()
@@ -278,7 +373,7 @@ public class GameManager : MonoBehaviour
             {
                 // create minimap
                 _minimap = _generator.CreateMinimap(_instantiatedPlayer, _extendedMinimap);
-                SetScannerActive(_activateScanner);
+                //SetScannerActive(_activateScanner);
             }
 
             InitializeStats();
@@ -322,10 +417,9 @@ public class GameManager : MonoBehaviour
         {
             InitFirstLevel();
         }
-        
     }
 
-    private void SetScannerActive(bool value)
+    public void SetScannerControlActive(bool value)
     {
         if (_instantiatedPlayer == null)
         {
@@ -343,40 +437,52 @@ public class GameManager : MonoBehaviour
             weaponControl.enabled = value;
         }
 
-        var camera = _instantiatedPlayer.GetComponentInChildren<Camera>(true);
-        if (camera == null)
-        {
-            Debug.LogError("Could not find camera in children of player instance");
-        }
-        else
-        {
-            var camGameObj = camera.gameObject;
-            var scanner = camGameObj.GetComponentInChildren<Scanner>(true);
-            if (scanner == null)
-            {
-                Debug.LogError("Could not find Scanner");
-            }
-            else
-            {
-                scanner.gameObject.SetActive(value);
-            }
-        }
+        //var camera = _instantiatedPlayer.GetComponentInChildren<Camera>(true);
+        //if (camera == null)
+        //{
+        //    Debug.LogError("Could not find camera in children of player instance");
+        //}
+        //else
+        //{
+        //    var camGameObj = camera.gameObject;
+        //    var scanner = camGameObj.GetComponentInChildren<Scanner>(true);
+        //    if (scanner == null)
+        //    {
+        //        Debug.LogError("Could not find Scanner");
+        //    }
+        //    else
+        //    {
+        //        scanner.gameObject.SetActive(value);
+        //    }
+        //}
     }
 
     public void LoadNextGameLevel()
     {
-        if (_gameLevelIdx < gameLevels.Length)
+        if (_gameLevelIdx < gameLevels.Length && !_inBossScene)
         {
             LoadScene(_gameLevelIdx);
             _gameLevelIdx++;
+            _inBossScene = false;
         }
         else
         {
-            // finish game
-            _dumpPath = DumpStats();
-            SceneManager.LoadScene(endSceneName);
-            _displayEndScreen = true;
-            DisplayEndScreen();
+            if (!_initializedEndBossScene && !_inBossScene)
+            {
+                // finish stats
+                _dumpPath = DumpStats();
+                
+                // load boss scene
+                SceneManager.LoadScene(EndBossSceneName);
+                _inBossScene = true;
+            }
+            else
+            {
+                SceneManager.LoadScene(endSceneName);
+                _displayEndScreen = true;
+                DisplayEndScreen();
+                _inBossScene = false;
+            }
         }
     }
 

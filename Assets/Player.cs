@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
             weaponControl.SwitchWeapon(Mathf.FloorToInt((input.weaponSwitch.y)));
             input.weaponSwitch.y = 0;
         }
- 
+
         if (!input) { return; } 
         if (!input.shoot) { return; }
 
@@ -38,7 +38,10 @@ public class Player : MonoBehaviour
         if (!weaponControl) { return; }
 
         input.shoot = true;
-        weaponControl.UseWeapon();
+        if (weaponControl.isActiveAndEnabled)
+        {
+            weaponControl.UseWeapon();
+        }
     }
 
     public void AddWeapon(BaseWeapon weapon)
