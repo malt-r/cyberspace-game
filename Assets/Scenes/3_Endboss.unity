@@ -353,6 +353,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4384823362110937584, guid: 80f55b574abbb6242bdc415594f0ec53, type: 3}
+      propertyPath: droneClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 0b05fd712e469d249ae06dcd6998cb30, type: 3}
+    - target: {fileID: 4384823362110937584, guid: 80f55b574abbb6242bdc415594f0ec53, type: 3}
+      propertyPath: actionClip
+      value: 
+      objectReference: {fileID: 8300000, guid: d52184d6a66e9984a8cd3a3fdd2486c1, type: 3}
+    - target: {fileID: 4384823362110937584, guid: 80f55b574abbb6242bdc415594f0ec53, type: 3}
+      propertyPath: transitionClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 106060d98bb1c1a4580e66ebb083b5e6, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80f55b574abbb6242bdc415594f0ec53, type: 3}
 --- !u!1 &29229152
@@ -10695,7 +10707,7 @@ Transform:
   m_LocalScale: {x: 0.4, y: 1, z: 0.28}
   m_Children: []
   m_Father: {fileID: 2111698167}
-  m_RootOrder: 6
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!64 &1815738797
 MeshCollider:

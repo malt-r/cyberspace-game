@@ -134,6 +134,8 @@ public class GameManager : MonoBehaviour
     private bool _initializedEndBossScene;
     private bool _inBossScene;
 
+    public bool ExtendedMinimap => _extendedMinimap;
+
     // Start is called before the first frame update
     void Start()
     {

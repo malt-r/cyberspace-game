@@ -49,6 +49,7 @@ public class TutorialManager : MonoBehaviour
     
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
     private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
+    private const string msg_minimap_extended = "Die Minimap rechts oben hilft bei der Orientierung. Die rote Linie zeigt den Weg zur nächsten Aufgabe";
     private const string msg_collectible = "Du hast ein Collectible gefunden, finde sie alle!";
 
     private bool pickupUpHealth;
@@ -356,7 +357,15 @@ public class TutorialManager : MonoBehaviour
     private void HandleLeaveTutorial(object arg0)
     {
         _minimapUIPanel.SetActive(true);
-        DisplayPopup(msg_minimap);
+
+        if (GameObject.FindObjectOfType<GameManager>().ExtendedMinimap)
+        {
+            DisplayPopup(msg_minimap_extended);
+        }
+        else
+        {
+            DisplayPopup(msg_minimap);
+        }
     }
 
 
