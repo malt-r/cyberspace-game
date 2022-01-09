@@ -11,6 +11,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private bool skipTutorial;
     [SerializeField] private bool disableMinimapOnStart;
     [SerializeField] private bool messageOnFirstCollectible;
+
+    [SerializeField] private float bossTransitionLenght = 27.5f;
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
@@ -48,6 +50,8 @@ public class TutorialManager : MonoBehaviour
     public const string evt_learnLaser = "Story/Laser";
     public const string evt_learnBomb = "Story/Bomb";
 
+    public const string evt_startBossIntroVoiceLine = "Boss/StartIntroVoiceLine";
+
     private bool _readyForNextStage = true;
 
     [SerializeField]
@@ -66,13 +70,17 @@ public class TutorialManager : MonoBehaviour
         learnSee = 1,
         learnLook = 2,
         learnWalk = 3,
-        free = 4
+        free = 4,
+        bossIntro = 5,
+        bossTransition = 6,
+        bossFight = 7
     }
 
     private HashSet<TutorialStage> shownMessages = new HashSet<TutorialStage>();
 
     private TutorialStage _currentTutorialStage = TutorialStage.init;
     private StarterAssetsInputs _input;
+    private bool _bossFight;
 
     // Start is called before the first frame update
     void Start()
@@ -130,14 +138,109 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening(Absorber.evt_pickupBomb, HandlePickupBomb);
                 EventManager.StartListening(Absorber.evt_pickupHealth, HandlePickupHealth);
                 EventManager.StartListening(Absorber.evt_pickupLaser, HandleGetLaser);
+                
+                EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
+                EventManager.StartListening("Boss/EnterBossLevel", HandleBossEnterLevel);
             }
         }
 
         if (_initialized)
         {
-            ImplementFirstTutorial();
+            if (_bossFight)
+            {
+                ImplementBossFight();
+            }
+            else
+            {
+                ImplementFirstTutorial();
+            }
         }
     }
+
+    private void HandleBossEnterLevel(object arg0)
+    {
+        var enemies = FindObjectsOfType<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            enemy.SetForceIdle(true);
+        }
+    }
+
+    private void HandleBossIntro(object arg0)
+    {
+        _playerController.canMove = false;
+        _playerController.canJump = false;
+        _playerController.canSprint = false;
+        _currentTutorialStage = TutorialStage.bossIntro;
+        EventManager.TriggerEvent(evt_startBossIntroVoiceLine, new StoryEventData().SetEventName(evt_startBossIntroVoiceLine).SetSender(this));
+        _currentStageFiredMessage = false;
+        _bossFight = true;
+    }
+
+    void TransitionToNextStage()
+    {
+        _readyForNextStage = true;
+    }
+    
+    
+    void ImplementBossFight()
+    {
+        switch (_currentTutorialStage) // do stages with statemachine pattern? refactor
+        {
+            case TutorialStage.bossIntro:
+                if (_readyForNextStage)
+                {
+                    _readyForNextStage = false;
+                    _currentTutorialStage = TutorialStage.bossTransition;
+                    _currentStageFiredMessage = false;
+                }
+                break;
+            case TutorialStage.bossTransition:
+                if (!_currentStageFiredMessage && _readyForNextStage)
+                {
+                    FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.transition);
+                    
+                    // TODO: trigger Animation of Boss enemy
+                    FindObjectOfType<BossEnemy>().transform.GetComponent<Animator>().SetTrigger("Rise");
+                    
+                    //TODO: trigger shield animation
+                    
+                    Invoke("TransitionToNextStage", bossTransitionLenght);
+                    _currentStageFiredMessage = true;
+                }
+                
+                if (_readyForNextStage) // TODO: fire event
+                {
+                    _currentTutorialStage = TutorialStage.bossFight;
+                    _currentStageFiredMessage = false;
+                    _readyForNextStage = false;
+                }
+                break;
+            case TutorialStage.bossFight:
+                if (!_currentStageFiredMessage && _readyForNextStage)
+                {
+                    _playerController.canMove = true;
+                    _playerController.canJump = true;
+                    _playerController.canSprint = true;
+                    
+                    DisplayPopup("Besiege den Computer");
+                    _currentStageFiredMessage = true;
+                }
+                
+                if (_readyForNextStage) // TODO: fire event
+                {
+                    _snackBar.HideMessage();
+                    _playerController.canLookAround = true;
+                    _currentTutorialStage = TutorialStage.learnWalk;
+                    _currentStageFiredMessage = false;
+                    _readyForNextStage = false;
+                    _prevMove = _input.move;
+                }
+                _prevLook = _input.look;
+                break;
+        }
+    }
+    
 
     private void HandlePickupHealth(object arg0)
     {
@@ -201,6 +304,7 @@ public class TutorialManager : MonoBehaviour
     }
 
 
+    
     void ImplementFirstTutorial()
     {
         switch (_currentTutorialStage) // do stages with statemachine pattern? refactor

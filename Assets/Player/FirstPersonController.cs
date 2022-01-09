@@ -137,6 +137,21 @@ namespace StarterAssets
 		
 		private void Update()
 		{
+			if (!canMove)
+			{
+				_input.move = Vector2.zero;
+			}
+
+			if (!canJump)
+			{
+				_input.jump = false;
+			}
+
+			if (!canSprint)
+			{
+				_input.sprint = false;
+			}
+			
 			if (_prevCanSee != canSee)
 			{
 				var visualBlock = FindObjectOfType<CannotSee>();
@@ -163,7 +178,6 @@ namespace StarterAssets
 
 		private void handleMoveSounds()
 		{
-
 			if (_input.sprint && _controller.isGrounded && _controller.velocity.magnitude > 2.0f &!audioSource.isPlaying)
 			{
 				audioSource.clip = runningSound;
@@ -179,6 +193,11 @@ namespace StarterAssets
 				audioSource.pitch = Random.Range(0.9f, 1.1f);
 				audioSource.Play();
 				//Debug.Log("Walking");
+			}
+
+			if (!canMove && audioSource.isPlaying)
+			{
+				audioSource.Stop();
 			}
 		}
 
