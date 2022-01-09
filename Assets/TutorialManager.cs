@@ -11,6 +11,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private bool skipTutorial;
     [SerializeField] private bool disableMinimapOnStart;
     [SerializeField] private bool messageOnFirstCollectible;
+
+    [SerializeField] private float bossTransitionLenght = 27.5f;
     
     private FirstPersonController _playerController;
     private SnackbarManager _snackBar;
@@ -174,6 +176,11 @@ public class TutorialManager : MonoBehaviour
         _currentStageFiredMessage = false;
         _bossFight = true;
     }
+
+    void TransitionToNextStage()
+    {
+        _readyForNextStage = true;
+    }
     
     
     void ImplementBossFight()
@@ -191,34 +198,36 @@ public class TutorialManager : MonoBehaviour
             case TutorialStage.bossTransition:
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
-                    // TODO: trigger Animation of Boss enemy
-                    // TODO: trigger sound transition
                     FindObjectOfType<BossMusicManager>().newSoundtrack(BossMusicManager.TrackType.transition);
                     
+                    // TODO: trigger Animation of Boss enemy
+                    FindObjectOfType<BossEnemy>().transform.GetComponent<Animator>().SetTrigger("Rise");
                     
-                    //DisplayPopup(msg_learnSee);
+                    //TODO: trigger shield animation
+                    
+                    Invoke("TransitionToNextStage", bossTransitionLenght);
                     _currentStageFiredMessage = true;
                 }
                 
-                // left mouse button
-                if (Input.GetMouseButtonDown(0) && _readyForNextStage) // TODO: fire event
+                if (_readyForNextStage) // TODO: fire event
                 {
-                    _snackBar.HideMessage();
-                    _playerController.canSee = true;
                     _currentTutorialStage = TutorialStage.bossFight;
                     _currentStageFiredMessage = false;
-                    _prevLook = _input.look;
                     _readyForNextStage = false;
                 }
                 break;
             case TutorialStage.bossFight:
                 if (!_currentStageFiredMessage && _readyForNextStage)
                 {
-                    DisplayPopup(msg_learnLook);
+                    _playerController.canMove = true;
+                    _playerController.canJump = true;
+                    _playerController.canSprint = true;
+                    
+                    DisplayPopup("Besiege den Computer");
                     _currentStageFiredMessage = true;
                 }
                 
-                if (_prevLook != _input.look && _readyForNextStage) // TODO: fire event
+                if (_readyForNextStage) // TODO: fire event
                 {
                     _snackBar.HideMessage();
                     _playerController.canLookAround = true;

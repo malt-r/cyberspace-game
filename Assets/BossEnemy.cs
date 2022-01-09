@@ -20,8 +20,9 @@ public class BossEnemy : Enemy
     new void Start()
     {
         base.Start();
+        Debug.Log("Start Boss");
         mobList = new List<Enemy>();
-        spawner = GetComponent <MonsterSpawner>();
+        spawner = GetComponent<MonsterSpawner>();
         weaponControl = GetComponent<WeaponControl>();
         lavaController = GetComponent<LavaController>();
         foreach (var shield in shields)

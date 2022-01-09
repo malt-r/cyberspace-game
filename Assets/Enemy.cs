@@ -36,8 +36,13 @@ public class Enemy : MonoBehaviour
     protected void Start()
     {
         playerDetector = GetComponentInChildren<PlayerDetector>();
-        aggroParticleSystem = transform.Find("Particle System").GetComponent<ParticleSystem>();
-        if( !model ){ model = transform.Find("Model");}
+        //aggroParticleSystem = transform.Find("Particle System").GetComponent<ParticleSystem>();
+        aggroParticleSystem = GetComponentInChildren<ParticleSystem>();
+        if (!model)
+        {
+            //model = transform.Find("Model");
+            model = transform.Find("Model");
+        }
         navMeshAgent = GetComponent<NavMeshAgent>();
         stats = GetComponent<ActorStats>();
         weaponControl = GetComponent<WeaponControl>();
