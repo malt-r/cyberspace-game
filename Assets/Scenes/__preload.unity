@@ -174,8 +174,8 @@ MonoBehaviour:
   endSceneName: __endscreen
   EndBossSceneName: 3_EndBoss
   gameLevels:
-  - Level2_Test
   - 1_Level1_V2
+  - Level2_Test
   startWithBossScene: 0
   movementRecordInterval: 1
   ExtendedMinimapInFirstLevel: 1

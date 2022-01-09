@@ -110,8 +110,9 @@ GameObject:
   - component: {fileID: 4503463529398642442}
   - component: {fileID: 4973015130509639474}
   - component: {fileID: 1012907871931543884}
+  - component: {fileID: 545698475600413733}
   m_Layer: 6
-  m_Name: Door Nav no collider for monsters
+  m_Name: Door Nav with collider for monsters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,3 +291,16 @@ MonoBehaviour:
   openSound: {fileID: 8300000, guid: 55058d755fc272a4986b3785c160a928, type: 3}
   closeSound: {fileID: 8300000, guid: bf9fa8c1171028b48848e8307ebb10be, type: 3}
   source: {fileID: 4973015130509639474}
+--- !u!65 &545698475600413733
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4339651273818107711}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
