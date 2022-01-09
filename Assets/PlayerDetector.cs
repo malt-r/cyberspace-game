@@ -23,6 +23,7 @@ public class PlayerDetector : MonoBehaviour
         if (other.gameObject.CompareTag(targetTag))
         {
             detectedPlayer = null;
+            distance = float.MaxValue;
         }
     }
 

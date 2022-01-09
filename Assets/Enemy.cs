@@ -7,34 +7,37 @@ using UnityEngine.AI;
 [RequireComponent(typeof(CombatParticipant))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float minFollowDistance = 5f;
-    [SerializeField] private float maxFollowDistance = 10f;
-    [SerializeField] private float attackAngle = 15f;
-    [SerializeField] private float attackRange = 20f;
+    [SerializeField] protected float minFollowDistance = 5f;
+    [SerializeField] protected float maxFollowDistance = 10f;
+    [SerializeField] protected float attackAngle = 15f;
+    [SerializeField] protected float attackRange = 20f;
     //Used for debugging
-    [SerializeField] private bool isFollowing = false;
+    [SerializeField] protected bool isFollowing = false;
     private ActorStats stats;
-    [SerializeField] private PlayerDetector playerDetector;
-    private WeaponControl weaponControl;
-    [SerializeField] private ParticleSystem aggroParticleSystem;
+    [SerializeField] protected PlayerDetector playerDetector;
+    [SerializeField] protected WeaponControl weaponControl;
+    [SerializeField] protected ParticleSystem aggroParticleSystem;
     
-    [SerializeField] private Transform model;
-    [SerializeField] private float rotationSpeed = 0.5f;
-    [SerializeField] private bool inverse = true;
+    [SerializeField] protected Transform model;
+    [SerializeField] protected float rotationSpeed = 0.5f;
+    [SerializeField] protected bool inverse = true;
 
-    [SerializeField] private List<Transform> dropableItems;
+    [SerializeField] protected List<Transform> dropableItems;
 
     [Tooltip("Forces the enemy to be idle and not attack")]
     
     
-    [SerializeField] private bool ForceIdle;
+    [SerializeField] protected bool ForceIdle;
 
-    private NavMeshAgent navMeshAgent;
+    protected NavMeshAgent navMeshAgent;
 
-    private AnimationController animator;
+    protected AnimationController animator;
     
-    void Start()
+    protected void Start()
     {
+        playerDetector = GetComponentInChildren<PlayerDetector>();
+        aggroParticleSystem = transform.Find("Particle System").GetComponent<ParticleSystem>();
+        if( !model ){ model = transform.Find("Model");}
         navMeshAgent = GetComponent<NavMeshAgent>();
         stats = GetComponent<ActorStats>();
         weaponControl = GetComponent<WeaponControl>();
@@ -51,7 +54,7 @@ public class Enemy : MonoBehaviour
         }
     }
     
-    void Update()
+    protected void Update()
     {
         if (!ForceIdle)
         {
@@ -74,14 +77,11 @@ public class Enemy : MonoBehaviour
         var playerPosition = player.transform.position+ Vector3.up/2;
         var targetVec = playerPosition - ownPosition;
         var angle = Vector3.Angle(targetVec, ownTransform.forward);
-
         
         var hitSomething = Physics.Raycast(ownPosition, targetVec, out var hit);
-        //Debug.DrawRay(ownPosition, targetVec, Color.green);
         
         if (!hitSomething) { return; }
         if (!hit.collider.tag.Equals("Player")) { return;}
-
         if (angle > attackAngle || angle < -attackAngle) { return;}
 
         var enemyWantsToAttack = playerDetector.Distance < attackRange;
@@ -90,19 +90,15 @@ public class Enemy : MonoBehaviour
         var canAttack = weaponControl.CurrentWeapon.CanAttack();
         if (canAttack)
         {
-            if(animator)
-            animator.Trigger("Attack");
+
+            TriggerAnimation("Attack");
             weaponControl.UseWeapon();
         }
         
     }
     
 
- 
-    
-    
-
-    private void updateAppearance()
+    protected virtual void updateAppearance()
     {
         model.transform.Rotate(0, 0, rotationSpeed);
         var deadRatio = (stats.CurrentHealth + 1) / stats.maxHealth;
@@ -120,39 +116,43 @@ public class Enemy : MonoBehaviour
     {
         if (playerDetector.ReachablePlayer == null) {
             aggroParticleSystem.Stop();
-            if(animator)
-            animator.ChangeAnimationState("Idle");
+            ChangeAnimationState("Idle");
             return; 
         }
+        
         var player = playerDetector.ReachablePlayer;
         aggroParticleSystem.Play();
-        
-
         isFollowing = false;
         var distanceToPlayer = playerDetector.Distance;
 
         if (distanceToPlayer > maxFollowDistance)
         {
-            if(animator)
-            animator.ChangeAnimationState("Idle");
+            ChangeAnimationState("Idle");
             return;
         }
-       
-        // var playerPosition = player.position;
-        // Vector3 targetPostition = new Vector3( player.position.x, 
-        //     this.transform.position.y, 
-        //     player.position.z ) ;
-        // this.transform.LookAt( targetPostition ) ;
+        
         transform.LookAt(player);
+        
         if (distanceToPlayer < minFollowDistance)
         {
-            if(animator)
-            animator.ChangeAnimationState("Idle");
+            ChangeAnimationState("Idle");
             return;
         }
-        if(animator)
-        animator.ChangeAnimationState("Walk");
+
+        ChangeAnimationState("Walk");
         isFollowing = true;
         navMeshAgent.SetDestination(player.position);
+    }
+
+    protected void TriggerAnimation(string triggerName)
+    {
+        if (!animator) { return; }
+        animator.Trigger(triggerName);
+    }
+
+    protected void ChangeAnimationState(string state)
+    {
+        if (!animator) return;
+        animator.ChangeAnimationState(state);
     }
 }

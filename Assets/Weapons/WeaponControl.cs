@@ -30,8 +30,13 @@ public class WeaponControl : MonoBehaviour
     // Update is called once per frame
     private void Start()
     {
-        CurrentWeapon = WeaponHolder.GetChild(weaponIndex).GetComponent<BaseWeapon>();
+        CurrentWeapon = getWeaponByIndex(weaponIndex);
         CurrentWeapon.InitWeapon(Owner, Camera, Firepoint);
+    }
+
+    private BaseWeapon getWeaponByIndex(int newWeaponIndex)
+    {
+        return WeaponHolder.GetChild(newWeaponIndex).GetComponent<BaseWeapon>();
     }
 
     public void UseWeapon()
@@ -50,9 +55,16 @@ public class WeaponControl : MonoBehaviour
         if (CurrentWeapon == null) return;
         
         var scanner = CurrentWeapon as Scanner;
-        //TODO: Switching passiert hier
-        //Weil Monster auch switchen eventuell
+        if(scanner){
         scanner.SwitchMode(indexDelta);
+        }
+        //Is monster
+        else
+        {
+            weaponIndex += indexDelta;
+            CurrentWeapon =getWeaponByIndex(weaponIndex);
+            CurrentWeapon.InitWeapon(Owner, Camera, Firepoint);
+        }
     }
 
     public void AddWeapon(BaseWeapon weapon)

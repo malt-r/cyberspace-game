@@ -6,24 +6,14 @@ public class MonsterSpawner : MonoBehaviour
 {
     public List<GameObject> spawnList;
 
-    public float deltaTime;
-
-    public float spawnTime;
-    // Update is called once per frame
-    void Update()
+    public Enemy SpawnRandomMonster(Bounds bounds)
     {
-        deltaTime += Time.deltaTime;
+        var index = Random.Range(0, spawnList.Count-1);
+        var randX = Random.Range(bounds.min.x, bounds.max.x);
+        var randz = Random.Range(bounds.min.z, bounds.max.z);
+        var randomOffset = new Vector3(randX, 0, randz);
 
-        if (deltaTime > spawnTime)
-        {
-            deltaTime = 0;
-            var index = Random.Range(0, spawnList.Count-1);
-            var randX = Random.Range(-15, 15);
-            var randz = Random.Range(-15, 15);
-            var randomOffset = new Vector3(randX, 0, randz);
-
-            var spawnPos = transform.position + randomOffset;
-            Instantiate(spawnList[index],spawnPos, Quaternion.identity);
-        }
+        var spawnPos = transform.position + randomOffset;
+        return Instantiate(spawnList[index],spawnPos, Quaternion.identity).GetComponent<Enemy>();
     }
 }

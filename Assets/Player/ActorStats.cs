@@ -17,7 +17,7 @@ public class ActorStats : MonoBehaviour
 		currentHealth = maxHealth;
     }
 
-    public virtual void TakeDamage(float damage, bool bomb = false, bool byEnemy = false)
+    public virtual void TakeDamage(float damage, bool bomb = false, bool byEnemy = false, bool byLava = false)
     {
 	    if (onlyBombsCanDamageMe && !bomb)
 	    {
@@ -39,6 +39,10 @@ public class ActorStats : MonoBehaviour
 			if (bomb)
 			{
 				EventManager.TriggerEvent("Death/ByBomb", new StoryEventData().SetEventName("Death/ByBomb"));
+			}
+			if (byLava)
+			{
+				EventManager.TriggerEvent("Death/ByLava", new StoryEventData().SetEventName("Death/ByLava"));
 			}
 			EventManager.TriggerEvent("Combat/PlayerDied", this.gameObject);
 		}
