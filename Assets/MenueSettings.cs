@@ -41,16 +41,25 @@ public class MenueSettings : MonoBehaviour
         voiceVolumeSlider.onValueChanged.AddListener((float newValue) => { handleSoundSettings(voiceVolumeSlider, newValue); });
         soundeffectsVolumeSlider.onValueChanged.AddListener((float newValue) => { handleSoundSettings(soundeffectsVolumeSlider, newValue); });
         
-        //Mouse
+        //Mouse,
+        initMouseSensitivitySlider(mouseSensitivitySlider);
         mouseSensitivitySlider.onValueChanged.AddListener((float newValue) => { handleMouseSettings(mouseSensitivitySlider, newValue); });
+       
 
         backButton.onClick.AddListener(() =>
         {
             var menueInteractor = FindObjectOfType(typeof(MenueInteractor)) as MenueInteractor;
-            menueInteractor.DisableMenue();
+            if(menueInteractor){
+                menueInteractor.DisableMenue();
+            }
         });
 
         
+    }
+
+    private void initMouseSensitivitySlider(Slider slider)
+    {
+        mouseSensitivitySlider.value = PlayerPrefs.GetFloat("Mouse/Sensitivity",1);
     }
 
     void OnEnable()

@@ -111,6 +111,8 @@ public class Enemy : MonoBehaviour
 
     protected virtual void updateAppearance()
     {
+        if (model == null) { return; }
+        
         model.transform.Rotate(0, 0, rotationSpeed);
         var deadRatio = (stats.CurrentHealth + 1) / stats.maxHealth;
         deadRatio = Mathf.Clamp(deadRatio, 0.5f, 1f);
