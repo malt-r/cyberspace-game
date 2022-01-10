@@ -161,6 +161,19 @@ public class BossEnemy : Enemy
             case 0:
                 EventManager.TriggerEvent("boss/0shields-left",new StoryEventData().SetEventName("boss/0shields-left"));
                 weaponControl.SwitchWeapon(1);
+                
+                // set stopping distance to minimum for successful attack
+                if (weaponControl.CurrentWeapon.Type == WeaponType.MELEE)
+                {
+                    var meleeWeapon = weaponControl.CurrentWeapon as MeleeWeapon;
+                    var range = meleeWeapon.AttackRadius;
+                    var agentComponent = GetComponent<NavMeshAgent>();
+                    agentComponent.stoppingDistance = range - 1;
+
+                    // always follow player
+                    maxFollowDistance = 100.0f;
+                    attackRange = meleeWeapon.AttackRadius;
+                }
                 break;
         }
     }
