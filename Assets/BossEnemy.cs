@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Assets.Weapons;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -32,7 +30,6 @@ public class BossEnemy : Enemy
 
     [SerializeField]
     private bool inIntro = true;
-   
 
     private bool _registeredInitialMobSpawning;
 
@@ -58,7 +55,6 @@ public class BossEnemy : Enemy
         
         GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
 
-        EventManager.StartListening("Boss/Ready", arg0 => inIntro = false);
         EventManager.StartListening("Boss/Ready", OnBossReady);
     }
 
@@ -89,7 +85,6 @@ public class BossEnemy : Enemy
 
         if (!ForceIdle)
         {
-            spawnMobs();
             for (int i = 0; i < numberOfMobsToSpawnAtTheSameTime; i++)
             {
                 spawnMobs();
@@ -100,40 +95,19 @@ public class BossEnemy : Enemy
                 _registeredInitialMobSpawning = false;
                 spawnInitialMobs();
             }
-            //handleLava();
         }
     }
-
-    private void handleLava()
-    {
-        timeSinceLastLavaSpawn += Time.deltaTime;
-
-        if (timeSinceLastLavaSpawn < lavaInterfall) { return; }
-        timeSinceLastLavaSpawn = 0;
-            
-        if(lavaController.LavaIsActive){
-            lavaController.HideLava();
-        }
-        else
-        {
-            lavaController.ShowLava();
-        }
-    }
-
 
     void spawnMobs()
     {
-        
         if(mobList.Count == maxConcurrentMobs) { return; }
 
         timeSinceLastMonsterSpawn += Time.deltaTime;
-        if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
         if (timeSinceLastMonsterSpawn > spawnDelay 
             && mobList.Count < maxConcurrentMobs 
             && !lavaController.LavaIsActive)
         {
             spawnMob(null);
-
         }
     }
     
@@ -149,8 +123,6 @@ public class BossEnemy : Enemy
     {
         timeSinceLastMonsterSpawn = 0;
         var monster = spawner.SpawnMonster(spawnArea.bounds, index);
-        mobList.Add(monster);
-        monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
         if (monster != null)
         {
             mobList.Add(monster);
@@ -192,18 +164,4 @@ public class BossEnemy : Enemy
                 break;
         }
     }
-
-    public void ShowLava()
-    {
-        lavaController.ShowLava();
-    }
-
-    public void HideLava()
-    {
-        lavaController.HideLava();
-        
-        spawnInitialMobs();
-
-    }
-    
 }
