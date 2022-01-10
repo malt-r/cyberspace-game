@@ -176,7 +176,7 @@ MonoBehaviour:
   gameLevels:
   - 1_Level1_V2
   - Level2_Test
-  startWithBossScene: 0
+  startWithBossScene: 1
   movementRecordInterval: 1
   ExtendedMinimapInFirstLevel: 0
   ShowCollectiblesTimed: 1
