@@ -32,7 +32,7 @@ public class MinigameStatus : MonoBehaviour
         
         if (_storyTrigger != null)
         {
-            _storyTrigger.Activate();
+            _storyTrigger.Activate(null);
         }
 
         if (_animator != null)

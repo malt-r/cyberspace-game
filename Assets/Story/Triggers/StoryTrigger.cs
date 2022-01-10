@@ -67,7 +67,7 @@ public class StoryTrigger : MonoBehaviour
         return data;
     }
 
-    public void Activate()
+    public void Activate(object payload)
     {
         if (!_wasActivated)
         {
@@ -84,6 +84,7 @@ public class StoryTrigger : MonoBehaviour
             if (!string.IsNullOrEmpty(storyEventName))
             {
                 var data = CreateEventData(storyEventName);
+                data.SetPayLoad(payload);
                 EventManager.TriggerEvent(storyEventName, data);
             }
 

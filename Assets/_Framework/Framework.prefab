@@ -177,7 +177,6 @@ MonoBehaviour:
   Minimap: {fileID: 4818416091417483447}
   ShowGridNeighbors: 0
   GridCoordsForNeighbor: {x: 0, y: 0}
-  playerPrefab: {fileID: 8446778818680392781, guid: bf0a63795bdeee7409b65b60f02bc51b, type: 3}
 --- !u!1 &1692415758235600320
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,6 +514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 0}
   text: {fileID: 0}
+  backgroundImage: {fileID: 0}
   hasMessage: 0
   lifeTime: 15
   currentTime: 0
@@ -526,6 +526,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1692415758235600321}
     m_Modifications:
+    - target: {fileID: 1766377156660601869, guid: 51fe5604ac16bc34ab4f55625783dd23, type: 3}
+      propertyPath: OutputMixerGroup
+      value: 
+      objectReference: {fileID: 2436203743654749915, guid: c65776e92fd4bcc47b1482e9b3920499, type: 2}
     - target: {fileID: 4141327867493893689, guid: 51fe5604ac16bc34ab4f55625783dd23, type: 3}
       propertyPath: m_Name
       value: SoundManager

@@ -27,9 +27,10 @@ namespace Statistics
     public struct LevelStats
     {
         public string levelName;
+        public long generatorSeed;
         public Vector3[] deaths;
         public float timeForLevelInS;
-        public int foundCollectibles;
+        public Vector3[] foundCollectibles;
         public int totalCollectibles;
         public MinigameSolveDataPoint[] minigameData;
         public MinimapType minimapType;
@@ -77,7 +78,9 @@ public class GameManager : MonoBehaviour
     private Vector3 _lastPassedDoorMarkerPos;
     private Minimap _minimap;
     private int _totalCollectibleCount;
-    private int _collectedCount;
+    //private int _collectedCount;
+    private List<Vector3> _collectedCollectibles;
+    private long _generatorSeed;
     private CollectibleGuiController _collectibleGuiController;
     
     // statistics
@@ -222,8 +225,13 @@ public class GameManager : MonoBehaviour
     private void HandleCollectible(object arg0)
     {
         Debug.Log("Collected collectible");
-        _collectedCount++;
-        _collectibleGuiController.UpdateGui(_collectedCount, _totalCollectibleCount, timed: ShowCollectiblesTimed);
+
+        var data = arg0 as StoryEventData;
+        var payload = data.Payload as Collectible;
+        
+        _collectedCollectibles.Add(payload.transform.position);
+        
+        _collectibleGuiController.UpdateGui(_collectedCollectibles.Count, _totalCollectibleCount, timed: ShowCollectiblesTimed);
     }
 
     // store door dock as last passed respawn point
@@ -514,7 +522,7 @@ public class GameManager : MonoBehaviour
         if (_levelStats.TryGetValue(_gameLevelIdx, out var stats))
         {
             stats.levelName = gameLevels[_gameLevelIdx - 1];
-            stats.foundCollectibles = _collectedCount;
+            stats.foundCollectibles = _collectedCollectibles.ToArray();
             stats.totalCollectibles = _totalCollectibleCount;
             stats.deaths = _deaths.ToArray();
             stats.minigameData = _minigameSolves.ToArray();
@@ -543,7 +551,7 @@ public class GameManager : MonoBehaviour
         _minigameSolves = new List<MinigameSolveDataPoint>();
         _movementDataPoints = new List<MovementDataPoint>();
         _levelStartTime = DateTime.Now;
-        _collectedCount = 0;
+        _collectedCollectibles = new List<Vector3>();
         _totalCollectibleCount = 0;
         
         InvokeRepeating("RecordMovementStat", 0.0f, movementRecordInterval);
@@ -588,7 +596,7 @@ public class GameManager : MonoBehaviour
             var stats = _levelStats[_gameLevelIdx];
             statsMenu.SetDeaths(stats.deaths.Length);
             statsMenu.SetTime(stats.timeForLevelInS);
-            statsMenu.SetCollectibleCount(stats.foundCollectibles, stats.totalCollectibles);
+            statsMenu.SetCollectibleCount(stats.foundCollectibles.Length, stats.totalCollectibles);
             statsMenu.SetSessionId(sessionID);
             statsMenu.SetMinimapType(stats.minimapType);
             _displayStats = false;
