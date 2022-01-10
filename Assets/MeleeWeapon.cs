@@ -14,6 +14,7 @@ public class MeleeWeapon : BaseWeapon
     // Start is called before the first frame update
 
     public  LayerMask lm;
+    public float AttackRadius => attackRadius;
     
     void Start()
     {
