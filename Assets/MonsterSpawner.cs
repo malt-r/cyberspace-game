@@ -8,11 +8,11 @@ public class MonsterSpawner : MonoBehaviour
 
     public Enemy SpawnMonster(Bounds bounds, int? monsterIndex)
     {
-        var index = monsterIndex ?? Random.Range(0, spawnList.Count-1);
-        if (index < spawnList.Count - 1)
-        {
-            index = Random.Range(0, spawnList.Count-1);
-        }
+        var index = monsterIndex ?? Random.Range(0, spawnList.Count);
+        //if (index < spawnList.Count - 1)
+        //{
+        //    index = Random.Range(0, spawnList.Count);
+        //}
         
         if (index > spawnList.Count)
         {
