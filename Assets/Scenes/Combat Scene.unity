@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -236,15 +236,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5207154607665955642, guid: 4307b6fb6b0aedc43bcd10441e2572e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.012901
+      value: 5.37
       objectReference: {fileID: 0}
     - target: {fileID: 5207154607665955642, guid: 4307b6fb6b0aedc43bcd10441e2572e0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5207154607665955642, guid: 4307b6fb6b0aedc43bcd10441e2572e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -24.155754
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5207154607665955642, guid: 4307b6fb6b0aedc43bcd10441e2572e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -826,15 +826,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -23.81
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.95
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.3774347
+      value: -4.019
       objectReference: {fileID: 0}
     - target: {fileID: 420751267569082092, guid: e6bab8db7ef55b4498bbf9152bb16fec, type: 3}
       propertyPath: m_LocalRotation.w
@@ -941,7 +941,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-64672
+  m_Name: pb_Mesh-268644
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
