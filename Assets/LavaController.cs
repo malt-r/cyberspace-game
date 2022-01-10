@@ -11,20 +11,24 @@ public class LavaController : MonoBehaviour
 
     private List<CombatParticipant> combatParticipants;
     private List<BaseItem> items;
-    public bool LavaIsActive => lava.activeSelf;
+    public bool LavaIsActive;
 
+
+    private bool active;
     [SerializeField]
     private float deltatime;
     [SerializeField]
     private float damageIntervall =1;
     [SerializeField]
     private float damageFactor = 10;
+
+    public Material RoomMaterial;
     
     private void Start()
     {
         combatParticipants = new List<CombatParticipant>();
         items = new List<BaseItem>();
-        lava.SetActive(false);
+        //lava.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -82,27 +86,27 @@ public class LavaController : MonoBehaviour
         combatParticipants.Remove(cp);
     }
 
+
     private void Update()
     {
         deltatime += Time.deltaTime;
-        if (deltatime > damageIntervall)
+        if (deltatime < damageIntervall) return;
+        
+        deltatime = 0;
+        foreach (var cp in combatParticipants.ToList())
         {
-            deltatime = 0;
-            foreach (var cp in combatParticipants.ToList())
-            {
-                handleDamage(cp);
-            }
+            handleDamage(cp);
+        }
             
-            foreach (var item in items.ToList())
-            {
-                handleItem(item);
-            }
-        } 
+        foreach (var item in items.ToList())
+        {
+            handleItem(item);
+        }
     }
 
     void handleDamage(CombatParticipant other)
     {
-        if (!LavaIsActive) { return; }
+       // if (!LavaIsActive) { return; }
         other.TakeDamage(damageFactor, byLava : true);
     }
 

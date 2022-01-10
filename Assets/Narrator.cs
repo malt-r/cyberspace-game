@@ -23,6 +23,8 @@ public class Narrator : MonoBehaviour
     private Dictionary<string, List<EventReactionClip>> _reactionClipDict;
 
     private AudioSource _audioSource;
+
+    private bool canNarrate = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +66,8 @@ public class Narrator : MonoBehaviour
 
     void EventReaction(object data)
     {
+        if (!canNarrate) { return; }
+        
         var eventData = data as StoryEventData;
         var eventName = eventData.EventName;
         if (_reactionClipDict.TryGetValue(eventName, out List<EventReactionClip> reactions))
@@ -96,6 +100,11 @@ public class Narrator : MonoBehaviour
         else
         {
             Debug.LogError("I don't know how to react to an event like " + eventName);
+        }
+
+        if (eventName == "Boss/Death")
+        {
+            canNarrate = false;
         }
     }
 

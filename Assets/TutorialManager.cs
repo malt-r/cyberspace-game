@@ -225,10 +225,12 @@ public class TutorialManager : MonoBehaviour
     {
         var shieldGens = GameObject.FindObjectsOfType<ShieldGenerator>();
         var inactiveCount = shieldGens.Count(gen => !gen.wasActivated);
+        
         if (inactiveCount == 0)
         {
-            // activate shield of boss
             var boss = GameObject.FindObjectOfType<BossEnemy>();
+            // activate shield of boss
+            
             boss.ActivateShieldGameObject();
             
             CancelInvoke("ActivateNextShield");
@@ -259,7 +261,7 @@ public class TutorialManager : MonoBehaviour
                     
                     // TODO: trigger Animation of Boss enemy
                     FindObjectOfType<BossEnemy>().transform.GetComponent<Animator>().SetTrigger("Rise");
-                    
+                    EventManager.TriggerEvent("Boss/Rising",new StoryEventData().SetEventName("Boss/Rising"));
                     Invoke("TransitionToNextStage", bossTransitionLenght);
                     InvokeRepeating("ActivateNextShield", shieldActivationDelay, shieldActivationDistanceInS);
                     _currentStageFiredMessage = true;
@@ -276,6 +278,7 @@ public class TutorialManager : MonoBehaviour
             case TutorialStage.bossFight:
                 if (!_currentStageFiredMessage)
                 {
+                    EventManager.TriggerEvent("Boss/Ready",new StoryEventData().SetEventName("Boss/Ready"));
                     _playerController.canMove = true;
                     _playerController.canJump = true;
                     _playerController.canSprint = true;
