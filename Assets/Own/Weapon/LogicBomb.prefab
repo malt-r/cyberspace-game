@@ -4888,9 +4888,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocity: 0
   damage: 100
-  igniteTime: 5
+  igniteTime: 4
   maxTargets: 10
-  attackRadius: 10
+  attackRadius: 8
   attackLayers:
     serializedVersion: 2
     m_Bits: 64
