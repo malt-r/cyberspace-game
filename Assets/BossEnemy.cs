@@ -9,6 +9,7 @@ using UnityEngine.AI;
 public class BossEnemy : Enemy 
 {
     [SerializeField] protected int maxConcurrentMobs =3;
+    [SerializeField] protected int numberOfMobsToSpawnAtTheSameTime =2;
     [SerializeField] List<Enemy> mobList;
     [SerializeField] float timeSinceLastMonsterSpawn;
     [SerializeField] float spawnDelay=15f;
@@ -89,6 +90,11 @@ public class BossEnemy : Enemy
         if (!ForceIdle)
         {
             spawnMobs();
+            for (int i = 0; i < numberOfMobsToSpawnAtTheSameTime; i++)
+            {
+                spawnMobs();
+            }
+
             if (_registeredInitialMobSpawning && !lavaController.LavaIsActive)
             {
                 _registeredInitialMobSpawning = false;
@@ -122,6 +128,9 @@ public class BossEnemy : Enemy
 
         timeSinceLastMonsterSpawn += Time.deltaTime;
         if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
+        if (timeSinceLastMonsterSpawn > spawnDelay 
+            && mobList.Count < maxConcurrentMobs 
+            && !lavaController.LavaIsActive)
         {
             spawnMob(null);
 
