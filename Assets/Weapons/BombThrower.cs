@@ -13,6 +13,9 @@ public class BombThrower : BaseWeapon
     void Awake()
     {
         Type = WeaponType.BOMBTHROWER;
+        
+        // can attack on spawn
+        deltaTime = atackSpeed + 1;
     }
     void Update()
     {

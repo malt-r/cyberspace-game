@@ -57,7 +57,17 @@ public class Bomb : MonoBehaviour
                     var enemy = collider.GetComponent<CombatParticipant>();
                     if (enemy != null)
                     {
-                        enemy.TakeDamage(damage, true);
+                        if (enemy.OnlyPlayerCanDamageMe)
+                        {
+                            if (owner.CompareTag("Player"))
+                            {
+                                enemy.TakeDamage(damage, true);
+                            }
+                        }
+                        else
+                        {
+                            enemy.TakeDamage(damage, true);
+                        }
                     }
                 }
             }
