@@ -48,7 +48,7 @@ public class MeleeWeapon : BaseWeapon
         }
     }
     private IEnumerator DelayForDamage(CombatParticipant enemy, CombatParticipant self){
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.633333333333333333333333333f);
         enemy.TakeDamage(self);
         
     }
