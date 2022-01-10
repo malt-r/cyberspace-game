@@ -223,7 +223,7 @@ MonoBehaviour:
   damage: 10
   atackSpeed: 1
   bombPrefab: {fileID: 6461825069282614623, guid: a081a65609985ee408328d8a08a82c00, type: 3}
-  throwingForceMultiplier: 10
+  throwingForceMultiplier: 7
 --- !u!82 &1216359801
 AudioSource:
   m_ObjectHideFlags: 0

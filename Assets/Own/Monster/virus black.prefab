@@ -5095,7 +5095,7 @@ MonoBehaviour:
   useCost: 0
   Material: {fileID: 0}
   damage: 10
-  atackSpeed: 10
+  atackSpeed: 8
   bombPrefab: {fileID: 6461825069282614623, guid: a081a65609985ee408328d8a08a82c00, type: 3}
   throwingForceMultiplier: 10
 --- !u!82 &5319851608791505942
@@ -5278,6 +5278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  onlyBombsCanDamageMe: 0
 --- !u!114 &5207154607665955652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5308,6 +5309,7 @@ MonoBehaviour:
   attackRange: 20
   isFollowing: 0
   playerDetector: {fileID: 5207154606368001108}
+  weaponControl: {fileID: 0}
   aggroParticleSystem: {fileID: 5207154607170833160}
   model: {fileID: 5749195650201901919}
   rotationSpeed: 0.25
