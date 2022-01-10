@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -34,29 +35,38 @@ public class Bomb : MonoBehaviour
         Instantiate(logicBombPrefab, transform.position, Quaternion.identity);
         Collider[] hitColliders = new Collider[maxTargets];
         int foundColliders = Physics.OverlapSphereNonAlloc(transform.position, attackRadius, hitColliders,attackLayers);
-        for (int i = 0; i < foundColliders; i++)
+        foreach (var collider in hitColliders.ToArray())
         {
             if (owner.tag.Equals("Player"))
             {
-                var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-                if(enemy) { 
-                    enemy.TakeDamage(damage, true);
+                if (collider != null)
+                {
+                    var enemy = collider.GetComponent<CombatParticipant>();
+                    if (enemy != null) { 
+                        enemy.TakeDamage(damage, true);
+                    }
                 }
             }
             else
             {
-                var enemyIsPlayer = hitColliders[i].tag.Equals("Player");
-                if (!enemyIsPlayer) { continue; }
+                if (collider != null)
+                {
+                    var enemyIsPlayer = collider.tag.Equals("Player");
+                    if (!enemyIsPlayer) { continue; }
 
-                var enemy = hitColliders[i].GetComponent<CombatParticipant>();
-                enemy.TakeDamage(damage, true);
-                
+                    var enemy = collider.GetComponent<CombatParticipant>();
+                    if (enemy != null)
+                    {
+                        enemy.TakeDamage(damage, true);
+                    }
+                }
             }
-            Debug.Log($" Bomb damages , {hitColliders[i].name} {damage} points");
             
-            
+            if (collider != null)
+            {
+                Debug.Log($" Bomb damages , {collider.name} {damage} points");
+            }
         }
-
 
         Destroy(gameObject);
     }

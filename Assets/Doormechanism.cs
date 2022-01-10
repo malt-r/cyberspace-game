@@ -110,6 +110,7 @@ public class Doormechanism : MonoBehaviour
 
     public void openDoors(bool deactivateAudio = false)
     {
+        if (open) { return;}
         SetAudioState(deactivateAudio);
         
         foreach (var door in Doors)
@@ -122,6 +123,7 @@ public class Doormechanism : MonoBehaviour
 
     public void closeDoors(bool deactivateAudio = false)
     {
+        if (!open) { return;}
         SetAudioState(deactivateAudio);
         
         foreach (var door in Doors)
