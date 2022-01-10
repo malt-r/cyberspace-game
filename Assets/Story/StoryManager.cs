@@ -19,15 +19,23 @@ public class StoryEventData
 {
     private string _eventName;
     private StoryMarker _marker;
+    private object _payload;
     private object _sender;
 
     public StoryMarker Marker => _marker;
     public string EventName => _eventName;
     public object Sender => _sender;
+    public object Payload => _payload;
 
     public StoryEventData SetEventName(string name)
     {
         _eventName = name;
+        return this;
+    }
+    
+    public StoryEventData SetPayLoad(object payload)
+    {
+        _payload = payload;
         return this;
     }
     

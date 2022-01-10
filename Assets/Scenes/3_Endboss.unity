@@ -2789,7 +2789,7 @@ PrefabInstance:
       objectReference: {fileID: 1567153142}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: maxConcurrentMobs
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: maxFollowDistance
@@ -2813,7 +2813,7 @@ PrefabInstance:
       objectReference: {fileID: 1194078633}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: numberOfMobsToSpawnAtTheSameTime
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6964786086269968781, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: m_StoppingDistance
@@ -5490,7 +5490,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh61756
+  m_Name: pb_Mesh67324
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

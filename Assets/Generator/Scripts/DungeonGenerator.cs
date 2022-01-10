@@ -316,8 +316,12 @@ public partial class DungeonGenerator : MonoBehaviour
     public DungeonGrid<Cell> Grid { get => _grid; }
     public Dictionary<int, Room> InstantiatedRooms { get => _instantiatedRooms; }
 
+    public long GeneratorSeed => RandomSeed;
+
     #endregion
 
+    
+    
     public enum NeighborDirection
     {
         left = 0,
@@ -2023,8 +2027,6 @@ public partial class DungeonGenerator : MonoBehaviour
 
     public static long GetExternalSeed()
     {
-        
-        
         var now = System.DateTime.Now;
         var notNow = now.AddDays((double)Random.Range(0.0f, 100.0f));
         return now.ToBinary() ^ notNow.ToBinary();

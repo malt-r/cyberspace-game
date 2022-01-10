@@ -471,7 +471,7 @@ public class TutorialManager : MonoBehaviour
                 if (!_currentStageFiredMessage)
                 {
                     var trigger = GetComponent<StoryTrigger>();
-                    trigger.Activate();
+                    trigger.Activate(null);
                     _snackBar.HideMessage();
                     _currentStageFiredMessage = true;
                 }

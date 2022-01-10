@@ -30,7 +30,7 @@ public class ColliderTrigger : StoryTrigger
             Debug.Log("Player entered collider");
             if (TriggerOnEnter)
             {
-                Activate();
+                Activate(null);
             }
         }
     }
@@ -52,7 +52,7 @@ public class ColliderTrigger : StoryTrigger
                 if (dot > 0)
                 {
                     Debug.Log("Player exitted in exit dir");
-                    Activate();
+                    Activate(null);
                 } 
                 else
                 {

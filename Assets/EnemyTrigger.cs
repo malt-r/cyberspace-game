@@ -22,7 +22,7 @@ public class EnemyTrigger : StoryTrigger
                 _deadEnemies++;
                 if (_deadEnemies >= _totalEnemies)
                 {
-                    Activate();
+                    Activate(null);
                 }
             };
         }

@@ -33,6 +33,6 @@ public class PickupTrigger : StoryTrigger
     void OnPickup()
     {
         // item was picked up
-        Activate();
+        Activate(ItemToWatch);
     }
 }

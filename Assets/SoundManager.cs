@@ -10,8 +10,9 @@ public class SoundManager : MonoBehaviour
   public static SoundManager Instance => _instance;
 
   public AudioMixer AudioMixer;
-  
 
+  [SerializeField] 
+  public AudioMixerGroup OutputMixerGroup;
 
   public AudioClip MenueSound;
   public AudioClip BackgroundSound;
@@ -76,12 +77,12 @@ public class SoundManager : MonoBehaviour
     if (sound == null) return;
     var soundGameObject = new GameObject(sound.ToString());
     var audioSource = soundGameObject.AddComponent<AudioSource>();
+
+    audioSource.outputAudioMixerGroup = _instance.OutputMixerGroup;
     var soundAudioClip = GetSoundAudioClip(sound);
     if (soundAudioClip == null) return;
 
-    Instance.AudioMixer.GetFloat("SoundeffectVolume", out var volume);
-    var finalVolume = dbToLinear(volume);
-    audioSource.PlayOneShot(soundAudioClip.clip,finalVolume);
+    audioSource.PlayOneShot(soundAudioClip.clip);
     Destroy(soundGameObject,30);
   }
 
