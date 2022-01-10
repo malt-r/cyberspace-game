@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useCost: 0
   Material: {fileID: 0}
-  damage: 10
+  damage: 15
   atackSpeed: 3
   bulletPrefab: {fileID: 5113944598899650998, guid: 37fc083e0f5e1124c999a78f8b60e7e5, type: 3}
 --- !u!82 &285419838
