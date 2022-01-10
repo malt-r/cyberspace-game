@@ -5310,7 +5310,7 @@ MonoBehaviour:
   attackRange: 20
   isFollowing: 0
   playerDetector: {fileID: 5207154606368001108}
-  weaponControl: {fileID: 0}
+  weaponControl: {fileID: 5207154607665955654}
   aggroParticleSystem: {fileID: 5207154607170833160}
   model: {fileID: 0}
   rotationSpeed: 0.25
