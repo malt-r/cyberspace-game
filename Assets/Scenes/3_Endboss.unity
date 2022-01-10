@@ -2799,6 +2799,10 @@ PrefabInstance:
       propertyPath: shields.Array.data[3]
       value: 
       objectReference: {fileID: 1194078633}
+    - target: {fileID: 6964786086269968781, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 7309670980676804355, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: shields.Array.data[0]
       value: 
@@ -5450,7 +5454,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh58678
+  m_Name: pb_Mesh71928
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
