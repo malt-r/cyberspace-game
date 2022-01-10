@@ -5297,6 +5297,7 @@ MonoBehaviour:
   attackRange: 20
   isFollowing: 0
   playerDetector: {fileID: 5337062666148271797}
+  weaponControl: {fileID: 0}
   aggroParticleSystem: {fileID: 5337062665316078057}
   model: {fileID: 543450651740745505}
   rotationSpeed: 0
@@ -5319,7 +5320,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 8
-  m_StoppingDistance: 6
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

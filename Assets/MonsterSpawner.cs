@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
@@ -14,6 +12,11 @@ public class MonsterSpawner : MonoBehaviour
         if (index < spawnList.Count - 1)
         {
             index = Random.Range(0, spawnList.Count-1);
+        }
+        
+        if (index > spawnList.Count)
+        {
+            return null;
         }
        
         var randX = Random.Range(bounds.min.x, bounds.max.x);

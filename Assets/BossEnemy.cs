@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Weapons;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossEnemy : Enemy 
 {
     [SerializeField] protected int maxConcurrentMobs =3;
+    [SerializeField] protected int numberOfMobsToSpawnAtTheSameTime =2;
     [SerializeField] List<Enemy> mobList;
     [SerializeField] float timeSinceLastMonsterSpawn;
     [SerializeField] float spawnDelay=15f;
@@ -27,7 +30,9 @@ public class BossEnemy : Enemy
 
     [SerializeField]
     private bool inIntro = true;
-   
+
+    private bool _registeredInitialMobSpawning;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -50,7 +55,13 @@ public class BossEnemy : Enemy
         
         GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
 
-        EventManager.StartListening("Boss/Ready", arg0 => inIntro = false);
+        EventManager.StartListening("Boss/Ready", OnBossReady);
+    }
+
+    private void OnBossReady(object arg0)
+    {
+        inIntro = false;
+        _registeredInitialMobSpawning = true;
     }
 
     public void ActivateShieldGameObject()
@@ -61,7 +72,7 @@ public class BossEnemy : Enemy
 
     void cleanUpRoom()
     {
-        foreach (var mob in mobList)
+        foreach (var mob in mobList.ToArray())
         {
             mob.GetComponent<CombatParticipant>().TakeDamage(float.MaxValue);
         }
@@ -74,38 +85,29 @@ public class BossEnemy : Enemy
 
         if (!ForceIdle)
         {
-            spawnMobs();
-            //handleLava();
+            for (int i = 0; i < numberOfMobsToSpawnAtTheSameTime; i++)
+            {
+                spawnMobs();
+            }
+
+            if (_registeredInitialMobSpawning && !lavaController.LavaIsActive)
+            {
+                _registeredInitialMobSpawning = false;
+                spawnInitialMobs();
+            }
         }
     }
-
-    private void handleLava()
-    {
-        timeSinceLastLavaSpawn += Time.deltaTime;
-
-        if (timeSinceLastLavaSpawn < lavaInterfall) { return; }
-        timeSinceLastLavaSpawn = 0;
-            
-        if(lavaController.LavaIsActive){
-            lavaController.HideLava();
-        }
-        else
-        {
-            lavaController.ShowLava();
-        }
-    }
-
 
     void spawnMobs()
     {
-        
         if(mobList.Count == maxConcurrentMobs) { return; }
 
         timeSinceLastMonsterSpawn += Time.deltaTime;
-        if (timeSinceLastMonsterSpawn > spawnDelay && mobList.Count < maxConcurrentMobs)
+        if (timeSinceLastMonsterSpawn > spawnDelay 
+            && mobList.Count < maxConcurrentMobs 
+            && !lavaController.LavaIsActive)
         {
             spawnMob(null);
-
         }
     }
     
@@ -121,8 +123,11 @@ public class BossEnemy : Enemy
     {
         timeSinceLastMonsterSpawn = 0;
         var monster = spawner.SpawnMonster(spawnArea.bounds, index);
-        mobList.Add(monster);
-        monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+        if (monster != null)
+        {
+            mobList.Add(monster);
+            monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+        }
     }
     protected override void updateAppearance(){
         //Dont scale boss
@@ -156,21 +161,20 @@ public class BossEnemy : Enemy
             case 0:
                 EventManager.TriggerEvent("boss/0shields-left",new StoryEventData().SetEventName("boss/0shields-left"));
                 weaponControl.SwitchWeapon(1);
+                
+                // set stopping distance to minimum for successful attack
+                if (weaponControl.CurrentWeapon.Type == WeaponType.MELEE)
+                {
+                    var meleeWeapon = weaponControl.CurrentWeapon as MeleeWeapon;
+                    var range = meleeWeapon.AttackRadius;
+                    var agentComponent = GetComponent<NavMeshAgent>();
+                    agentComponent.stoppingDistance = range - 1;
+
+                    // always follow player
+                    maxFollowDistance = 100.0f;
+                    attackRange = meleeWeapon.AttackRadius;
+                }
                 break;
         }
     }
-
-    public void ShowLava()
-    {
-        lavaController.ShowLava();
-    }
-
-    public void HideLava()
-    {
-        lavaController.HideLava();
-        
-        spawnInitialMobs();
-
-    }
-    
 }

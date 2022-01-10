@@ -92,7 +92,8 @@ public class Enemy : MonoBehaviour
         
         if (!hitSomething) { return; }
         if (!hit.collider.tag.Equals("Player")) { return;}
-        if (angle > attackAngle || angle < -attackAngle) { return;}
+        //if (angle > attackAngle || angle < -attackAngle) { return;}
+        ownTransform.LookAt(playerPosition);
 
         var enemyWantsToAttack = playerDetector.Distance < attackRange;
         if (!enemyWantsToAttack) { return; }

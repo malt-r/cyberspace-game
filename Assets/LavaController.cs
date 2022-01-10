@@ -89,13 +89,16 @@ public class LavaController : MonoBehaviour
 
     private void Update()
     {
-        deltatime += Time.deltaTime;
-        if (deltatime < damageIntervall) return;
+        //deltatime += Time.deltaTime;
+        //if (deltatime < damageIntervall) return;
+        //
+        //deltatime = 0;
         
-        deltatime = 0;
+        // continous damage
+        var damageToDeal = damageFactor * Time.deltaTime;
         foreach (var cp in combatParticipants.ToList())
         {
-            handleDamage(cp);
+            handleDamage(cp, damageToDeal);
         }
             
         foreach (var item in items.ToList())
@@ -104,10 +107,10 @@ public class LavaController : MonoBehaviour
         }
     }
 
-    void handleDamage(CombatParticipant other)
+    void handleDamage(CombatParticipant other, float damageToDeal)
     {
        // if (!LavaIsActive) { return; }
-        other.TakeDamage(damageFactor, byLava : true);
+        other.TakeDamage(damageToDeal, byLava : true);
     }
 
     void handleItem(BaseItem item)

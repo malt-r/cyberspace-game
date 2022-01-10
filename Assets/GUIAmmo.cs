@@ -29,8 +29,12 @@ public class GUIAmmo : MonoBehaviour
                 text.text = "###";
                 return;
             }
-            var prefix = laser.condition < 15 ? "‼" : "";
-            var laserCondition = Mathf.Floor(laser.condition).ToString(CultureInfo.InvariantCulture);
+            
+            bool critical = laser.condition < 15;
+            var prefix = critical ? "‼" : "";
+            text.color = critical ? Color.red : Color.white;
+            
+            var laserCondition = laser.condition.ToString("000", CultureInfo.InvariantCulture);
             text.text = prefix + "¤" + laserCondition;
         }
     }

@@ -23,7 +23,7 @@ public class BulletWeapon : BaseWeapon
         PlayUseSound();
         deltaTime = 0f;
         var bullet = Instantiate(bulletPrefab, Firepoint.position+Firepoint.forward*bulletPrefab.transform.localScale.z, Quaternion.LookRotation(Camera.forward,Vector3.up)).GetComponentInChildren<Bullet>();
-        
+        bullet.damage = damage;
         bullet.Ignite(Owner.gameObject.GetInstanceID());
 
     }

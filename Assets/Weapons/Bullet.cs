@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private float velocity;
     [SerializeField]
-    private float damage;
+    public float damage;
 
     private int ownerId;
 

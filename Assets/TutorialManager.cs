@@ -46,6 +46,7 @@ public class TutorialManager : MonoBehaviour
     private const string msg_pickupHealth = "Du hast Gesundheit aufgesammelt. Deine Gesundheit wird links unten angezeigt.";
 
     private const string msg_helpBossFight = "Der Computer und die Schildgeneratoren können nur mit Bomben zerstört werden.";
+    private const string msg_helpLava = "Die lilane Cyberlava ist sehr gefährlich! Bleibe nicht zu lang in ihr stehen.";
     
     private const string msg_infoInteract = "Drücke #icon{ICONS/E} um zu interagieren";
     private const string msg_minimap = "Die Minimap rechts oben hilft bei der Orientierung";
@@ -55,6 +56,9 @@ public class TutorialManager : MonoBehaviour
     private bool pickupUpHealth;
     private bool pickedUpLaser;
     private bool pickedUpBomb;
+    private bool diedByLava;
+
+    private bool dontDisplayDeathMessage;
 
     public const string evt_learnHealth = "Story/Health";
     public const string evt_learnLaser = "Story/Laser";
@@ -152,6 +156,7 @@ public class TutorialManager : MonoBehaviour
                 EventManager.StartListening("Boss/TriggerIntro", HandleBossIntro);
                 EventManager.StartListening("Boss/EnterBossLevel", HandleBossEnterLevel);
                 EventManager.StartListening("Boss/Death", HandleBossDeath);
+                EventManager.StartListening("Death/ByLava", HandleDeathByLava);
                 
                 EventManager.StartListening("Boss/Death", DeactivateHelpInvokation);
                 EventManager.StartListening("boss/3shields-left", DeactivateHelpInvokation);
@@ -170,6 +175,22 @@ public class TutorialManager : MonoBehaviour
             {
                 ImplementFirstTutorial();
             }
+        }
+    }
+
+    private void ResetDontDisplayDeath()
+    {
+        dontDisplayDeathMessage = false;
+    }
+
+    private void HandleDeathByLava(object arg0)
+    {
+        if (!diedByLava)
+        {
+            diedByLava = true;
+            dontDisplayDeathMessage = true;
+            DisplayPopup(msg_helpLava, DefaultTutorialPopupLength);
+            Invoke("ResetDontDisplayDeath", DefaultTutorialPopupLength);
         }
     }
 
@@ -278,7 +299,6 @@ public class TutorialManager : MonoBehaviour
             case TutorialStage.bossFight:
                 if (!_currentStageFiredMessage)
                 {
-                    EventManager.TriggerEvent("Boss/Ready",new StoryEventData().SetEventName("Boss/Ready"));
                     _playerController.canMove = true;
                     _playerController.canJump = true;
                     _playerController.canSprint = true;
@@ -291,6 +311,8 @@ public class TutorialManager : MonoBehaviour
                     
                     Invoke("ActivateAllEnemies", activateAllEnemiesDelay);
                     Invoke("DisplayBossFightHelp", helpMessageDelay);
+                    
+                    EventManager.TriggerEvent("Boss/Ready",new StoryEventData().SetEventName("Boss/Ready"));
                 }
                 break;
         }
@@ -345,7 +367,10 @@ public class TutorialManager : MonoBehaviour
 
     private void HandlePlayerDeath(object arg0)
     {
-        DisplayPopup("Du bist gestorben", 3.0f);
+        if (!dontDisplayDeathMessage)
+        {
+            DisplayPopup("Du bist gestorben", 3.0f);
+        }
     }
 
     private void HandleCollectible(object arg0)

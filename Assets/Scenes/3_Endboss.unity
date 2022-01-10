@@ -2776,6 +2776,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 164673606}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: attackRange
+      value: 10.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: weaponControl
       value: 
       objectReference: {fileID: 17174486}
@@ -2783,6 +2787,14 @@ PrefabInstance:
       propertyPath: lavaController
       value: 
       objectReference: {fileID: 1567153142}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: maxConcurrentMobs
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: maxFollowDistance
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: shields.Array.data[0]
       value: 
@@ -2799,10 +2811,26 @@ PrefabInstance:
       propertyPath: shields.Array.data[3]
       value: 
       objectReference: {fileID: 1194078633}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: numberOfMobsToSpawnAtTheSameTime
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6964786086269968781, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: m_StoppingDistance
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 7309670979874359706, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: damage
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309670980676804354, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: spawnList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309670980676804354, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: spawnList.Array.data[2]
+      value: 
+      objectReference: {fileID: 5207154607665955640, guid: 4307b6fb6b0aedc43bcd10441e2572e0, type: 3}
     - target: {fileID: 7309670980676804355, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: shields.Array.data[0]
       value: 
@@ -2874,6 +2902,14 @@ PrefabInstance:
     - target: {fileID: 7309670980676804359, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309670981034928121, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: damage
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309670981034928121, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: atackSpeed
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
@@ -5454,7 +5490,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh71928
+  m_Name: pb_Mesh61756
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7357,7 +7393,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-177036
+  m_Name: pb_Mesh-819078
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9402,7 +9438,7 @@ MonoBehaviour:
   LavaIsActive: 0
   deltatime: 0
   damageIntervall: 1
-  damageFactor: 25
+  damageFactor: 40
   RoomMaterial: {fileID: 2100000, guid: f7ec36dfd60e2ad47822230a76459c2e, type: 2}
 --- !u!1001 &1570251429
 PrefabInstance:
