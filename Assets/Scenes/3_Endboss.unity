@@ -2963,6 +2963,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7309670980676804475, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: onlyPlayerCanDamageMe
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7309670981034928121, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: damage
       value: 25

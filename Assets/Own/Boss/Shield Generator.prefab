@@ -18550,6 +18550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e4a9a360a828b4438672056e284b536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onlyPlayerCanDamageMe: 1
 --- !u!120 &5524827862625287153
 LineRenderer:
   m_ObjectHideFlags: 0
