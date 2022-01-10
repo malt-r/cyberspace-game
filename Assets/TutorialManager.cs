@@ -44,6 +44,8 @@ public class TutorialManager : MonoBehaviour
     private const string msg_learnLaser2 = "Der Laser verbraucht Energie. Die aktuelle Energie wird rechts unten angezeigt.";
     private const string msg_learnBomb  = "Du hast die Bombe eingesammelt. Sie richtet sehr viel Schaden gegen einen besonderen Gegner an.";
     private const string msg_pickupHealth = "Du hast Gesundheit aufgesammelt. Deine Gesundheit wird links unten angezeigt.";
+    private const string msg_findMinigame = "Hinweis: Finde den blauen pulsierenden Würfel und löse das Minispiel.";
+    private const string msg_helpMinigame = "Verbinde die farbigen Linien passend von links nach rechts.";
 
     private const string msg_helpBossFight = "Der Computer und die Schildgeneratoren können nur mit Bomben zerstört werden.";
     private const string msg_helpLava = "Die lilane Cyberlava ist sehr gefährlich! Bleibe nicht zu lang in ihr stehen.";
@@ -57,6 +59,7 @@ public class TutorialManager : MonoBehaviour
     private bool pickedUpLaser;
     private bool pickedUpBomb;
     private bool diedByLava;
+    private bool learnedAboutMinigame;
 
     private bool dontDisplayDeathMessage;
 
@@ -138,12 +141,12 @@ public class TutorialManager : MonoBehaviour
                 _initialized = true;
                 Debug.Log("TutorialManager Initialized");
 
+                EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HandleStartMinigame);
                 EventManager.StartListening("Minigame/GetJump", HandleLearnJump);
                 EventManager.StartListening("Minigame/GetSprint", HandleLearnSprint);
                 EventManager.StartListening("tut_leave", HandleLeaveTutorial);
                 
                 EventManager.StartListening(MinigameInteractor.evt_EnterCollider, HandleInteractPrompt);
-                EventManager.StartListening(MinigameInteractor.evt_StartMinigame, HidePopup);
                 
                 EventManager.StartListening("Collectible/Collect", HandleCollectible);
                 EventManager.StartListening("Combat/PlayerDied", HandlePlayerDeath);
@@ -175,6 +178,19 @@ public class TutorialManager : MonoBehaviour
             {
                 ImplementFirstTutorial();
             }
+        }
+    }
+
+    private void HandleStartMinigame(object arg0)
+    {
+        if (!learnedAboutMinigame)
+        {
+            DisplayPopup(msg_helpMinigame, DefaultTutorialPopupLength);
+            learnedAboutMinigame = true;
+        }
+        else
+        {
+            HidePopup();
         }
     }
 
@@ -322,7 +338,6 @@ public class TutorialManager : MonoBehaviour
     {
         GameManager.ActivateAllEnemies();
     }
-    
 
     private void HandlePickupHealth(object arg0)
     {
@@ -382,6 +397,11 @@ public class TutorialManager : MonoBehaviour
         _foundCollectibleBefore = true;
     }
 
+    private void DisplayMinigameHelp()
+    {
+        DisplayPopup(msg_findMinigame);
+    }
+
     private void HandleLeaveTutorial(object arg0)
     {
         _minimapUIPanel.SetActive(true);
@@ -394,6 +414,8 @@ public class TutorialManager : MonoBehaviour
         {
             DisplayPopup(msg_minimap);
         }
+        
+        Invoke("DisplayMinigameHelp", 60.0f);
     }
 
 
@@ -490,6 +512,8 @@ public class TutorialManager : MonoBehaviour
     {
         _playerController.canJump = true;
         DisplayPopup(msg_learnJump, DefaultTutorialPopupLength);
+        
+        CancelInvoke("DisplayMinigameHelp");
     }
     
     private void HandleLearnSprint(object arg0)
@@ -516,7 +540,7 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    void HidePopup(object arg0)
+    void HidePopup()
     {
         _snackBar.HideMessage();
     }

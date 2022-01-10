@@ -596,6 +596,10 @@ PrefabInstance:
       propertyPath: skipTutorial
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4505922158175684812, guid: 7ff0974fb1fc2b1459430d211e55abfd, type: 3}
+      propertyPath: DefaultTutorialPopupLength
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4505922158175684813, guid: 7ff0974fb1fc2b1459430d211e55abfd, type: 3}
       propertyPath: m_RootOrder
       value: 1
