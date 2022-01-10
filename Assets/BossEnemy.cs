@@ -72,7 +72,7 @@ public class BossEnemy : Enemy
 
     void cleanUpRoom()
     {
-        foreach (var mob in mobList)
+        foreach (var mob in mobList.ToArray())
         {
             mob.GetComponent<CombatParticipant>().TakeDamage(float.MaxValue);
         }

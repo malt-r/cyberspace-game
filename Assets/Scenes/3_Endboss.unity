@@ -2788,6 +2788,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1567153142}
     - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: maxConcurrentMobs
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: maxFollowDistance
       value: 5
       objectReference: {fileID: 0}
@@ -2807,6 +2811,10 @@ PrefabInstance:
       propertyPath: shields.Array.data[3]
       value: 
       objectReference: {fileID: 1194078633}
+    - target: {fileID: 164049463, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: numberOfMobsToSpawnAtTheSameTime
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6964786086269968781, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: m_StoppingDistance
       value: 15
