@@ -719,7 +719,7 @@ public partial class DungeonGenerator : MonoBehaviour
 
                 if (null == path)
                 {
-                    Debug.LogError("Path could not be created");
+                    Debug.LogWarning("Path could not be created");
                     return false;
                 }
                 else
@@ -1712,11 +1712,13 @@ public partial class DungeonGenerator : MonoBehaviour
             if (!SudoPlaceRooms())
             {
                 currentTries++;
+                Debug.Log("Retrying dungeon generation");
                 continue;
             }
             if (!FindPaths())
             {
                 currentTries++;
+                Debug.Log("Retrying dungeon generation");
                 continue;
             }
 
@@ -1726,6 +1728,8 @@ public partial class DungeonGenerator : MonoBehaviour
             success = true;
             
             DeactivateTemplates();
+
+            Debug.Log("Dungeon created successfully");
         }
         if (currentTries >= MaxDungeonTries)
         {
