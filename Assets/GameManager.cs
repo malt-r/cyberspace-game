@@ -374,6 +374,7 @@ public class GameManager : MonoBehaviour
         _generator = FindObjectOfType<DungeonGenerator>();
         if (_generator != null && _generator.FinishedGenerating) // generator will start generating on scene loading
         {
+            _generatorSeed = _generator.GeneratorSeed;
             if (!InstantiatePlayer())
             {
                 Debug.LogError("Could not instantiate player");
@@ -521,6 +522,7 @@ public class GameManager : MonoBehaviour
         // finalize game stats
         if (_levelStats.TryGetValue(_gameLevelIdx, out var stats))
         {
+            stats.generatorSeed = _generatorSeed;
             stats.levelName = gameLevels[_gameLevelIdx - 1];
             stats.foundCollectibles = _collectedCollectibles.ToArray();
             stats.totalCollectibles = _totalCollectibleCount;

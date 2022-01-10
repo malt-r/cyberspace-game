@@ -82,8 +82,6 @@ public class SoundManager : MonoBehaviour
     var soundAudioClip = GetSoundAudioClip(sound);
     if (soundAudioClip == null) return;
 
-    //Instance.AudioMixer.GetFloat("SoundeffectVolume", out var volume);
-    //var finalVolume = dbToLinear(volume);
     audioSource.PlayOneShot(soundAudioClip.clip);
     Destroy(soundGameObject,30);
   }
