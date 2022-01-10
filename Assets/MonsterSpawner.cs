@@ -15,6 +15,11 @@ public class MonsterSpawner : MonoBehaviour
         {
             index = Random.Range(0, spawnList.Count-1);
         }
+        
+        if (index > spawnList.Count)
+        {
+            return null;
+        }
        
         var randX = Random.Range(bounds.min.x, bounds.max.x);
         var randz = Random.Range(bounds.min.z, bounds.max.z);

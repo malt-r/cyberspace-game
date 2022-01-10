@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Assets.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossEnemy : Enemy 
 {
@@ -28,6 +32,9 @@ public class BossEnemy : Enemy
     [SerializeField]
     private bool inIntro = true;
    
+
+    private bool _registeredInitialMobSpawning;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -51,6 +58,13 @@ public class BossEnemy : Enemy
         GetComponent<ActorStats>().OnHealthReachedZero += () => throwDeathEvent();
 
         EventManager.StartListening("Boss/Ready", arg0 => inIntro = false);
+        EventManager.StartListening("Boss/Ready", OnBossReady);
+    }
+
+    private void OnBossReady(object arg0)
+    {
+        inIntro = false;
+        _registeredInitialMobSpawning = true;
     }
 
     public void ActivateShieldGameObject()
@@ -75,6 +89,11 @@ public class BossEnemy : Enemy
         if (!ForceIdle)
         {
             spawnMobs();
+            if (_registeredInitialMobSpawning && !lavaController.LavaIsActive)
+            {
+                _registeredInitialMobSpawning = false;
+                spawnInitialMobs();
+            }
             //handleLava();
         }
     }
@@ -123,6 +142,11 @@ public class BossEnemy : Enemy
         var monster = spawner.SpawnMonster(spawnArea.bounds, index);
         mobList.Add(monster);
         monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+        if (monster != null)
+        {
+            mobList.Add(monster);
+            monster.GetComponent<ActorStats>().OnHealthReachedZero += () => deleteMobFromList(monster);
+        }
     }
     protected override void updateAppearance(){
         //Dont scale boss
