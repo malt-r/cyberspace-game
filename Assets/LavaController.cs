@@ -109,7 +109,7 @@ public class LavaController : MonoBehaviour
 
     void handleDamage(CombatParticipant other, float damageToDeal)
     {
-       // if (!LavaIsActive) { return; }
+        if (!LavaIsActive) { return; }
         other.TakeDamage(damageToDeal, byLava : true);
     }
 
