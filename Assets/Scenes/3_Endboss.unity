@@ -1168,7 +1168,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-948642
+  m_Name: pb_Mesh-1318752
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1868,7 +1868,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-948604
+  m_Name: pb_Mesh-1318714
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2961,6 +2961,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7309670980676804359, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7309670980676804475, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
+      propertyPath: onlyPlayerCanDamageMe
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7309670981034928121, guid: 57f3cac974cd05543ab90d10ae251fa3, type: 3}
@@ -5550,7 +5554,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh109362
+  m_Name: pb_Mesh152324
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7453,7 +7457,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-945632
+  m_Name: pb_Mesh-1389990
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -9135,7 +9139,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-948628
+  m_Name: pb_Mesh-1318738
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -10516,7 +10520,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-948656
+  m_Name: pb_Mesh-1318766
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2

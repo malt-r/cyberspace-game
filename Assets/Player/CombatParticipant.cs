@@ -8,6 +8,13 @@ public class CombatParticipant : MonoBehaviour
 {
     private ActorStats stats;
     private WeaponControl weaponControl;
+    
+    
+	[SerializeField] 
+	private bool onlyPlayerCanDamageMe = false;
+
+    public bool OnlyPlayerCanDamageMe => onlyPlayerCanDamageMe;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +37,15 @@ public class CombatParticipant : MonoBehaviour
     public void TakeDamage(CombatParticipant enemy)
     {
         Debug.Log("Getting Damage");
+
+        if (onlyPlayerCanDamageMe)
+        {
+            if (!enemy.CompareTag("Player"))
+            {
+                return;
+            }
+        }
+        
         stats.TakeDamage(enemy.weaponControl.Damage, byEnemy: true);
     }
 
