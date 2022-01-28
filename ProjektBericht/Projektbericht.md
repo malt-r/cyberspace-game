@@ -1,7 +1,7 @@
 ---
 title: "Projektbericht Cyberspace"
-author: [Malte Reinsch (1111598)]
-date: "24.01.2022"
+author: [Malte Reinsch (1111598), Tim Lücking (1109744), Dennis Eller ()]
+date: "02.02.2022"
 lang: "de"
 titlepage: true
 toc-own-page: true
@@ -13,5 +13,7 @@ toc-own-page: true
 \listoffigures
 \pagebreak
 \pagenumbering{arabic}
+
+
 
 
