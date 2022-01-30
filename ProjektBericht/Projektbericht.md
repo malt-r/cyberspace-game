@@ -78,7 +78,6 @@ Für die Evaluierung wird die Art der Minimap als Variable ausgewählt. In der E
 \begin{figure}[!h]
 \caption{Zu untersuchende Minimaparten}
 \end{figure}
-
 Die Basisminimap wird für einen Raum aufgedeckt, sobald der Proband einen Raum betritt. Angrenzende Räume werden durch eine transparente Schattierung angezeigt. Bei der erweiterten Minimap wird der Weg zur nächsten zu lösenden Storyaufgabe eingezeichnet. Des Weiteren ist sie ab Beginn komplett aufgedeckt. Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den dazugehörigen Hypothesen formuliert:
 
 - F1: Welchen Einfluss haben Navigationshilfen auf die Erkundung in einem 3D Level?
@@ -198,14 +197,14 @@ Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in 
 \caption{Gesammelte Collectibles in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
+Die Probanden teilen sich in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
 
 |          | Basisminimap | Erweiterte Minimap |
 |----------|--------------|--------------------|
 | Achiever | 5,23 bzw. 6  | 3,85 bzw. 5        |
 | Explorer | 4,22 bzw. 5  | 2,78 bzw. 2        |
 
-Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 5. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5. Bei den Explorern betragen diese Werte 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern aktiv gesucht wurden. 
+Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 5. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5. Bei den Explorern betragen diese Werte 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern gesucht wurden. 
 
 
 <!-- TODO: Aufteilung der Level und Bartletyp: -->
@@ -222,7 +221,9 @@ Die zweite Hypothese (H2) nimmt an, dass Probanden mit der erweiterten Minimap d
 |---------------------|--------------------|
 | 387,06 bzw. 463,10  | 303,67 bzw. 358,97 |
 
-Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. <!-- TODO: Aufteilung der Level: -->Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
+Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. Es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. 
+<!-- TODO: Aufteilung der Level: -->
+Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
 
 ![](./pics/evaluation/playtime_b_achiever.png){width=50%}
 ![](./pics/evaluation/playtime_b_explorer.png){width=50%}
@@ -231,7 +232,7 @@ Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekun
 \caption{Spielzeit in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
+Die Probanden teilen sich in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
 
 |          | Basisminimap | Erweiterte Minimap |
 |----------|--------------|--------------------|
@@ -254,10 +255,22 @@ Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, das
 
 Die zweite Forschungsfrage (F2) untersucht welchen Einfluss Navigationshilfen auf die Orientierung in einem 3D Level haben. Die dritte Hypothese (H3) nimmt an, dass Probanden mit der erweiterten Minimap die Orientierung von den Probandenn als einfacher wahrgenommen wird, als mit der Basisminimap. Das Empfinden der Probanden bezüglich der Orientierung in Abhängigkeit der Minimap ist in folgender Abbildung dargestellt.
 
-<!-- TODO: Median Mittelwert hinzufügen: -->
+![Die Minimap hat mir bei der Ortientierung geholfen](./pics/evaluation/orientation_b_ae.png){#fig:ortientation_b_ae}
+
 <!-- TODO: Median Mittelwert hinzufügen: -->
 
 Es liegt keine klare Tendenz vor, mit welcher Minimap die Orientierung als einfacher empfunden wird. Damit findet sich keine Tendenz zur Bestätigung der Hypothese. Es zeigt aber die Tendenz auf, dass beide Minimaparten für die Orientierung im Spiel geeeignet sind.
+Die empfundene Hilfe bei der Orientierung ist in folgender Abbildung nach Bartletyp dargestellt.
+
+Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
+
+![](./pics/evaluation/orientation_b_a.png){width=50%}
+![](./pics/evaluation/orientation_b_e.png){width=50%}
+
+\begin{figure}[!h]
+\caption{Spielzeit in Abhängigkeit der Minimap und Bartletyps}
+\end{figure}
+
 
 ### Forschungsfrage 3 Hypothese 4 und 5 ###
 
