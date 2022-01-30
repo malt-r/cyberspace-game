@@ -16,7 +16,17 @@ toc-own-page: true
 
 # Einleitung #
 
+ asdasdasdjklasd asdjkasdkjlasdljkasdklj asdkljasdlk adsjklasdjklasdlkjasd klasdkl asdkl l kasdlk asdljkasdjkladsljk asdljkasdkljasdkl lasd kl asjdljk asdklj
+
 # Konzept und Umsetzung #
+
+ Dies lässt sich in [Abbildung ??](#fig:alter)
+
+![](./pics/evaluation/age_subjects.png){width=50%}
+![](./pics/evaluation/age_subjects.png){width=50%}
+\begin{figure}[!h]
+\caption{A single caption for the two subfigures}
+\end{figure}
 
 ## Spielidee ##
 
@@ -47,6 +57,9 @@ toc-own-page: true
 ### Bosskampf ###
 
 ## Spielanleitung ##
+
+
+bla
 
 # Evaluierung #
 
