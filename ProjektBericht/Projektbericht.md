@@ -13,7 +13,6 @@ toc-own-page: true
 \listoffigures
 \pagebreak
 \pagenumbering{arabic}
-\linespread{1.5}
 
 # Einleitung #
 
@@ -64,22 +63,23 @@ bla
 
 # Evaluierung #
 
-Nach der Umsetzung wird das Spiel mithilfe von Probanden evaluiert.
-
-
+Nach der Umsetzung wird das Spiel mithilfe von Probanden evaluiert. Dazu wird als Erstes der Aufbau der Evaluierung vorgestellt. Im Anschluss folgen die Ergebnisse.
 
 ## Aufbau ##
 
-Das erstellte Spiel soll evaluiert werden
-
-
-Bartletyp soll auch untersucht werden
-
-
+Zunächst werden die aufgestellten Forschungsfragen und Hypothesen vorgestellt. Im Anschluss folgen die Fragebögen, mit denen die Forschungsfragen evaluiert werden sollen. Daten die über Fragebögen nicht zuverlässig erhoben werden können, werden von dem Spiel selbständig aufgenommen. Zum Schluss wird die Versuchsdurchführung- und ablauf dargestellt.
 
 ### Forschungsfragen und Hypothesen ###
 
-Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den dazugehörigen Hypothesen formuliert:
+Für die Evaluierung wird die Art der Minimap als Variable ausgewählt. In der Evaluierung sollen zwei Arten von Minimaps evaluiert werden. Beide Minimaps zeigen das Level in Vogelperspektive. Beide Minimaps sind in folgender Abbildung dargestellt.
+
+![](./pics/basic_minimap.png){width=50%}
+![](./pics/extended_minimap.png){width=50%}
+\begin{figure}[!h]
+\caption{Zu untersuchende Minimaparten}
+\end{figure}
+
+Die Basisminimap wird für einen Raum aufgedeckt, sobald der Proband einen Raum betritt. Angrenzende Räume werden durch eine transparente Schattierung angezeigt. Bei der erweiterten Minimap wird der Weg zur nächsten zu lösenden Storyaufgabe eingezeichnet. Des Weiteren ist sie ab Beginn komplett aufgedeckt. Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den dazugehörigen Hypothesen formuliert:
 
 - F1: Welchen Einfluss haben Navigationshilfen auf die Erkundung in einem 3D Level?
     - H1: Mit der Basisminimap werden mehr Collectibles gefunden
@@ -89,6 +89,27 @@ Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den d
 - F3: Welche Navigationshilfe wird von den Nutzern bevorzugt?
     - H4: Probanden mit stärkerer “Achiever”-Ausprägung bevorzugen die ausgebaute Minimap
     - H5: Probanden mit stärkerer “Explorer”-Ausprägung bevorzugen die Basisminimap
+
+### Fragebögen ###
+
+Zur Evaluieren der Hypothesen und Einholen von generellem Feedback werden folgende Fragebögen verwendet:
+
+- Bartletest
+- Minimapfragebogen
+- Fragebogen über Demographie und allgemeiner Fragebogen
+
+**Bartletest**
+
+Der Bartletest klassifiziert die Probanden auf Grundlage von einer Reihe von Fragen in vier Typen ein. Die Fragen dienen der Bestimmung der Spielinteressen. Der Test basiert auf einem Paper von Richard Bartle und wurde ursprünglich für Multiplayer-Spiele entworfen, wird jedoch mittlerweile auch für Singleplayer-Spiele verwendet.
+
+**Minimap**
+
+Zur Evaluierung der Forschungsfragen bezüglich der Minimaps wird ein Fragebogen entworfen, der sich am IEQ (Immerssive Experience Questionaire) orientiert. Dieser besteht aus einer Reihen von Fragen, die einer 5-Likert-Skala von "Stimme garnicht zu" bis "Stimme voll zu" folgen. Dieser Fragebogen wird jeweils nach jedem Level von den Probanden ausgefüllt.
+
+**Demographie und Allgemein**
+
+Im demografischen Fragebogen wird das Alter, Geschlecht, der aktuelle Berufsstatus und Spielerfahrung erfragt, um Informationen über die Probanden zu erhalten.
+Des Weiteren wird allgemeines Feedback über das Spiel im allgemeinen Fragebogen gesammelt. Dieser besteht auch aus einer Reihen von Fragen, die einer 5-Likert-Skala von "Stimme garnicht zu" bis "Stimme voll zu" folgen. Neben den Likert-Skala-Fragen werden über Freitextfragen Anregungen zu den Minimaps gesammelt.
 
 ### Messdaten ###
 
@@ -102,71 +123,57 @@ Neben der Evaluierung über Fragebögen werden folgende Daten während des Spiel
 
 ### Versuchsdurchführung und -ablauf ###
 
-Beide Navigationsmethoden werden mit dem within Subject-Design evaluiert. Die Probanden absolvieren jeweils ein Level mit der Basis- oder der ausgebauten -Minimap. Die Zuordnung, welcher Probanden mit welcher Minimap beginnt, wird dabei randomisiert zugewiesen. Pro Versuchsablauf werden 45 Minuten angesetzt, wobei 25 Minuten für den Fragebogen eingeplant ist. Durch das Andauernd der Corona-Pandemie mussten die Versuche im häuslichen Umfeld sowie online im Bekanntenkreis der Entwickler durchgefphrt werden. Der Ablauf eines Versuchs erfolgt immer in folgender Reihenfolge:
+Beide Navigationsmethoden werden mit dem within Subject-Design evaluiert. Die Probanden absolvieren jeweils ein Level mit der Basis- oder der ausgebauten -Minimap. Die Zuordnung, welcher Proband mit welcher Minimap beginnt, wird dabei randomisiert zugewiesen. Pro Versuchsablauf werden 45 Minuten angesetzt, wobei 25 Minuten für den Fragebogen eingeplant ist. Durch das Andauern der Corona-Pandemie müssen die Versuche im häuslichen Umfeld sowie online im Bekanntenkreis der Entwickler durchgeführt werden. Der Ablauf eines Versuchs erfolgt immer in folgender Reihenfolge:
 
 1. Einführung geben
+    - Spiel bereitstellen
+    - Link zur Umfrage schicken
 1. Gesundheitszustand abfragen  
     - Ausschluss von Schwangeren oder Epilepsieerkrankten 
     - Abbruch des Versuchs bei Schwindel, Kopfschmerzen etc. 
-2. Fragebogen zum Bartletyp abfragen & Einverständniserklärung 
+1. Einverständniserklärung einholen
+2. Fragebogen zum Bartletyp ausfüllen
 3. Spielen des ersten Levels  
-    - Hier wird die erste Variation der Navigationshilfe evaluiert 
-4. Ausfüllen des spielbezogenen Fragebogens 
+    - Hier wird die erste Variation der Minimap evaluiert 
+4. Ausfüllen des Minimap-Fragebogens 
 5. Spielen des zweiten Levels  
-    - Hier wird die zweite Variation der Navigationshilfe evaluiert 
-6. Ausfüllen des spielbezogenen Fragebogens 
-7. Bosskampf 
+    - Hier wird die zweite Variation der Minimap evaluiert 
+6. Ausfüllen des Minimap-Fragebogens 
+7. Spielen des Boss-Levels 
 8. Ausfüllen des Allgemeinen Fragebogens 
 
 
-## Fragebögen ##
-
-Zur Evaluieren der Hypothesen werden folgende Fragebögen verwendet:
-
-- Bartletyp
-- Minimap
-- Allgemein
-- Demographie
-
-### Bartletyp ###
-
-### Minimap ###
-
-Oritentiert sich an IEQ
-
-### Allgemein ###
-
-### Demographie ###
-
 ## Ergebnisse ##
 
-### Teilnehmer ###
+Nach der Vorstellung des Aufbaus folgen die Ergebnisse der Evaluierung. Zunächst werden die Ergebnisse über die Probanden dargestellt. Im Anschluss werden die vorher aufgestellten Forschungsfragen bzw. Hypothesen evalauiert. Zum Schluss folgen die allgemeinen Ergebnisse über das Spiel.
 
-Insgesamt haben 41 Personen teilgenommen. Eine Person musste die Evaluierung wegen Schwindel und Übelkeit abbrechen. 
+### Probanden ###
 
-![Alter der Probanden](./pics/evaluation/age_subjects.png){#fig:age_subjects}
+Insgesamt haben 41 Personen teilgenommen. Eine Person musste die Evaluierung wegen Schwindel und Übelkeit abbrechen. In folgender Abbildung ist die Altersverteilung der Probanden dargestellt.
 
-Das Alter der Probanden lag zwischen 18 und 37. Das Durchschnittsalter liegt bei 24,25 und der Median bei 24.
+![Alter der Probanden](./pics/evaluation/age_subjects.png){#fig:subjects_age}
+
+Das Alter der Probanden liegt zwischen 18 und 37 Jahren. Das Durchschnittsalter liegt bei 24,25 und der Median bei 24 Jahren. Die Verteilung der Geschlechter der Probanden ist in folgender Abbildung dargestellt.
 
 ![Geschlecht der Probanden](./pics/evaluation/subjects_sex.png){#fig:subjects_sex}
 
-28 (70%) Probanden sind männlich und 12 (30%) weiblich. Niemand hat divers angegeben oder keine Angabe gemacht.
+28 (70%) Probanden sind männlich und 12 (30%) weiblich. Niemand hat divers angegeben oder keine Angabe gemacht. Die aktuelle berufliche Situation der Probanden ist in folgender Abbildung dargestellt.
 
-![Berufliche Situation der Probanden](./pics/evaluation/subjects_job.png){#fig:subjects_sex}
+![Berufliche Situation der Probanden](./pics/evaluation/subjects_job.png){#fig:subjects_job}
 
-25 (62,5%) der Probanten gaben als aktuelle berufliche Situation Student und 15 (37,5%) berufstätig an.
+25 (62,5%) der Probanten geben als aktuelle berufliche Situation Student und 15 (37,5%) berufstätig an. Wie oft die Probanden Videospiele spielen ist in folgender Abbildung dargestellt.
 
 ![Probandenfahrung der Probanden](./pics/evaluation/subjects_playtime.png)
 
-16 (40%) Probanden gaben an täglich und sechs (15%) mehrmals pro Woche Videospiele zu spielen. Jeweils neun (22,5%) gaben an mehrmals im Monat sowie weniger als einmal pro Monat zu Videospiele zu spielen.
+16 (40%) Probanden gaben an täglich und sechs (15%) mehrmals pro Woche Videospiele zu spielen. Jeweils neun (22,5%) gaben an mehrmals im Monat sowie weniger als einmal pro Monat zu Videospiele zu spielen. Mit dem ersten Fragebogen wird der Bartletyp der Probanden festgestellt. Die Verteilung der Bartletypen der Probanden ist in folgender Abbildung dargestellt.
 
 ![Ausprägungen der Bartletypen der Probanden](./pics/evaluation/subjects_preplayertype.png)
 
-Nach dem Bartletest ergibt sich eine Aufteilung in sieben (17,5%) Socializer, neun (22,5%) Achiever, 22 (55%) Explorer und zwei Killer (5%). Da im Rahmen der Evaluierung die Ausprägungen Achiever und Explorer untersucht werden sollen, werden die Socializer und Killer entsprechend ihrer stärksten Ausppägung zu den Achievern oder Explorern gezählt.
+Nach dem Bartletest ergibt sich eine Aufteilung in sieben (17,5%) Socializer, neun (22,5%) Achiever, 22 (55%) Explorer und zwei Killer (5%). Da im Rahmen der Evaluierung die Ausprägungen Achiever und Explorer untersucht werden sollen, werden die Socializer und Killer entsprechend ihrer stärksten Ausprägung zu den Achievern oder Explorern gezählt. Die daraus resultierende Verteilung ist in folgender Abbildung dargestellt.
 
 ![Finale Bartletypen der Probanden](./pics/evaluation/subjects_finalplayertype.png){#fig:age_subjects}
 
-Damit ergibt sich eine Aufteilung in 13 (32,5%) Achiever und 27 (67,5%) Explorer.
+Damit ergibt sich eine Aufteilung in 13 (32,5%) Achiever und 27 (67,5%) Explorer. Mit dieser Aufteilung werden die folgenden Forschungsfragen bzw. Hypothesen evaluiert.
 
 ### Forschungsfrage 1 Hypothese 1 ###
 
@@ -180,7 +187,8 @@ In jedem Level können 6 Collectibles gefunden werden. Die Mittelwerte bzw. Medi
 |--------------|--------------------|
 | 4,55 bzw. 5  | 3,12 bzw. 3,5      |
 
-Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. <!-- TODO: Aufteilung der Level: -->
+Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. 
+<!-- TODO: Aufteilung der Level: -->
 Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen. 
 
 ![](./pics/evaluation/collectibles_b_achiever.png){width=50%}
@@ -247,6 +255,7 @@ Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, das
 Die zweite Forschungsfrage (F2) untersucht welchen Einfluss Navigationshilfen auf die Orientierung in einem 3D Level haben. Die dritte Hypothese (H3) nimmt an, dass Probanden mit der erweiterten Minimap die Orientierung von den Probandenn als einfacher wahrgenommen wird, als mit der Basisminimap. Das Empfinden der Probanden bezüglich der Orientierung in Abhängigkeit der Minimap ist in folgender Abbildung dargestellt.
 
 <!-- TODO: Median Mittelwert hinzufügen: -->
+<!-- TODO: Median Mittelwert hinzufügen: -->
 
 Es liegt keine klare Tendenz vor, mit welcher Minimap die Orientierung als einfacher empfunden wird. Damit findet sich keine Tendenz zur Bestätigung der Hypothese. Es zeigt aber die Tendenz auf, dass beide Minimaparten für die Orientierung im Spiel geeeignet sind.
 
@@ -268,7 +277,7 @@ Die dritte Forschungsfrage (F3) untersucht welche Navigationshilfen von den Nutz
 \caption{Minimap-Präferenzen der Probanden nach Spielertyp}
 \end{figure}
 
-Bei der Aufteilung nach Spielertyp zeigt sich eine Tendenz, dass beide Spielertypen die Basisminimap bevorzugen. Es gibt eine leichte Tendenz, dass die Achiever die Basisminimap stärker bevorzugen als die Explorer. Damit liegt keine Tendenz zur Bestätigung der Hypothese H4 und Hypothese H5 vor
+Bei der Aufteilung nach Spielertyp zeigt sich eine Tendenz, dass beide Spielertypen die Basisminimap bevorzugen. Es gibt eine leichte Tendenz, dass die Achiever die Basisminimap stärker bevorzugen als die Explorer. Damit liegt keine Tendenz zur Bestätigung der Hypothese H4 und Hypothese H5 vor.
 
 ### Allgemeines zum Spiel ###
 
@@ -326,20 +335,21 @@ In den Freitextfragen zu Verbesserungsvorschlägen zum Spiel wurden folgende Pun
 - Weniger monotone Texturen zur besseren räumlichen Ortientierung
 - Tipps in der Snackbar auffälliger gestalten und mit Ton versehen
 - Field of View erhöhen oder eine Einstellung dafür bereitstellen
-- Icons
+- Icons für Aufsammelbares
 - Trefferfeedback deutlicher darstellen
 - Texturen die weniger Cybersickness oder Desorientierung auslösen
 - Optimierung der Sprungmechanik
 
 # Zusammenfassung und Ausblick #
 
-Die Messwerte könnten durch die hohe Probandenzahl statistisch analysiert werden. Des weiteren wurden nicht alle Antworten und Messwerte evaluiert. Die Antworten bezüglich der Glücksgefühle beim sammeln von Collectibles oder die geloggten Spielerbewegungen könnten die Basis weiterer Untersuchungen sein. In weiteren Studien könnten die Ausprägung Socializer und Killer untersucht werden. Des Weiteren sollte das Spiel dahingehend angepasst werden, dass Schwindel und Übelkeit während des Spielens verringert wird. Außerdem könnte die Aufteilung der Probanden nach dem Test von Jon Radoff erfolgen, der statt einem Kategorie-Framework ein Komponenten-Framework vorschlägt.
+Die Messwerte könnten durch die hohe Probandenzahl statistisch analysiert werden. Des weiteren wurden nicht alle Antworten und Messwerte evaluiert. Die Antworten bezüglich der Glücksgefühle beim sammeln von Collectibles oder die geloggten Spielerbewegungen könnten die Basis weiterer Untersuchungen sein. In weiteren Studien könnten die Ausprägung Socializer und Killer untersucht werden. Des Weiteren sollte das Spiel dahingehend angepasst werden, dass Schwindel und Übelkeit während des Spielens verringert wird. Außerdem könnte die Aufteilung der Probanden nach dem Test von Jon Radoff erfolgen, der statt einem Kategorie-Framework ein Komponenten-Framework vorschlägt. Ein weiteres Feld was im Rahmen des Moduls betrachtet werden könnte, wäre das Cheaten im Singeplayer-Kontext.
 
 # Lessons Learned #
 
 Licht in Räumen
 Virendesign
 Allgemein
+Siehe PPP
 
 # Literaturverzeichnis und Quellen #
 
