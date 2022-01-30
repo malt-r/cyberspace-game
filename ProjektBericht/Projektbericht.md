@@ -73,11 +73,11 @@ Nach der Umsetzung wird das Spiel mithilfe von Probanden evaluiert.
 Das erstellte Spiel soll evaluiert werden
 
 
-Probandentyp soll auch untersucht werden
+Bartletyp soll auch untersucht werden
 
 
 
-**Forschungsfragen und Hypothesen**
+### Forschungsfragen und Hypothesen ###
 
 Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den dazugehörigen Hypothesen formuliert:
 
@@ -90,7 +90,7 @@ Anhand der zu untersuchenden Variable wurden folgende Forschungsfragen mit den d
     - H4: Probanden mit stärkerer “Achiever”-Ausprägung bevorzugen die ausgebaute Minimap
     - H5: Probanden mit stärkerer “Explorer”-Ausprägung bevorzugen die Basisminimap
 
-**Messdaten:**
+### Messdaten ###
 
 Neben der Evaluierung über Fragebögen werden folgende Daten während des Spielens gemessen:
 
@@ -100,17 +100,15 @@ Neben der Evaluierung über Fragebögen werden folgende Daten während des Spiel
 - Anzahl der gefundenen Collectibles mit Position
 - Anzahl der Tode pro Level mit Position
 
-**Versuchsdurchführung und -ablauf:**
+### Versuchsdurchführung und -ablauf ###
 
-Beide Navigationsmethoden werden mit dem within Subject-Design evaluiert. Die Probanden absolvieren jeweils ein Level mit der Basis- oder der ausgebauten -Minimap. Die Zuordnung, welcher Probanden mit welcher Minimap beginnt, wird dabei randomisiert zugewiesen. Pro Versuchsablauf werden 45 Minuten angesetzt, wobei 25 Minuten für den Fragebogen eingeplant ist. Die Versuche werden im häuslichen Umfeld sowie im Bekanntenkreis der Entwickler durchgeführt.
-<!-- Corona erwähnen bzw dass es online war-->
-Der Ablauf eines Versuchs erfolgt immer in folgender Reihenfolge:
+Beide Navigationsmethoden werden mit dem within Subject-Design evaluiert. Die Probanden absolvieren jeweils ein Level mit der Basis- oder der ausgebauten -Minimap. Die Zuordnung, welcher Probanden mit welcher Minimap beginnt, wird dabei randomisiert zugewiesen. Pro Versuchsablauf werden 45 Minuten angesetzt, wobei 25 Minuten für den Fragebogen eingeplant ist. Durch das Andauernd der Corona-Pandemie mussten die Versuche im häuslichen Umfeld sowie online im Bekanntenkreis der Entwickler durchgefphrt werden. Der Ablauf eines Versuchs erfolgt immer in folgender Reihenfolge:
 
 1. Einführung geben
 1. Gesundheitszustand abfragen  
     - Ausschluss von Schwangeren oder Epilepsieerkrankten 
     - Abbruch des Versuchs bei Schwindel, Kopfschmerzen etc. 
-2. Fragebogen zum Probandentyp abfragen & Einverständniserklärung 
+2. Fragebogen zum Bartletyp abfragen & Einverständniserklärung 
 3. Spielen des ersten Levels  
     - Hier wird die erste Variation der Navigationshilfe evaluiert 
 4. Ausfüllen des spielbezogenen Fragebogens 
@@ -125,13 +123,12 @@ Der Ablauf eines Versuchs erfolgt immer in folgender Reihenfolge:
 
 Zur Evaluieren der Hypothesen werden folgende Fragebögen verwendet:
 
-- Probandentyp
+- Bartletyp
 - Minimap
 - Allgemein
 - Demographie
 
-
-### Probandentyp ###
+### Bartletyp ###
 
 ### Minimap ###
 
@@ -163,11 +160,11 @@ Das Alter der Probanden lag zwischen 18 und 37. Das Durchschnittsalter liegt bei
 
 16 (40%) Probanden gaben an täglich und sechs (15%) mehrmals pro Woche Videospiele zu spielen. Jeweils neun (22,5%) gaben an mehrmals im Monat sowie weniger als einmal pro Monat zu Videospiele zu spielen.
 
-![Ausprägungen der Probandentypen der Probanden](./pics/evaluation/subjects_preplayertype.png)
+![Ausprägungen der Bartletypen der Probanden](./pics/evaluation/subjects_preplayertype.png)
 
 Nach dem Bartletest ergibt sich eine Aufteilung in sieben (17,5%) Socializer, neun (22,5%) Achiever, 22 (55%) Explorer und zwei Killer (5%). Da im Rahmen der Evaluierung die Ausprägungen Achiever und Explorer untersucht werden sollen, werden die Socializer und Killer entsprechend ihrer stärksten Ausppägung zu den Achievern oder Explorern gezählt.
 
-![Finale Probandentypen der Probanden](./pics/evaluation/subjects_finalplayertype.png){#fig:age_subjects}
+![Finale Bartletypen der Probanden](./pics/evaluation/subjects_finalplayertype.png){#fig:age_subjects}
 
 Damit ergibt sich eine Aufteilung in 13 (32,5%) Achiever und 27 (67,5%) Explorer.
 
@@ -184,16 +181,16 @@ In jedem Level können 6 Collectibles gefunden werden. Die Mittelwerte bzw. Medi
 | 4,55 bzw. 5  | 3,12 bzw. 3,5      |
 
 Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. <!-- TODO: Aufteilung der Level: -->
-Durch die Ermittlung des Probandentyps lassen sich die gesammelten Collectibles in Abhängigkeit des Probandentyps untersuchen. 
+Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen. 
 
 ![](./pics/evaluation/collectibles_b_achiever.png){width=50%}
 ![](./pics/evaluation/collectibles_b_explorer.png){width=50%}
 
 \begin{figure}[!h]
-\caption{Gesammelte Collectibles in Abhängigkeit der Minimap und Probandentyps}
+\caption{Gesammelte Collectibles in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Probandentyps sind in folgender Tabelle dargestellt.
+Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
 
 |          | Basisminimap | Erweiterte Minimap |
 |----------|--------------|--------------------|
@@ -203,7 +200,7 @@ Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bz
 Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 5. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5. Bei den Explorern betragen diese Werte 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern aktiv gesucht wurden. 
 
 
-<!-- TODO: Aufteilung der Level und Probandentyp: -->
+<!-- TODO: Aufteilung der Level und Bartletyp: -->
 
 ### Forschungsfrage 1 Hypothese 2 ###
 
@@ -217,20 +214,20 @@ Die zweite Hypothese (H2) nimmt an, dass Probanden mit der erweiterten Minimap d
 |---------------------|--------------------|
 | 387,06 bzw. 463,10  | 303,67 bzw. 358,97 |
 
-Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. <!-- TODO: Aufteilung der Level: -->Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Probandentypen evaluieren.
+Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. <!-- TODO: Aufteilung der Level: -->Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
 
 ![](./pics/evaluation/playtime_b_achiever.png){width=50%}
 ![](./pics/evaluation/playtime_b_explorer.png){width=50%}
 
 \begin{figure}[!h]
-\caption{Spielzeit in Abhängigkeit der Minimap und Probandentyps}
+\caption{Spielzeit in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Probandentyps sind in folgender Tabelle dargestellt.
+Die Probanden teilen sind in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
 
 |          | Basisminimap | Erweiterte Minimap |
 |----------|--------------|--------------------|
-| Achiever | 432,24 \ bzw. 368,00  | 376,15 bzw. 325,22        |
+| Achiever | 432,24 bzw. 368,00  | 376,15 bzw. 325,22        |
 | Explorer | 477,95 bzw. 390,30  | 350,70 bzw. 292,57        |
 
 |          | Basisminimap | Erweiterte Minimap |
@@ -242,7 +239,7 @@ Der Mittelwert und Median betragen für die Basisminimap bei den Achievern 432,2
 
 Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der erweiterten Minimap das Level schneller abgeschlossen wird, als mit der Basisminimap.
 
-<!-- TODO: Aufteilung der Level und Probandentyp: -->
+<!-- TODO: Aufteilung der Level und Bartletyp: -->
 
 
 ### Forschungsfrage 2 Hypothese 3 ###
@@ -277,17 +274,47 @@ Bei der Aufteilung nach Spielertyp zeigt sich eine Tendenz, dass beide Spielerty
 
 Neben den Fragen zur Evaluierung der Hypothesen werden die Probanden zu allgemeinen Aspekten zum Spiel befragt. Zunächst sollten die Probanden angeben, wie anspruchsvoll sie das Spiel empfanden haben. Die Ergebnisse sind in folgender Abbildung dargestellt.
 
+![Das Spiel war anspruchsvoll](./pics/evaluation/gamehard_b.png){#fig:gamehard}
 
+<!-- TODO: Median Mittelwert hinzufügen: -->
 
 Es lässt sich eine leichte Tendenz erkennen, dass Explorer das Spiel als eher anspruchsvoll bewerten. Bei den Achievern hingegen gibt es eine leichte Tendenz, dass das Spiel als eher nicht anspruchsvoll bewertet wird.
 
+Als nächstes wurden die Probanden gefragt, ob es Momente gab, in denen sie aufgeben wollten. Die Ergebnisse sind in folgender Abbildung dargestellt.
+
+![Es gab Momente in denen Aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame}
+<!-- TODO: Median Mittelwert hinzufügen: -->
+
+Bei beiden Spielergruppen gibt es eine leichte Tendenz dazu, dass es keine Momente gab, in denen sie aufgeben wollten. Dieses Ergebnis deckt sich mit den Antworten zu der Frage, ob das Spiel unbedingt absolviert werden wollte.
+
+![Ich wollte das Spiel unbedingt erfolgreich absolvieren](./pics/evaluation/all_wingame_ae.png){#fig:wingame}
+<!-- TODO: Median Mittelwert hinzufügen: -->
+
+Diese Ergebnisse zeigen Tendenzen, dass die Achiever und Explorer gleichermaßen motiviert waren das Spiel abzuschließen und nicht aufzugeben. Diese Tendenzen spiegeln sich auch im den Anspruch wieder, das Spiel mit möglichst wenig Toden zu beenden.
+
+![Ich wollte das Spiel mit möglichst wenig Toden beenden](./pics/evaluation/all_lowdeaths_ae.png){#fig:playdeaths}
+<!-- TODO: Median Mittelwert hinzufügen: -->
+
+Dieselben Tendenzen zeigen sich auch beim Spielspaß, der in folgender Abbildung dargestellt ist.
+
+![Mir hat das Spiel Spaß gemacht](./pics/evaluation/all_fun_ae.png){#fig:playfun}
+
+<!-- TODO: Median Mittelwert hinzufügen: -->
+
+Die Ergebnisse zeigen Tendenzen, dass das Spiel den Probanten, unabhängig vom Spielertyp, Spaß gemacht hat. Als nächstes wurden die Probanden befragt, ob sie das Spiel erneut spielen wollen würden. Die Ergebnisse sind in folgender Abbildung dargestellt.
+
+![Ich würde das Spiel erneut spielen wollen](./pics/evaluation/all_playagain.png){#fig:playagain}
+
+<!-- TODO: Median Mittelwert hinzufügen: -->
 
 In den Freitextfragen zu Verbesserungsvorschlägen zur Basisminimap wurden folgende Punkte genannt:
+
 - Zoomstufe der Minimap einstellbar machen
 - Minimap dreht sich mit dem Spieler
 - Ansicht mit dem kompletten Level
 
 In den Freitextfragen zu Verbesserungsvorschlägen zur erweiterten Minimap wurden foglende Punkte genannt:
+
 - Zoomstufe der Minimap einstellbar machen
 - Minimap dreht sich mit dem Spieler
 - Nur den Zielort und nicht den Pfad anzeigen
@@ -295,6 +322,7 @@ In den Freitextfragen zu Verbesserungsvorschlägen zur erweiterten Minimap wurde
 - Nicht die komplette Map zu Beginn aufdecken
 
 In den Freitextfragen zu Verbesserungsvorschlägen zum Spiel wurden folgende Punkte genannt:
+
 - Weniger monotone Texturen zur besseren räumlichen Ortientierung
 - Tipps in der Snackbar auffälliger gestalten und mit Ton versehen
 - Field of View erhöhen oder eine Einstellung dafür bereitstellen
@@ -303,12 +331,15 @@ In den Freitextfragen zu Verbesserungsvorschlägen zum Spiel wurden folgende Pun
 - Texturen die weniger Cybersickness oder Desorientierung auslösen
 - Optimierung der Sprungmechanik
 
-
 # Zusammenfassung und Ausblick #
 
-## Lessons Learned ##
+Die Messwerte könnten durch die hohe Probandenzahl statistisch analysiert werden. Des weiteren wurden nicht alle Antworten und Messwerte evaluiert. Die Antworten bezüglich der Glücksgefühle beim sammeln von Collectibles oder die geloggten Spielerbewegungen könnten die Basis weiterer Untersuchungen sein. In weiteren Studien könnten die Ausprägung Socializer und Killer untersucht werden. Des Weiteren sollte das Spiel dahingehend angepasst werden, dass Schwindel und Übelkeit während des Spielens verringert wird. Außerdem könnte die Aufteilung der Probanden nach dem Test von Jon Radoff erfolgen, der statt einem Kategorie-Framework ein Komponenten-Framework vorschlägt.
 
-In weiteren Studien könnten die Ausprägung Socializer und Killer untersucht werden. Des Weiteren sollte das Spiel dahingehend angepasst werden, dass Schwindel und Übelkeit während des Spielens verringert wird. Außerdem könnte die Aufteilung der Probanden nach dem Test von Jon Radoff erfolgen, der statt einem Kategorie-Framework ein Komponenten-Framework vorschlägt.
+# Lessons Learned #
+
+Licht in Räumen
+Virendesign
+Allgemein
 
 # Literaturverzeichnis und Quellen #
 
