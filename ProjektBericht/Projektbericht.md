@@ -11,7 +11,6 @@ toc-own-page: true
 \pagenumbering{gobble}
 \pagebreak
 \listoffigures
-\pagebreak
 \pagenumbering{arabic}
 
 # Einleitung #
@@ -84,6 +83,8 @@ Zur Evaluieren der Hypothesen und Einholen von generellem Feedback werden folgen
 - Minimapfragebogen
 - Fragebogen über Demographie und allgemeiner Fragebogen
 
+Es werden sowohl Likert-Skala-Fragen, als auch Freitextfragen gestellt. Bei den Likert-Skala-Fragen wird eine 5er Skala von -2 bis 2 (Stimme garnicht zu bis Stimme voll zu) verwendet.
+
 **Bartletest**
 
 Der Bartletest klassifiziert die Probanden auf Grundlage von einer Reihe von Fragen in vier Typen ein. Die Fragen dienen der Bestimmung der Spielinteressen. Der Test basiert auf einem Paper von Richard Bartle und wurde ursprünglich für Multiplayer-Spiele entworfen, wird jedoch mittlerweile auch für Singleplayer-Spiele verwendet.
@@ -139,6 +140,10 @@ Insgesamt haben 41 Personen teilgenommen. Eine Person musste die Evaluierung weg
 
 ![Alter der Probanden](./pics/evaluation/age_subjects.png){#fig:subjects_age}
 
+| Mittelwert | Median| 
+|--------------|--------|
+|  24,25   | 24 | 
+
 Das Alter der Probanden liegt zwischen 18 und 37 Jahren. Das Durchschnittsalter liegt bei 24,25 und der Median bei 24 Jahren. Die Verteilung der Geschlechter der Probanden ist in folgender Abbildung dargestellt.
 
 ![Geschlecht der Probanden](./pics/evaluation/subjects_sex.png){#fig:subjects_sex}
@@ -169,13 +174,12 @@ Die erste Forschungsfrage (F1) untersucht welchen Einfluss Navigationshilfen auf
 
 In jedem Level können 6 Collectibles gefunden werden. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendete Minimap sind in folgender Tabelle dargestellt.
 
-| Basisminimap | Erweiterte Minimap |
-|--------------|--------------------|
-| 4,55 bzw. 5  | 3,12 bzw. 3,5      |
+| Basisminimap |        | Erweiterte Minimap |        |
+|--------------|--------|--------------------|--------|
+| Mittelwert   | Median | Mittelwert         | Median |
+| 4,55         | 5      | 3,12               | 3,5    |
 
-Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. 
-<!-- TODO: Aufteilung der Level: -->
-Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen. 
+Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen. 
 
 ![](./pics/evaluation/collectibles_b_achiever.png){width=50%}
 ![](./pics/evaluation/collectibles_b_explorer.png){width=50%}
@@ -184,17 +188,15 @@ Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in 
 \caption{Gesammelte Collectibles in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sich in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
 
-|          | Basisminimap | Erweiterte Minimap |
-|----------|--------------|--------------------|
-| Achiever | 5,23 bzw. 6  | 3,85 bzw. 5        |
-| Explorer | 4,22 bzw. 5  | 2,78 bzw. 2        |
+|          | Basisminimap |         | Erweiterte Minimap |        |
+|----------|--------------|---------|--------------------|--------|
+|          | Mittelwert   | Median  | Mittelwert         | Median |
+| Achiever | 5,23         | 6       | 3,85               | 5      |
+|          | Mittelwert   | Median  | Mittelwert         | Median |
+| Explorer | 4,22         | 5       | 2,78               | 2      |
 
-Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 5. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5. Bei den Explorern betragen diese Werte 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern gesucht wurden. 
-
-
-<!-- TODO: Aufteilung der Level und Bartletyp: -->
+Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 6 Collectibles. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5 Collectibles. Bei den Explorern beträgt die Anzahl der Collectibles 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern gesucht wurden. 
 
 ### Forschungsfrage 1 Hypothese 2 ###
 
@@ -204,15 +206,13 @@ Die zweite Hypothese (H2) nimmt an, dass Probanden mit der erweiterten Minimap d
 
  Der Mittelwert sowie Median für die gemessenen Spielzeiten sind in folgender Tabelle dargestellt.
 
-\pagebreak
 | Basisminimap |        | Erweiterte Minimap |        |
 |--------------|--------|--------------------|--------|
 | Mittelwert   | Median | Mittelwert         | Median |
 | 387,06       | 463,10 | 303,67             | 358,97 |
 
-
 Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. Es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. 
-<!-- TODO: Aufteilung der Level: -->
+
 Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
 
 ![](./pics/evaluation/playtime_b_achiever.png){width=50%}
@@ -222,8 +222,6 @@ Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auc
 \caption{Spielzeit in Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
-Die Probanden teilen sich in 13 Achiever und 27 Explorer auf. Die Mittelwerte bzw. Mediane der gesammelten Collectibles in Abhängigkeit der verwendeten Minimap und Bartletyps sind in folgender Tabelle dargestellt.
-
 |          | Basisminimap |         | Erweiterte Minimap |        |
 |----------|--------------|---------|--------------------|--------|
 |          | Mittelwert   | Median  | Mittelwert         | Median |
@@ -232,12 +230,7 @@ Die Probanden teilen sich in 13 Achiever und 27 Explorer auf. Die Mittelwerte bz
 | Explorer | 477,95       | 390,30  | 350,70             | 292,57 |
 
 
-Der Mittelwert und Median betragen für die Basisminimap bei den Achievern 432,24 bzw. 368,00 Sekunden. Bei der erweiterten Minimap betragen diese Werte 376,15 bzw. 325,22 Sekunden. Bei den Explorern betragen diese Werte 477,95 bzw 390,30 Sekunden bei der Basisminimap und 350,70 bzw. 292,57 Sekunden bei der erweiterten Minimap. 
-
-Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der erweiterten Minimap das Level schneller abgeschlossen wird, als mit der Basisminimap.
-
-<!-- TODO: Aufteilung der Level und Bartletyp: -->
-
+Der Mittelwert und Median betragen für die Basisminimap bei den Achievern 432,24 bzw. 368,00 Sekunden. Bei der erweiterten Minimap betragen diese Werte 376,15 bzw. 325,22 Sekunden. Bei den Explorern betragen diese Werte 477,95 bzw 390,30 Sekunden bei der Basisminimap und 350,70 bzw. 292,57 Sekunden bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der erweiterten Minimap das Level schneller abgeschlossen wird, als mit der Basisminimap.
 
 ### Forschungsfrage 2 Hypothese 3 ###
 
@@ -245,20 +238,29 @@ Die zweite Forschungsfrage (F2) untersucht welchen Einfluss Navigationshilfen au
 
 ![Die Minimap hat mir bei der Ortientierung geholfen](./pics/evaluation/orientation_b_ae.png){#fig:ortientation_b_ae}
 
-<!-- TODO: Median Mittelwert hinzufügen: -->
+| Basisminimap |        | Erweiterte Minimap |        |
+|--------------|--------|--------------------|--------|
+| Mittelwert   | Median | Mittelwert         | Median |
+| 1,38         | 1,50   | 1,52               | 2,00   |
 
-Es liegt keine klare Tendenz vor, mit welcher Minimap die Orientierung als einfacher empfunden wird. Damit findet sich keine Tendenz zur Bestätigung der Hypothese. Es zeigt aber die Tendenz auf, dass beide Minimaparten für die Orientierung im Spiel geeeignet sind.
-Die empfundene Hilfe bei der Orientierung ist in folgender Abbildung nach Bartletyp dargestellt.
-
-Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
+Der Mittelwert beträgt bei der Basisminimap 1,38 und 1,52 bei der erweiterten Minimap. Der Median beträgt bei der Basisminimap 1,5 und bei der erweiterten MInimap 2,0. Es liegt keine klare Tendenz vor, mit welcher Minimap die Orientierung als einfacher empfunden wird. Damit findet sich keine Tendenz zur Bestätigung der Hypothese. Es zeigt aber die Tendenz auf, dass beide Minimaparten für die Orientierung im Spiel geeeignet sind.
+Die empfundene Hilfe bei der Orientierung ist in folgender Abbildung nach Bartletyp dargestellt. Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
 
 ![](./pics/evaluation/orientation_b_a.png){width=50%}
 ![](./pics/evaluation/orientation_b_e.png){width=50%}
 
 \begin{figure}[!h]
-\caption{Spielzeit in Abhängigkeit der Minimap und Bartletyps}
+\caption{Empfundene Hilfe bei der Orientierung Abhängigkeit der Minimap und Bartletyps}
 \end{figure}
 
+|          | Basisminimap |         | Erweiterte Minimap |        |
+|----------|--------------|---------|--------------------|--------|
+|          | Mittelwert   | Median  | Mittelwert         | Median |
+| Achiever | 1,54         | 2       | 1,31               | 2      |
+|          | Mittelwert   | Median  | Mittelwert         | Median |
+| Explorer | 1,30         | 1       | 1,63               | 2      |
+
+Bei der Aufteilung nach den Bartletypen lässt sich die Tendenz festellen, dass beide Probandengruppen sich mit beiden Minimaparten orientieren können. Nur bei den Explorern mit Basisminimap fällt auf, dass die Tendenz beim Median um einen Punkt geringer ausfällt als bei den Achievern.
 
 ### Forschungsfrage 3 Hypothese 4 und 5 ###
 
@@ -286,38 +288,69 @@ Neben den Fragen zur Evaluierung der Hypothesen werden die Probanden zu allgemei
 
 ![Das Spiel war anspruchsvoll](./pics/evaluation/gamehard_b.png){#fig:gamehard}
 
-<!-- TODO: Median Mittelwert hinzufügen: -->
+|          |  |         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | -0,31                       | 0       |
+|          | Mittelwert                  | Median  | 
+| Explorer | 0,41                        | 1       |
 
-Es lässt sich eine leichte Tendenz erkennen, dass Explorer das Spiel als eher anspruchsvoll bewerten. Bei den Achievern hingegen gibt es eine leichte Tendenz, dass das Spiel als eher nicht anspruchsvoll bewertet wird.
+Es lässt sich eine leichte Tendenz erkennen, dass Explorer das Spiel als eher anspruchsvoll bewerten. Bei den Achievern hingegen gibt es eine leichte Tendenz, dass das Spiel als eher nicht anspruchsvoll bewertet wird. Als nächstes wurden die Probanden gefragt, ob es Momente gab, in denen sie aufgeben wollten. Die Ergebnisse sind in folgender Abbildung dargestellt.
 
-Als nächstes wurden die Probanden gefragt, ob es Momente gab, in denen sie aufgeben wollten. Die Ergebnisse sind in folgender Abbildung dargestellt.
+![Es gab Momente in denen aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame}
 
-![Es gab Momente in denen Aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame}
-<!-- TODO: Median Mittelwert hinzufügen: -->
+|          ||         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | -1                          | -2      |
+|          | Mittelwert                  | Median  | 
+| Explorer | -1,15                       | -2      |
 
-Bei beiden Spielergruppen gibt es eine leichte Tendenz dazu, dass es keine Momente gab, in denen sie aufgeben wollten. Dieses Ergebnis deckt sich mit den Antworten zu der Frage, ob das Spiel unbedingt absolviert werden wollte.
+Bei beiden Spielergruppen gibt es eine Tendenz dazu, dass es keine Momente gab, in denen sie aufgeben wollten. Dieses Ergebnis deckt sich mit den Antworten zu der Frage, ob das Spiel unbedingt absolviert werden wollte.
 
 ![Ich wollte das Spiel unbedingt erfolgreich absolvieren](./pics/evaluation/all_wingame_ae.png){#fig:wingame}
-<!-- TODO: Median Mittelwert hinzufügen: -->
+
+|          | |         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | 1,46                        | 2       |
+|          | Mittelwert                  | Median  | 
+| Explorer | 1,37                        | 2       |
 
 Diese Ergebnisse zeigen Tendenzen, dass die Achiever und Explorer gleichermaßen motiviert waren das Spiel abzuschließen und nicht aufzugeben. Diese Tendenzen spiegeln sich auch im den Anspruch wieder, das Spiel mit möglichst wenig Toden zu beenden.
 
 ![Ich wollte das Spiel mit möglichst wenig Toden beenden](./pics/evaluation/all_lowdeaths_ae.png){#fig:playdeaths}
-<!-- TODO: Median Mittelwert hinzufügen: -->
+
+|          ||         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | 0,59                        | 1       |
+|          | Mittelwert                  | Median  | 
+| Explorer | 0,62                        | 1       |
 
 Dieselben Tendenzen zeigen sich auch beim Spielspaß, der in folgender Abbildung dargestellt ist.
 
 ![Mir hat das Spiel Spaß gemacht](./pics/evaluation/all_fun_ae.png){#fig:playfun}
 
-<!-- TODO: Median Mittelwert hinzufügen: -->
+|          ||         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | 1,46                        | 2       |
+|          | Mittelwert                  | Median  | 
+| Explorer | 1,41                        | 1       |
 
-Die Ergebnisse zeigen Tendenzen, dass das Spiel den Probanten, unabhängig vom Spielertyp, Spaß gemacht hat. Als nächstes wurden die Probanden befragt, ob sie das Spiel erneut spielen wollen würden. Die Ergebnisse sind in folgender Abbildung dargestellt.
+Die Ergebnisse zeigen Tendenzen, dass das Spiel den Probanten, unabhängig vom Spielertyp, Spaß gemacht hat. Dabei gibt es eine leichte Tendenz, dass das Spiel den Achievern mehr Spaß gehabt hat, da der Median um einen Punkt höher ist. Als nächstes wurden die Probanden befragt, ob sie das Spiel erneut spielen wollen würden. Die Ergebnisse sind in folgender Abbildung dargestellt.
 
 ![Ich würde das Spiel erneut spielen wollen](./pics/evaluation/all_playagain.png){#fig:playagain}
 
-<!-- TODO: Median Mittelwert hinzufügen: -->
+|          ||         |     
+|----------|-----------------------------|---------|
+|          | Mittelwert                  | Median  | 
+| Achiever | 0,08                        | 0       |
+|          | Mittelwert                  | Median  | 
+| Explorer | 0,56                        | 1       |
 
-In den Freitextfragen zu Verbesserungsvorschlägen zur Basisminimap wurden folgende Punkte genannt:
+Hier lässt sich eine leichte Tendenz erkennen, dass die Explorer eher gewillt wären, das Spiel noch mal zu spielen. Neben den Likert-Skala-Fragen werden auch die Freitextfragen evaluiert. In den Freitextfragen zu Verbesserungsvorschlägen zur Basisminimap wurden folgende Punkte genannt:
 
 - Zoomstufe der Minimap einstellbar machen
 - Minimap dreht sich mit dem Spieler
@@ -343,9 +376,12 @@ In den Freitextfragen zu Verbesserungsvorschlägen zum Spiel wurden folgende Pun
 
 # Zusammenfassung und Ausblick #
 
+TBD
 Die Messwerte könnten durch die hohe Probandenzahl statistisch analysiert werden. Des weiteren wurden nicht alle Antworten und Messwerte evaluiert. Die Antworten bezüglich der Glücksgefühle beim sammeln von Collectibles oder die geloggten Spielerbewegungen könnten die Basis weiterer Untersuchungen sein. In weiteren Studien könnten die Ausprägung Socializer und Killer untersucht werden. Des Weiteren sollte das Spiel dahingehend angepasst werden, dass Schwindel und Übelkeit während des Spielens verringert wird. Außerdem könnte die Aufteilung der Probanden nach dem Test von Jon Radoff erfolgen, der statt einem Kategorie-Framework ein Komponenten-Framework vorschlägt. Ein weiteres Feld was im Rahmen des Moduls betrachtet werden könnte, wäre das Cheaten im Singeplayer-Kontext.
 
 # Lessons Learned #
+
+TBD
 
 Licht in Räumen
 Virendesign
@@ -354,6 +390,4 @@ Siehe PPP
 
 # Literaturverzeichnis und Quellen #
 
-asdasd
-asd
-asdasd
+TBD
