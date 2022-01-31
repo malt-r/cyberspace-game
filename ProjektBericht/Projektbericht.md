@@ -38,7 +38,11 @@ Im zweiten Level erlangt der Spielcharakter einen Scanner, mit dem bestimmte Ite
 können. Um weiter im Level voranzukommen, muss der Spielcharakter den Lasermodus
 für den Scanner finden, mit dem Gegner bekämpft werden können. Thematisch passend
 werden diese Gegner "Computerviren" genannt. Das zweite Level ist deutlich mehr von
-der Kampfmechanik bestimmt.
+der Kampfmechanik bestimmt. Dieser Laser verbraucht Energie und kann überhitzen, sobald
+die Energie aufgebraucht ist, so wird sichergestellt, dass der Laser nicht dauerhaft
+genutzt werden kann. Am Ende vom zweiten Level muss der Spielcharakter einen Computervirus
+besiegen, der Bomben wirft. Anschließend kann der Spieler den Bombenmodus für den Scanner
+aufheben.
 
 Während der Erkundung der Level können sogenannte "Collectibles" gefunden werden,
 welche keine besondere Funktion haben, außer den Sammeltrieb anzusprechen und so
@@ -53,6 +57,10 @@ der Spielcharakter in diesem Level gegen den Computer selbst antreten (dargestel
 durch einen Röhrenmonitor). Der Bosskampf ist dabei in zwei Phasen aufgeteilt, indem
 erst Schildgeneratoren durch gezielte Bombenwürfe durch den Spielcharakter zerstört werden müssen.
 Abschließend muss der Computer noch mit einer Bombe getroffen werden.
+
+Das Spiel soll mithilfe der Unity Gameengine umgesetzt werden. Diese Engine ist
+sehr weit verbreitet, kostenlos nutzbar und insbesondere für kleinere Projekte sehr beliebt. Im Vergleich
+zu der ebenfalls kostenlos nutzbaren Unreal Engine ist die Lernkurve deutlich flacher.
 
 ## Meilensteine ##
 
