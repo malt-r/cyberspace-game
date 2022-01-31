@@ -15,13 +15,57 @@ toc-own-page: true
 
 # Einleitung #
 
+Im Rahmen des Moduls "Computer Games (Visualisierung)" wurde das Videospiel "Escape
+the Cyberspace" entwickelt. Dieser Projektbericht dokumentiert das Konzept, die Umsetzung
+und die daran anschließende Evaluierung dieses Spiels.
+
 # Konzept und Umsetzung #
 
 ## Spielidee ##
 
 ## Meilenstiene ##
 
+| **KW** | **Meilenstein** |
+| - | --------|
+| 42 | Konzept verfeinert, Projektplanung und Zuständigkeiten geklärt|
+| 43 | Konzept für Generatoralgorithmus steht, Spielerbewegung funktioniert, Sandboxraum für Grafik- / Spielmechaniktests existiert|
+| 44 | Design für Collectibles finalisiert, Monsterdesign finalisiert, erste Räume vordefiniert, Levelgenerator prototypisch implementiert, Basis für Kampfmechanik steht​|
+| 45 | Levelgenerator finalisiert, Texturen für Dungeon finalisiert, Kampfmechanik prototypisch implementiert|
+| 46 | Kampfmechanik finalisiert, Collectible placement implementiert, Levelgenerator ist game-ready, Kampfmechanik implementiert, ​|
+| 47 | Fähigkeiten prototypisch implementiert, Rätselmechanik und erste Rätsel implementiert, Sprachausgabe (Computer) prototypisch implementiert, Minimap prototypisch implementiert|
+| 48 | Fähigkeiten implementiert, Hilfetaste prototypisch implementiert, Spielflussmanager|
+| 49 | Prototyp implementiert, Forschungsfragen sammeln |
+| 50 | Letzte Fehler behoben; fertige Versuchsdurchlaufsbeschreibung |
+| 51 | |
+| 52 | Spiel finalisiert |
+| 01 | Erste Evaluierungsrunde durchgeführt |
+| 02 | Evaluierung abgeschlossen |
+| 03 | Projektbericht abgeschlossen |
+| 04 | Abschlusspräsentation erstellt |
+| 05 | Abschlusspräsentation gehalten |
+
 ## Arbeitspakete und Zuständigkeiten ##
+
+Tim Lücking:
+- Level-Design
+- Minispiel
+- Türmechanik
+
+Dennis Eller:
+- Spielerbewegung
+- Aufsammelbares
+- Kampfmechanik
+- Gegner
+- Sound
+- Menüs
+
+Malte Reinsch:
+- Level-Generator
+- Minimap
+- Story & Erzähler
+- Tutorial
+- Bosskampf Soundtrack
+- GameManager
 
 ## Umsetzung ##
 
