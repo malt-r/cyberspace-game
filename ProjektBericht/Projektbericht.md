@@ -14,6 +14,7 @@ figPrefix: "Abbildung"
 \pagebreak
 \listoffigures
 \pagenumbering{arabic}
+\pagebreak
 
 # Einleitung #
 
