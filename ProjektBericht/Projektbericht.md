@@ -429,7 +429,7 @@ Mit dem Laser- und Bombenmodus kann der Spielcharakter die Gegner im Level besie
 
 Der Nahkampfvirus lässt einen Gesundheitswürfel fallen, nachdem er besiegt wurde. Die anderen Monsterarten lassen ebenfalls Gesundheitswürfel fallen. Der Bombenvirus stellt eine Ausnahme dar, da er neben einem Gesundheitswürfel auch den Bombenmodus von dem Scanner fallen lässt. Das Fallen lassen von Gesundheitswürfeln ist in folgender Abbildung dargestellt.
 
-![Fallen gelassene Gesundheitswürfel eines Gegners](./pics/unity_health.png){#fig:unity_raycastcheck}
+![Fallen gelassene Gesundheitswürfel eines Gegners](./pics/unity_health.png){#fig:unity_health}
 
 Um die Begegnungen mit den Monstern herausfordernd zu gestalten, können sie dem Spielcharakter Schaden zufügen. Der zuvor gezeigte Nahkampfvirus kann nur Nahkampfschaden austeilen, während die anderen beiden Virenarten mit Projektilen oder Bomben dem Spielcharakter Schaden zufügen können.
 
