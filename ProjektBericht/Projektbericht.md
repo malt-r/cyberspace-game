@@ -37,8 +37,6 @@ Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
 - Logging von Statistiken über den aktuellen Spieldurchlauf
 - Exportieren der Statistiken als `.json`-Datei
 
-### GUI unnd Menüs ###
-
 ### Generator ###
 
 Der Level-Generator wird vom GameManager nach dem Laden der Spielszene aufgerufen.
@@ -102,6 +100,35 @@ entsprechende Korridormodul eingesetzt werden muss. Die fertig konstruierten Kor
 sind in der untenstehenden Abbildung zu erkennen.
 
 TODO: Korridorbild
+
+### GUI und Menüs ###
+
+#### Minimap ####
+
+Die Minimap zeigt in zwei unterschiedlichen Formen einen kleinen Ausschnitt des Levels
+an, um die Orientierung im Level zu erleichtern. Hierfür verwendet die Minimap die
+Gitterdaten, welche bei der Erstellung des Levels durch den Level-Generator erzeugt werden,
+um eine Miniatur des Levels aufzubauen. Diese Miniatur besteht aus Kacheln, welche
+die Wände des Levels als grüne Linien darstellen. Über der Miniatur wird ein Pfeil
+passend zur Spielerbewegung bewegt und mit einer orthografischen Kamera auf eine
+Rendertextur in der GUI projeziert.
+
+In der Basisminimap ist anfangs nur ein kleiner Teil der Minimap sichtbar. Beim Betreten
+einer neuen Zelle oder eines neuen Raums werden diese auf der Minimap aufgedeckt.
+Um besser erkennen zu können, an welchen Stellen der Spieler das Level noch weiter erkunden kann,
+werden die angrenzenden (aber noch nicht betretenen) Zellen abgedunkelt dargestellt.
+Hierzu wird eine dunkle, transparente Kachel über die entsprechenden Minimap-Kacheln gelegt.
+Ein Beispiel ist in den untenstehenden Abbildungen zu erkennen.
+
+TODO: Basisminimap-Bilder
+
+Die erweiterte Minimap zeigt den Weg zur nächsten Story-Aufgabe als rote Linie durch das Level
+an. Hierfür wird auf Basis der Gitterdaten der A\*-Algorithmus angewandt, um einen Pfad
+von der aktuellen Spielerposition zu der Position des aktuell aktiven Storymarkers
+zu finden. Die Punkte dieses Pfads werden anschließend in einem Linerenderer über den Minimap-Kacheln
+dargestellt. Ein Beispiel ist den untenstehenden Abbildungen zu entnehmen.
+
+TODO: erweiterte Minimap Bilder
 
 ### Story ###
 
