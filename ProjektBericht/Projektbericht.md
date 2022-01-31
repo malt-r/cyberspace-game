@@ -421,11 +421,11 @@ Die Gegner besitzen wie der Spielcharakter einen WeaponHolder der die Waffe abst
 Im Konzept wird ein Scanner als Waffe vorgeschlagen der über Energie statt Munition verfügt. Damit wird verhindert, dass dem Spielcharakter die Munition ausgeht sowie dass der Teilnehmende nicht taktisch vorgehen muss, weil unendlich Munition zur Verfügung steht.
 Die Energie regeneriert sich von selbst, wenn der Scanner nicht verwendet wird und hat einen Wert von maximal 100 Punkten. Fallen die Energiepunkte auf 0 überhitzt der Scanner und kann für einen Zeitraum von 3 Sekunden nicht verwendet werden. Währenddessen steigt Qualm auf, der die Überhitzung anzeigt. Nachdem der Scanner abgekühlt ist, regenreriert sich der Scanner wieder. Während der Absorber keine Energie verbraucht, benötigt der Lasermodus pro Sekunde 10 Energiepunkte. Das Verwenden des Bombenmodi sorgt für ein sofortiges Überhitzen des Scanners, wodurch ein taktisch kluges Verwenden der Bombe nötig ist. Das Überhitzen des Scanners ist in folgender Abbildung dargestellt.
 
-![Überhitzung des Scanners](./pics/unity_overheat.png){#fig:unity_raycastcheck}
+![Überhitzung des Scanners](./pics/unity_overheat.png){#fig:unity_overheat}
 
 Mit dem Laser- und Bombenmodus kann der Spielcharakter die Gegner im Level besiegen. Der Kampf mit einem Nahkampfvirus mit dem Lasermodus ist in folgender Abbildung dargestellt.
 
-![Kampf gegen einen Nahkampfvirus](./pics/unity_meleefight.png){#fig:unity_raycastcheck}
+![Kampf gegen einen Nahkampfvirus](./pics/unity_meleefight.png){#fig:unity_meleefight}
 
 Der Nahkampfvirus lässt einen Gesundheitswürfel fallen, nachdem er besiegt wurde. Die anderen Monsterarten lassen ebenfalls Gesundheitswürfel fallen. Der Bombenvirus stellt eine Ausnahme dar, da er neben einem Gesundheitswürfel auch den Bombenmodus von dem Scanner fallen lässt. Das Fallen lassen von Gesundheitswürfeln ist in folgender Abbildung dargestellt.
 
