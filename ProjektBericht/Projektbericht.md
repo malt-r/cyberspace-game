@@ -27,6 +27,16 @@ toc-own-page: true
 
 ### Framework ###
 
+#### GameManager ####
+
+Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
+- Laden der Spielszenen und Zwischenmenüs
+- Anstoßen der Level-Generierung
+- Instanziierung des Spielers am Spawnpunkt
+- Erstellung der Minimap
+- Logging von Statistiken über den aktuellen Spieldurchlauf
+- Exportieren der Statistiken als `.json`-Datei
+
 ### GUI unnd Menüs ###
 
 ### Generator ###
@@ -94,6 +104,18 @@ sind in der untenstehenden Abbildung zu erkennen.
 TODO: Korridorbild
 
 ### Story ###
+
+Die Story wird insbesondere durch die angezeigten Aufgaben an den Spieler kommuniziert.
+Hierfür ließt der StoryManager aller StoryMarker des Levels ein und sortiert diese
+nach StoryIndex.
+
+Jeder StoryMarker kann eine Beschreibung enthalten, welche bei dessen Aktivierung über
+die GUI angezeigt wird. Diese Beschreibung gibt an, welche Spieleraktion erforderlich ist,
+um die Story-Aufgabe abzuschließen. Da dies viele unterschiedliche Spieleraktivitäten beinhaltet
+(über einen Abgrund springen, ein Rätsel lösen, einen Gegner besiegen) ist die StoryTrigger-Komponente
+in der Lage, ein Event mit einem aktivierten StoryMarker an den StoryManager zu senden.
+Der StoryTrigger wird durch diverse spezifische Trigger überladen, um die verschiedenen
+zu absolvierenden Spieleraktionen zu erfassen.
 
 ### Räume ###
 
