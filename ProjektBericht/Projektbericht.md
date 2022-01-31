@@ -110,12 +110,15 @@ Malte Reinsch:
 
 ### Framework ###
 
+Das Framework sammelt einige Komponenten, die in jeder Szene für den Spielablauf benötigt werden.
+Im Folgenden werden die wichtigsten Komponenten kurz vorgestellt.
+
 #### GameManager ####
 
 Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
 - Laden der Spielszenen und Zwischenmenüs
 - Anstoßen der Level-Generierung
-- Instanziierung des Spielers am Spawnpunkt
+- Instanziierung des Spielcharakters am Spawnpunkt
 - Erstellung der Minimap
 - Logging von Statistiken über den aktuellen Spieldurchlauf
 - Exportieren der Statistiken als `.json`-Datei
@@ -184,6 +187,16 @@ sind in der untenstehenden Abbildung zu erkennen.
 ![Eingesetzte Korridormodule](./pics/corridor.png)
 
 ### GUI und Menüs ###
+
+#### Zwischenmenü ####
+
+Das Zwischenmenü wird nach Vollendung des ersten und zweiten Levels angezeigt und
+fasst den Durchlauf des Levels zusammen. Es zeigt, wie in der untenstehenden
+Abbildung zu erkennen, die Anzahl der gefundenen Collectibles, die benötigte
+Zeit und die Anzahl der Tode an. Außerdem werden einige Informationen für
+die Evaluierung dargestellt.
+
+![Zwischenmenü](./pics/zwischenmenu.png)
 
 #### Minimap ####
 
@@ -268,7 +281,7 @@ Die Basisminimap wird für einen Raum aufgedeckt, sobald der Proband einen Raum 
     - H2: Mit der erweiterten Minimap wird das Level schneller abgeschlossen
 - F2: Welchen Einfluss haben Navigationshilfen auf die Orientierung in einem 3D Level?
     - H3: Mit der erweiterten Minimap wird die Orientierung im Spiel als einfacher wahrgenommen
-- F3: Welche Navigationshilfe wird von den Nutzern bevorzugt?
+- F5: Welche Navigationshilfe wird von den Nutzern bevorzugt?
     - H4: Probanden mit stärkerer “Achiever”-Ausprägung bevorzugen die ausgebaute Minimap
     - H5: Probanden mit stärkerer “Explorer”-Ausprägung bevorzugen die Basisminimap
 
