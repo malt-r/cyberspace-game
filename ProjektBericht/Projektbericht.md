@@ -76,6 +76,22 @@ der Delauney-Triangulation konstruiert. Das Ergebnis ist im untenstehenden Bild 
 
 TODO: MSTBild
 
+Mit dem minimalen Spannbaum sind die finalen Verbindungen zwischen den Türen bekannt.
+Für jede dieser Verbindungen muss anschließend ein Pfad im Gitter gefunden werden, sodass
+die Korridore zwischen den Räumen platziert werden können. Hierfür wird der A\*-Algorithmus
+verwendet. Die Kostenfunktion wird dabei so gewählt, dass der Generator keine Pfade
+durch andere Räume oder Pfade einer anderen Partition wählt. Das Ergebnis dieser
+Phase ist im untenstehenden Bild zu sehen.
+
+TODO: PFadbild
+
+Entlang der so definierten Pfade werden pro Zelle Korridormodule eingesetzt, um einen
+zusammenhängenden Korridor zu erzeugen. Hierfür muss der Korridortyp für jede Zelle
+ermittelt werden (gerades Stück, Kurve, T-Kreuzung) und die Rotation, mit der das
+entsprechende Korridormodul eingesetzt werden muss. Die fertig konstruierten Korridore
+sind in der untenstehenden Abbildung zu erkennen.
+
+TODO: Korridorbild
 
 ### Story ###
 
