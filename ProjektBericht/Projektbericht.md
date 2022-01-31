@@ -196,7 +196,7 @@ Abbildung zu erkennen, die Anzahl der gefundenen Collectibles, die benötigte
 Zeit und die Anzahl der Tode an. Außerdem werden einige Informationen für
 die Evaluierung dargestellt.
 
-TODO: Bild
+![Zwischenmenü](./pics/zwischenmenu.png)
 
 #### Minimap ####
 
