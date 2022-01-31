@@ -5,6 +5,8 @@ date: "02.02.2022"
 lang: "de"
 titlepage: true
 toc-own-page: true
+secPrefix: "Kapitel"
+figPrefix: "Abbildung"
 
 ---
 
@@ -243,9 +245,128 @@ in der Lage, ein Event mit einem aktivierten StoryMarker an den StoryManager zu 
 Der StoryTrigger wird durch diverse spezifische Trigger überladen, um die verschiedenen
 zu absolvierenden Spieleraktionen zu erfassen.
 
+## Design ##
+
 ### Räume ###
 
-### Probanden ###
+Räume werden in einem Level platziert und mit Korridoren verbunden. Dabei müssen die Räume von den Korridoren
+unterscheidbar sein. Grundsätzlich besitzen die Räume eine höhere Decke und sind breiter als die Korridore.
+
+Die Räume müssen so gebaut sein, dass eine Geschichte erzählt werden kann und das Level spielbar ist. Barrieren in
+Räumen müssen so entworfen werden, dass sie nicht passierbar sind, sofern nicht eine bestimmte Fähigkeit erlernt wurde.
+
+Es sind Räume notwendig, welche als Barriere der Geschichte wirken. Nachdem die Testperson *Springen* erlernt, kann
+der Raum mit einem Abgrund als Barriere passiert werden. Blaue Lava am Boden des Abgrunds soll der Testperson zeigen,
+dass beim Runterfallen die Testperson im Spiel stirbt und respawned wird. Ein Passieren ohne die Fähigkeit *Springen* ist
+nicht möglich. Die Testperson kann ebenfalls das erste Level nicht abschließen ohne die Fähigkeit *Sprinten* erlernt zu haben.
+Im Raum des Ausgangs befindet sich ebenfalls ein Abgrund, welcher breiter als im bereits vorgestellten Raum ist. So ist
+ein Passieren nur mit einem Sprung während man sprintet möglich. Im zweiten Level muss vor dem Besiegen des ersten Gegners
+der Lasermodus aufgehoben werden. Der erste Kampfraum kann nicht ohne diese Fähigkeit passiert werden. Im Folgenden Abbildungen
+wird ein Raum mit Barriere und eine verschlossene Tür gezeigt.
+
+<div id="fig:barriere">
+![Raum mit Barriere](./pics/Design/Barriere.png){width=70%}
+![Tür als Barriere](./pics/Design/tuer.png){width=30%}
+
+Räume mit Barriere
+</div>
+
+Das Ende eines Levels wird dabei mit Hilfe eines Portals und einem Ausgangs-Schild dargestellt. Das folgende Bild stellt 
+das Ende eines Levels dar.
+
+![Ende eines Levels](./pics/Design/Exit.png){width=40%}
+
+Um die Fähigkeiten erlernen zu können werden ebenfalls Räume benötigt, welche Schlüsselinhalte beinhalten. In diesen Räumen
+können Fähigkeiten nach dem Abschließen eines Minispiels erlernt werden. Diese Räume besitzen ein Minispiel oder einen Gegner,
+welcher besiegt werden muss. Auf das Minispiel wird in [@sec:Minispiel] eingegangen. Im Folgenden wird ein solcher Schlüsselraum 
+dargestellt. 
+
+![Raum mit Schlüssel](./pics/Design/Schluessel.png){width=70%}
+
+Zum Schluss werden Räume benötigt, welche nicht von der Geschichte abhängig sind. Diese Räume können beispielsweise 
+Collectibles (siehe [@sec:Collectibles]), Gegner und Jump'n'Run-Einlagen beinhalten. In folgender Abbildung wird so ein geschichtsunabhängiger
+Raum dargestellt.
+
+![Geschichtsunabhängiger Raum](./pics/Design/nichtwichtig.png){width=80%}
+
+Die Textur der Räume ist simpel gehalten und ist eine Anlehnung an die alte Darstellung des *Cyberspace*. Der Film
+*Tron* dient beispielsweise als Inspiration für das simple Design. Gleichzeitig erschwert die immer gleichbleibende 
+Textur das Orientiern im Level. Dies wurde gewollt umgesetzt, damit Testpersonen auf die Minimap angewiesen sind und 
+öfters auf diese schauen. Die Farbe grün wurde wegen ihrer entspannenden Wirkung gewählt. Der Bloom-Effekt ist ebenfalls
+an alte *Cyberspace*-Vorstellungen angelehnt und soll zeigen, dass die Textur der Räume leuchtet. Die folgende Abbildung zeigt die
+Textur im Spiel.
+
+![Raumtextur](./pics/Design/Textur.png){width=50%}
+
+
+### Collectibles {#sec:Collectibles}
+
+Die Collectibles besitzen ein abstraktes Modell. Sie leuchten und drehen sich, um die Aufmerksamkeit auf sich zu richten. 
+Zusätzlich emittieren sie ein Geräusch, welches nur in einem bestimmten Umkreis zu hören ist. Im ersten Raum des Spiels 
+wird der Testperson ein Collectible gezeigt, welches aufgehoben werden kann. So werden Collectibles den Testpersonen vorgestellt. 
+Im Folgenden wird ein Collectible dargestellt.
+
+![Collectible](./pics/Design/collectible.png){width=50%}
+
+Die weiteren Collectibles sind in den Leveln in verschiedenen Räumen verteilt. Diese sind teils versteckt, werden direkt 
+gezeigt oder benötigen Anstrengung der Testperson. Für ein paar Collectibles muss ein Jump'n'Run abgeschlossen werden. Weitere sind
+in Räumen versteckt, welche sich abseits des Hauptpfades befinden. Andere Collectibles werden den Testpersonen direkt beim 
+Betreten eines Raumes gezeigt, befinden sich aber beispielsweise an einer erhöhten Person, die es zu erklimmen gilt. Zusätzlich
+werden Collectibles ebenfalls von Gegnern bewacht oder befinden sich in Sackgassen innerhalb der Korridore.
+
+Ein Collectible ist besonders versteckt. Zum Erlangen des Collectibles wird die Fähigkeit *Sprung* benötigt. Der Raum, in dem
+sich das Collectible befindet wird dabei von der Testperson vor dem Erhalten der *Sprung*-Fähigkeit passiert. Um dieses einsammeln
+zu können, müssen Testpersonen die Fähigkeit erlangen und zurück gehen, um das Collectible einsammeln zu können. So ist es 
+möglich zu schauen, ob eine Testperson dazu bereit ist, für Collectibles zurück zu gehen. 
+
+### Minispiel {#sec:Minispiel}
+
+Das Minispiel dient dem Erhalten bzw. Erlernen einer Fähigkeit. Es ist an ein Minispiel vom Hit-Game *Among Us* angelehnt.
+Aufgabe ist es, die zufällig platzierten Farben der linken Seite mit dazugehöriger Farbe auf der rechten Seite zu verbinden. 
+Für Farbenblinde werden ebenfalls Buchstaben zur Unterscheidung an die Farben geschrieben. Nach erfolgreichem Abschließen
+eines Minispiels wird eine Fähigkeit erlernt oder eine Tür geöffnet. Im folgenden wird das Design und die Funktionsweise 
+des Minispiels dargestellt.
+
+<div id="fig:minigame">
+![Minispiel](./pics/Design/Minispiel1.png){width=66%}
+![Minispiel mit verbundenen Farben](./pics/Design/Minispiel2.png){width=33%}
+
+Minispiel
+</div>
+
+### Gegnerdesign ###
+
+Die Gegner im Spiel sollen Computerviren darstellen. Aus diesem Grund wurden virusähnliche Assets ausgewählt.
+Zur spielerischen Abwechslungen soll die Testperson verschiedene
+Monster besiegen, die unterschiedliche Angriffsarten besitzen.
+Der Nahkampfgegner (siehe [@fig:gegnera]) stellt eine so genannte *Bakteriophage* dar. Das Asset besitzt Animationen für einen Nahkrampangriff
+und für die Bewegung mit Hilfe der "Beine". Der Bombenvirus (siehe [@fig:gegnerb]) 
+stellt einen gepanzerten Virus dar und kann Bomben werfen. Der Fernkampfvirus wurde bewusst abstrakt gewählt (siehe [@fig:gegnerc]).
+
+<div id="fig:gegner">
+![Nahkampfgegner](./pics/Design/Nahkampf.png){#fig:gegnera width=30%}
+![Bombengegner](./pics/Design/Bombenvirus.png){#fig:gegnerb width=36%}
+![Fernkampfgegner](./pics/Design/Fernkampfvirus.png){#fig:gegnerc width=33%}
+
+Gegnertypen
+</div>
+
+### Items ###
+
+Als Items werden farbige Würfel verwendet. Dabei gibt es die Farben grün, rot und schwarz. Das grüne Item lädt beim Aufheben
+Lebensenergie der Testperson auf. Der rote Würfel dient zum Erlernen des Lasermodus, der schwarze Würfel zum Erlenen des Bombenmodus. In folgender Abbildung sind die drei Würfel dargestellt.
+
+![Items](./pics/Design/items.png){width=50%}
+
+### Waffe ###
+
+Als Waffe wurde ein Asset aus dem Internet gewählt. Es ist ein Model mit wenigen Polygonen und passt deswegen gut in die
+erstellte Spielwelt. Ein Farbiger Zylinder auf der Waffe zeigt den aktuell ausgewählten Modus der Waffe an. Im folgenden wird 
+die Waffe dargestellt.
+
+![Waffe](./pics/Design/Waffe.png){width=50%}
+
+### Probanden oder Testpersonen? ###
 
 ### Gegner ###
 
@@ -273,11 +394,12 @@ Daten, die über Fragebögen nicht zuverlässig erhoben werden können, werden v
 Für die Evaluierung wird die Art der Minimap als Variable ausgewählt. In der Evaluierung sollen zwei Arten von Minimaps evaluiert werden.
 Beide Minimap-Arten zeigen das Level in Vogelperspektive. Beide Minimap-Arten sind in folgender Abbildung dargestellt.
 
-![](./pics/basic_minimap.png){width=50%}
-![](./pics/extended_minimap.png){width=50%}
-\begin{figure}[!h]
-\caption{Zu untersuchende Minimaparten}
-\end{figure}
+<div id="fig:figureRef">
+![Basisminimap](./pics/basic_minimap.png){width=50%}
+![Erweiterte Minimap](./pics/extended_minimap.png){width=50%}
+
+Zu untersuchende Minimaparten
+</div>
 
 Die Basisminimap wird für einen Raum aufgedeckt, sobald der Proband einen Raum betritt.
 Angrenzende Räume werden durch eine transparente Schattierung angezeigt.
@@ -607,7 +729,7 @@ dass das Spiel als eher nicht anspruchsvoll bewertet wird. Als nächstes wurden
 die Probanden gefragt, ob es Momente gab, in denen sie aufgeben wollten.
 Die Ergebnisse sind in folgender Abbildung dargestellt.
 
-![Es gab Momente in denen aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame}
+![Es gab Momente in denen aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame1}
 
 |          ||         |
 |----------|-----------------------------|---------|
@@ -620,7 +742,7 @@ Bei beiden Spielergruppen gibt es eine Tendenz dazu, dass es keine Momente gab,
 in denen sie aufgeben wollten. Dieses Ergebnis deckt sich mit den Antworten zu
 der Frage "Ich wollte das Spiel unbedingt absolviert".
 
-![Ich wollte das Spiel unbedingt erfolgreich absolvieren](./pics/evaluation/all_wingame_ae.png){#fig:wingame}
+![Ich wollte das Spiel unbedingt erfolgreich absolvieren](./pics/evaluation/all_wingame_ae.png){#fig:wingame2}
 
 |          | |         |
 |----------|-----------------------------|---------|
