@@ -56,14 +56,13 @@ eine Partition beendet und eine neue begonnen werden muss.
 Zur Vereinfachung der Arbeit des Generators operiert dieser auf einem Gitter. Die
 zu platierenden Räume und Korridore sind auf die Dimensionen der Gitterzellen abgestimmt.
 
-TODO: Gitterbild
-
 Basierend auf den Dimensionen der Räume in einer Partition berechnet der Generator einen
 Bereich auf dem Gitter, in dem die Räume mit zufälliger Position und Rotation platziert werden können.
 Stellt der Generator eine Kollision der Räume fest, wird dieser Prozess erneut gestartet,
 bis eine gültige Raumanordnung gefunden wird.
 
-TODO: Platierungsbild
+
+![Platzierte Räume](./pics/gitter.png)
 
 Anschließend müssen die Räume durch Korridore verbunden werden. Die Türen der Räume
 sind durch "DoorMarker"-Komponenten markiert, aus deren Positionen die passenden Gitterzellen-Indizes
@@ -77,12 +76,12 @@ Um Pfade zwischen den Türen einer Türpartition zu definieren wird im ersten Sc
 Delauney-Triangulation zwischen allen betroffenene Türen berechnet (bzw. der ersten Zellen,
 die im Korridor an die Tür andocken).
 
-TODO: Delauneybild
+![Delauney-Triangulation der Türen](./pics/delauney.png)
 
 Um die Verbindungen zwischen den Türen zu reduzieren wird ein minimaler Spannbaum auf
 der Delauney-Triangulation konstruiert. Das Ergebnis ist im untenstehenden Bild zu erkennen.
 
-TODO: MSTBild
+![Minimaler Spannbaum](./pics/mst.png)
 
 Mit dem minimalen Spannbaum sind die finalen Verbindungen zwischen den Türen bekannt.
 Für jede dieser Verbindungen muss anschließend ein Pfad im Gitter gefunden werden, sodass
@@ -91,7 +90,7 @@ verwendet. Die Kostenfunktion wird dabei so gewählt, dass der Generator keine P
 durch andere Räume oder Pfade einer anderen Partition wählt. Das Ergebnis dieser
 Phase ist im untenstehenden Bild zu sehen.
 
-TODO: PFadbild
+![Ermittelte Pfade](./pics/path.png)
 
 Entlang der so definierten Pfade werden pro Zelle Korridormodule eingesetzt, um einen
 zusammenhängenden Korridor zu erzeugen. Hierfür muss der Korridortyp für jede Zelle
@@ -99,7 +98,7 @@ ermittelt werden (gerades Stück, Kurve, T-Kreuzung) und die Rotation, mit der d
 entsprechende Korridormodul eingesetzt werden muss. Die fertig konstruierten Korridore
 sind in der untenstehenden Abbildung zu erkennen.
 
-TODO: Korridorbild
+![Eingesetzte Korridormodule](./pics/corridor.png)
 
 ### GUI und Menüs ###
 
@@ -120,7 +119,9 @@ werden die angrenzenden (aber noch nicht betretenen) Zellen abgedunkelt dargeste
 Hierzu wird eine dunkle, transparente Kachel über die entsprechenden Minimap-Kacheln gelegt.
 Ein Beispiel ist in den untenstehenden Abbildungen zu erkennen.
 
-TODO: Basisminimap-Bilder
+![Aufbau der Basis-Minimap in der Szene](./pics/basic_minimap_scene.png){width=60%}
+
+![Basisminimap](./pics/basic_minimap.png){width=40%}
 
 Die erweiterte Minimap zeigt den Weg zur nächsten Story-Aufgabe als rote Linie durch das Level
 an. Hierfür wird auf Basis der Gitterdaten der A\*-Algorithmus angewandt, um einen Pfad
@@ -128,7 +129,9 @@ von der aktuellen Spielerposition zu der Position des aktuell aktiven Storymarke
 zu finden. Die Punkte dieses Pfads werden anschließend in einem Linerenderer über den Minimap-Kacheln
 dargestellt. Ein Beispiel ist den untenstehenden Abbildungen zu entnehmen.
 
-TODO: erweiterte Minimap Bilder
+![Aufbau der erweiterten Minimap in der Szene](./pics/extended_minimap_scene.png){width=60%}
+
+![Erweiterte Minimap](./pics/extended_minimap.png){width=40%}
 
 ### Story ###
 
