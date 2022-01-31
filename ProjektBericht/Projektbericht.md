@@ -277,27 +277,27 @@ wird ein Raum mit Barriere und eine verschlossene Tür gezeigt.
 Räume mit Barriere
 </div>
 
-Das Ende eines Levels wird dabei mit Hilfe eines Portals und einem Ausgangs-Schild dargestellt. Das folgende Bild stellt 
+Das Ende eines Levels wird dabei mit Hilfe eines Portals und einem Ausgangs-Schild dargestellt. Das folgende Bild stellt
 das Ende eines Levels dar.
 
 ![Ende eines Levels](./pics/Design/Exit.png){width=40%}
 
 Um die Fähigkeiten erlernen zu können werden ebenfalls Räume benötigt, welche Schlüsselinhalte beinhalten. In diesen Räumen
 können Fähigkeiten nach dem Abschließen eines Minispiels erlernt werden. Diese Räume besitzen ein Minispiel oder einen Gegner,
-welcher besiegt werden muss. Auf das Minispiel wird in [@sec:Minispiel] eingegangen. Im Folgenden wird ein solcher Schlüsselraum 
-dargestellt. 
+welcher besiegt werden muss. Auf das Minispiel wird in [@sec:Minispiel] eingegangen. Im Folgenden wird ein solcher Schlüsselraum
+dargestellt.
 
 ![Raum mit Schlüssel](./pics/Design/Schluessel.png){width=70%}
 
-Zum Schluss werden Räume benötigt, welche nicht von der Geschichte abhängig sind. Diese Räume können beispielsweise 
+Zum Schluss werden Räume benötigt, welche nicht von der Geschichte abhängig sind. Diese Räume können beispielsweise
 Collectibles (siehe [@sec:Collectibles]), Gegner und Jump'n'Run-Einlagen beinhalten. In folgender Abbildung wird so ein geschichtsunabhängiger
 Raum dargestellt.
 
 ![Geschichtsunabhängiger Raum](./pics/Design/nichtwichtig.png){width=80%}
 
 Die Textur der Räume ist simpel gehalten und ist eine Anlehnung an die alte Darstellung des *Cyberspace*. Der Film
-*Tron* dient beispielsweise als Inspiration für das simple Design. Gleichzeitig erschwert die immer gleichbleibende 
-Textur das Orientiern im Level. Dies wurde gewollt umgesetzt, damit Testpersonen auf die Minimap angewiesen sind und 
+*Tron* dient beispielsweise als Inspiration für das simple Design. Gleichzeitig erschwert die immer gleichbleibende
+Textur das Orientiern im Level. Dies wurde gewollt umgesetzt, damit Testpersonen auf die Minimap angewiesen sind und
 öfters auf diese schauen. Die Farbe grün wurde wegen ihrer entspannenden Wirkung gewählt. Der Bloom-Effekt ist ebenfalls
 an alte *Cyberspace*-Vorstellungen angelehnt und soll zeigen, dass die Textur der Räume leuchtet. Die folgende Abbildung zeigt die
 Textur im Spiel.
@@ -307,30 +307,30 @@ Textur im Spiel.
 
 ### Collectibles {#sec:Collectibles}
 
-Die Collectibles besitzen ein abstraktes Modell. Sie leuchten und drehen sich, um die Aufmerksamkeit auf sich zu richten. 
-Zusätzlich emittieren sie ein Geräusch, welches nur in einem bestimmten Umkreis zu hören ist. Im ersten Raum des Spiels 
-wird der Testperson ein Collectible gezeigt, welches aufgehoben werden kann. So werden Collectibles den Testpersonen vorgestellt. 
+Die Collectibles besitzen ein abstraktes Modell. Sie leuchten und drehen sich, um die Aufmerksamkeit auf sich zu richten.
+Zusätzlich emittieren sie ein Geräusch, welches nur in einem bestimmten Umkreis zu hören ist. Im ersten Raum des Spiels
+wird der Testperson ein Collectible gezeigt, welches aufgehoben werden kann. So werden Collectibles den Testpersonen vorgestellt.
 Im Folgenden wird ein Collectible dargestellt.
 
 ![Collectible](./pics/Design/collectible.png){width=50%}
 
-Die weiteren Collectibles sind in den Leveln in verschiedenen Räumen verteilt. Diese sind teils versteckt, werden direkt 
+Die weiteren Collectibles sind in den Leveln in verschiedenen Räumen verteilt. Diese sind teils versteckt, werden direkt
 gezeigt oder benötigen Anstrengung der Testperson. Für ein paar Collectibles muss ein Jump'n'Run abgeschlossen werden. Weitere sind
-in Räumen versteckt, welche sich abseits des Hauptpfades befinden. Andere Collectibles werden den Testpersonen direkt beim 
+in Räumen versteckt, welche sich abseits des Hauptpfades befinden. Andere Collectibles werden den Testpersonen direkt beim
 Betreten eines Raumes gezeigt, befinden sich aber beispielsweise an einer erhöhten Person, die es zu erklimmen gilt. Zusätzlich
 werden Collectibles ebenfalls von Gegnern bewacht oder befinden sich in Sackgassen innerhalb der Korridore.
 
 Ein Collectible ist besonders versteckt. Zum Erlangen des Collectibles wird die Fähigkeit *Sprung* benötigt. Der Raum, in dem
 sich das Collectible befindet wird dabei von der Testperson vor dem Erhalten der *Sprung*-Fähigkeit passiert. Um dieses einsammeln
-zu können, müssen Testpersonen die Fähigkeit erlangen und zurück gehen, um das Collectible einsammeln zu können. So ist es 
-möglich zu schauen, ob eine Testperson dazu bereit ist, für Collectibles zurück zu gehen. 
+zu können, müssen Testpersonen die Fähigkeit erlangen und zurück gehen, um das Collectible einsammeln zu können. So ist es
+möglich zu schauen, ob eine Testperson dazu bereit ist, für Collectibles zurück zu gehen.
 
 ### Minispiel {#sec:Minispiel}
 
 Das Minispiel dient dem Erhalten bzw. Erlernen einer Fähigkeit. Es ist an ein Minispiel vom Hit-Game *Among Us* angelehnt.
-Aufgabe ist es, die zufällig platzierten Farben der linken Seite mit dazugehöriger Farbe auf der rechten Seite zu verbinden. 
+Aufgabe ist es, die zufällig platzierten Farben der linken Seite mit dazugehöriger Farbe auf der rechten Seite zu verbinden.
 Für Farbenblinde werden ebenfalls Buchstaben zur Unterscheidung an die Farben geschrieben. Nach erfolgreichem Abschließen
-eines Minispiels wird eine Fähigkeit erlernt oder eine Tür geöffnet. Im folgenden wird das Design und die Funktionsweise 
+eines Minispiels wird eine Fähigkeit erlernt oder eine Tür geöffnet. Im folgenden wird das Design und die Funktionsweise
 des Minispiels dargestellt.
 
 <div id="fig:minigame">
@@ -346,7 +346,7 @@ Die Gegner im Spiel sollen Computerviren darstellen. Aus diesem Grund wurden vir
 Zur spielerischen Abwechslungen soll die Testperson verschiedene
 Monster besiegen, die unterschiedliche Angriffsarten besitzen.
 Der Nahkampfgegner (siehe [@fig:gegnera]) stellt eine so genannte *Bakteriophage* dar. Das Asset besitzt Animationen für einen Nahkrampangriff
-und für die Bewegung mit Hilfe der "Beine". Der Bombenvirus (siehe [@fig:gegnerb]) 
+und für die Bewegung mit Hilfe der "Beine". Der Bombenvirus (siehe [@fig:gegnerb])
 stellt einen gepanzerten Virus dar und kann Bomben werfen. Der Fernkampfvirus wurde bewusst abstrakt gewählt (siehe [@fig:gegnerc]).
 
 <div id="fig:gegner">
@@ -367,7 +367,7 @@ Lebensenergie der Testperson auf. Der rote Würfel dient zum Erlernen des Laserm
 ### Waffe ###
 
 Als Waffe wurde ein Asset aus dem Internet gewählt. Es ist ein Model mit wenigen Polygonen und passt deswegen gut in die
-erstellte Spielwelt. Ein Farbiger Zylinder auf der Waffe zeigt den aktuell ausgewählten Modus der Waffe an. Im folgenden wird 
+erstellte Spielwelt. Ein Farbiger Zylinder auf der Waffe zeigt den aktuell ausgewählten Modus der Waffe an. Im folgenden wird
 die Waffe dargestellt.
 
 ![Waffe](./pics/Design/Waffe.png){width=50%}
@@ -386,69 +386,131 @@ die Waffe dargestellt.
 
 #### Spielbewegung ####
 
-Für die Bewegung des Spielercharakters wird der First Person Controller (FPS-Controller) von Unity verwendet. Dabei handelt es sich um einen Playercontroller auf Basis des Charactercontrollers, der nicht rigbidbodybasiert ist. Zum Steuern der Bewegungsfähigkeiten wird der FPS-Controller um die Funktion ergänzt einzelne Funktionen Umzuschalten. Die Instanz des Spielerchatakters in Unity ist in folgender Abbildung dargestellt.
+Für die Bewegung des Spielercharakters wird der First Person Controller (FPS-Controller)
+von Unity verwendet. Dabei handelt es sich um einen Playercontroller auf Basis des
+Charactercontrollers, der nicht rigbidbodybasiert ist. Zum Steuern der
+Bewegungsfähigkeiten wird der FPS-Controller um die Funktion ergänzt, einzelne Funktionen umzuschalten.
+Die Instanz des Spielercharakters in Unity ist in folgender Abbildung dargestellt.
 
 ![Spielcharakter in Unity](./pics/unity_player.png){#fig:unity_character}
 
-Zum Steuern des Charakters wird das neue Input System von Unity verwendet. In dem neuen System kann ein Input Action Asseet erstellt werden, welche verschiedene Actionmaps beinhaltet. Das Input Action Asset ist in folgender Abbildung dargestellt.
+Zum Steuern des Charakters wird das neue Input System von Unity verwendet.
+In dem neuen System kann ein Input Action Asseet erstellt werden, welche verschiedene
+Actionmaps beinhaltet. Das Input Action Asset ist in folgender Abbildung dargestellt.
 
 ![Input Action Asset](./pics/unity_input.png){#fig:unity_inputactionasset}
 
-Im Input Action Asset ist immer eine Actionmap aktiv. Durch Actionmaps können Gruppen von Aktionen (Actions) definiert werden, die unabhängig voneinander sind. Dadurch können die Spielinteraktionen von den Interaktionen im Menü und Minispiel getrennt werden. Dadurch wird verhindert, dass sich der Charakter bewegt, während sich der Teilnehmende im Menü oder Minispiel befindet. Durch die Verwendung in Actionmaps wird komplexer Code vermieden der Eingaben der Teilnehmenden verarbeitet. Des Weiteren können an dieser Stelle ohne Änderungen am Code weitere Eingabegeräte hinzugefügt werden wie Gamepad oder VR-Controller.
+Im Input Action Asset ist immer eine Actionmap aktiv. Durch Actionmaps können
+Gruppen von Aktionen (Actions) definiert werden, die unabhängig voneinander sind.
+Dadurch können die Spielinteraktionen von den Interaktionen im Menü und Minispiel
+getrennt werden. Dadurch wird verhindert, dass sich der Charakter bewegt, während
+sich der Teilnehmende im Menü oder Minispiel befindet. Durch die Verwendung von
+Actionmaps wird komplexer Code vermieden, der Eingaben der Teilnehmenden verarbeiten muss.
+Des Weiteren können an dieser Stelle ohne Änderungen am Code weitere Eingabegeräte
+hinzugefügt werden, wie z.B. Gamepad oder VR-Controller.
 
 #### Aufsammelbares ####
 
-Im Spiel kann der Charakter verschiedene aufsammelbare Gegenstände einsammeln. Bis auf die Collectibles und den Scanner können die Gegenstände nur durch den Absorbermodus des Scanners aufgenommen werden. Alle Gegenstände haben eine gemeinsame Basisklasse, wodurch sie entweder mit dem Spielcharakter oder dem Absorberstrahl interagieren. Wird ein Gegenstand von dem Absorberstrahl getroffen, wird dieser in Richtung des Spielchatakters gezogen. Hat sich der Gegenstand dem Charakter ausreichend genähert, wird dieser aufgenommen. Wird ein Lebenswürfel aufgesammelt, erhöhen sich die aktuellen Lebenspunkte des Charakters.
+Im Spiel kann der Charakter verschiedene Gegenstände einsammeln. Bis auf die
+Collectibles und den Scanner können die Gegenstände nur durch den Absorbermodus
+des Scanners aufgenommen werden. Alle Gegenstände haben eine gemeinsame Basisklasse,
+wodurch sie entweder mit dem Spielcharakter oder dem Absorberstrahl interagieren.
+Wird ein Gegenstand von dem Absorberstrahl getroffen, wird dieser in Richtung
+des Spielchatakters gezogen. Hat sich der Gegenstand dem Charakter ausreichend genähert,
+wird dieser aufgenommen. Wird ein Lebenswürfel aufgesammelt, erhöhen sich die aktuellen
+Lebenspunkte des Charakters.
 
-Mit dem Absorber können auch weitere Scannermodi aufgesammelt werden. Dazu zählt einmal der Lasermodus, mit dem Gegner im Level besiegt werden können. Des Weiteren kann auch ein Bombemmodus aufgesammelt werden, mit dem der Teilnehmende Bomben verschießen kann, die mehrere Gegner und sich selbst Schaden zufügt. 
+Mit dem Absorber können auch weitere Scannermodi aufgesammelt werden. Dazu zählt
+einmal der Lasermodus, mit dem Gegner im Level besiegt werden können. Des Weiteren
+kann auch ein Bombenmodus aufgesammelt werden, mit dem der Teilnehmende Bomben
+werfen kann, die mehrere Gegner und sich selbst Schaden zufügt.
 
 #### Gegner ####
 
-Im Spiel muss der Teilnehmende verschiedene Gegner besiegen. Damit die Gegner für den Teilnehmenden eine Herausforderung darstellen, können die Gegner den Spielcharakter besiegen. Die Gegner verwenden den Navmesh Agent von Unity, um das Bewegen durch Wände oder Hindernisse zu unterbinden. Der Einsatz des Navmesh und des Navmesh Agent ist in foglender Abbildung dargestellt.
+Im Spiel muss der Teilnehmende verschiedene Gegner besiegen. Damit die Gegner
+für den Teilnehmenden eine Herausforderung darstellen, können die Gegner den
+Spielcharakter besiegen. Die Gegner verwenden den Navmesh Agent von Unity, um
+die Bewegung durch Wände oder Hindernisse zu unterbinden. Der Einsatz des Navmesh
+und des Navmesh Agent ist in foglender Abbildung dargestellt.
 
 ![Navmesh Agent und Navmesh](./pics/unity_navmesh.png){#fig:unity_navmesh}
 
-Des Weiteren besitzen die Gegner einen PlayerDetector um den Spielcharakter zu sehen. Der PlayerDetector ist in folgender Abbildung dargestellt.
+Des Weiteren besitzen die Gegner einen PlayerDetector um den Spielcharakter zu sehen.
+Der PlayerDetector ist in folgender Abbildung dargestellt.
 
 ![Raycast Check des PlayerDector](./pics/unity_playerdetector.png){#fig:unity_playerdetector}
 
-Die gründe Sphäre zeigt die Sichtweite des Gegners an, während die pinke Sphäre die Reichweite der aktuellen Waffe darstellt. Um zu verhindern, dass die Gegner den Spielcharakter durch Wände sehen können, wird zwischen dem Charakter und Gegner ein Raycast gezogen. Trifft der Raycast auf dem Weg zum Spielcharakter auf eine Wand oder Hindernis, wird vom Playerdetector kein Charakter an den Gegner weitergegeben. 
+Die gründe Sphäre zeigt die Sichtweite des Gegners an, während die pinke Sphäre
+die Reichweite der aktuellen Waffe darstellt. Um zu verhindern, dass die Gegner
+den Spielcharakter durch Wände sehen können, wird zwischen dem Charakter und Gegner
+ein Raycast gezogen. Trifft der Raycast auf dem Weg zum Spielcharakter auf eine Wand
+oder Hindernis, wird vom Playerdetector kein Charakter an den Gegner weitergegeben.
 
 ![Raycast Check des PlayerDector](./pics/unity_enemyraycast.png){#fig:unity_raycastcheck}
 
-Die Gegner besitzen wie der Spielcharakter einen WeaponHolder der die Waffe abstrahiert. Dadurch kann ohne Codeänderung im Gegner die aktive Waffe gewechselt werden, was vielseitige Angriffsstrageien ermöglicht. Im Model befindet sich das was vom Teilnehmenden gesehen werden kann. Das Model beinhaltet damit auch die Teile des Gegners die animiert werden. Das hat den Vorteil, dass Animationen nicht mit der Spiellogik interferieren.
+Die Gegner besitzen wie der Spielcharakter einen WeaponHolder der die Waffe
+abstrahiert. Dadurch kann ohne Codeänderung im Gegner die aktive Waffe gewechselt
+werden, was vielseitige Angriffsstrategien ermöglicht. Im Model befindet sich das 3D Modell des Gegners.
+Das Model beinhaltet damit auch die Teile des Gegners, die animiert werden.
+Das hat den Vorteil, dass Animationen nicht mit der Spiellogik interferieren.
 
 
 <!-- Virenarten aufzählen?-->
 
 #### Kampfmechanik ####
 
-Im Konzept wird ein Scanner als Waffe vorgeschlagen der über Energie statt Munition verfügt. Damit wird verhindert, dass dem Spielcharakter die Munition ausgeht sowie dass der Teilnehmende nicht taktisch vorgehen muss, weil unendlich Munition zur Verfügung steht.
-Die Energie regeneriert sich von selbst, wenn der Scanner nicht verwendet wird und hat einen Wert von maximal 100 Punkten. Fallen die Energiepunkte auf 0 überhitzt der Scanner und kann für einen Zeitraum von 3 Sekunden nicht verwendet werden. Währenddessen steigt Qualm auf, der die Überhitzung anzeigt. Nachdem der Scanner abgekühlt ist, regenreriert sich der Scanner wieder. Während der Absorber keine Energie verbraucht, benötigt der Lasermodus pro Sekunde 10 Energiepunkte. Das Verwenden des Bombenmodi sorgt für ein sofortiges Überhitzen des Scanners, wodurch ein taktisch kluges Verwenden der Bombe nötig ist. Das Überhitzen des Scanners ist in folgender Abbildung dargestellt.
+Im Konzept wird ein Scanner als Waffe vorgeschlagen der über Energie statt
+Munition verfügt. Damit wird verhindert, dass dem Spielcharakter die Munition
+ausgeht sowie, dass der Teilnehmende nicht taktisch vorgehen muss, weil unendlich
+Munition zur Verfügung steht.
+Die Energie regeneriert sich von selbst, wenn der Scanner nicht verwendet wird
+und hat einen Wert von maximal 100 Punkten. Fallen die Energiepunkte auf 0, überhitzt
+der Scanner und kann für einen Zeitraum von 3 Sekunden nicht verwendet werden. Währenddessen
+steigt Qualm auf, der die Überhitzung andeutet. Nachdem der Scanner abgekühlt ist,
+regenreriert sich der Scanner wieder. Während der Absorber keine Energie verbraucht,
+benötigt der Lasermodus pro Sekunde 10 Energiepunkte. Das Verwenden des Bombenmodus sorgt
+für ein sofortiges Überhitzen des Scanners, wodurch ein taktisch kluges Verwenden der
+Bombe nötig ist. Das Überhitzen des Scanners ist in folgender Abbildung dargestellt.
 
 ![Überhitzung des Scanners](./pics/unity_overheat.png){#fig:unity_overheat}
 
-Mit dem Laser- und Bombenmodus kann der Spielcharakter die Gegner im Level besiegen. Der Kampf mit einem Nahkampfvirus mit dem Lasermodus ist in folgender Abbildung dargestellt.
+Mit dem Laser- und Bombenmodus kann der Spielcharakter die Gegner im Level besiegen.
+Der Kampf gegen einen Nahkampfvirus mit dem Lasermodus ist in folgender Abbildung dargestellt.
 
 ![Kampf gegen einen Nahkampfvirus](./pics/unity_meleefight.png){#fig:unity_meleefight}
 
-Der Nahkampfvirus lässt einen Gesundheitswürfel fallen, nachdem er besiegt wurde. Die anderen Monsterarten lassen ebenfalls Gesundheitswürfel fallen. Der Bombenvirus stellt eine Ausnahme dar, da er neben einem Gesundheitswürfel auch den Bombenmodus von dem Scanner fallen lässt. Das Fallen lassen von Gesundheitswürfeln ist in folgender Abbildung dargestellt.
+Der Nahkampfvirus lässt einen Gesundheitswürfel fallen, nachdem er besiegt wurde.
+Die anderen Monsterarten lassen ebenfalls Gesundheitswürfel fallen. Der
+Bombenvirus stellt eine Ausnahme dar, da er neben einem Gesundheitswürfel auch den
+Bombenmodus für den Scanner fallen lässt. Das Fallenlassen von Gesundheitswürfeln
+ist in folgender Abbildung dargestellt.
 
 ![Fallen gelassene Gesundheitswürfel eines Gegners](./pics/unity_health.png){#fig:unity_health}
 
-Um die Begegnungen mit den Monstern herausfordernd zu gestalten, können sie dem Spielcharakter Schaden zufügen. Der zuvor gezeigte Nahkampfvirus kann nur Nahkampfschaden austeilen, während die anderen beiden Virenarten mit Projektilen oder Bomben dem Spielcharakter Schaden zufügen können.
+Um die Begegnungen mit den Monstern herausfordernd zu gestalten, können sie dem
+Spielcharakter Schaden zufügen. Der zuvor gezeigte Nahkampfvirus kann nur Nahkampfschaden
+austeilen, während die anderen beiden Virenarten dem Spielcharakter mit Projektilen oder Bomben Schaden zufügen können.
 
 #### Bosskampf ####
 
-Im letzten Level findet ein Bosskampf statt. Hier trifft der Teilnehmde auf den Computer, der den Teilnehmenden im Cyberspace eingesperrt hat. Beim Betreten des Raumes wird wieder verschlossen und der Computer erscheint. In diesem Level kommen alle Monsterarten zusammen. Der Teilnehmende benötigt alle Lasermodi um den Computer zu besiegen. Der Computer lässt in einem festen Intervall Lava vom Boden aufsteigen, die dem Spielcharakter als auch den Gegnern Schaden zufügt. Die Kampfszene mit der Lava ist in folgender Abbildung dargestellt.
+Im letzten Level findet ein Bosskampf statt. Hier trifft der Teilnehmde auf den
+Computer, der den Teilnehmenden im Cyberspace eingesperrt hat. Beim Betreten des
+Raumes wird dieser verschlossen und der Computer erscheint. In diesem Level
+kommen alle Monsterarten zusammen. Der Teilnehmende benötigt alle Lasermodi um
+den Computer zu besiegen. Der Computer lässt in einem festen Intervall Lava vom
+Boden aufsteigen, die dem Spielcharakter als auch den Gegnern Schaden zufügt.
+Die Kampfszene mit der Lava ist in folgender Abbildung dargestellt.
 
 ![Bosskampf](./pics/unity_bossfight.png){#fig:unity_bosslava}
 
-Um den Computer zu besiegen müsseen die Schildgeneratoren zerstört werden. Nachdem alle vier Schildgeneratoren zerstört wurden, kann der Computer mit einer Bombe zerstört werden. Das zerstören eines Schildgenerators ist in foglender Abbildung dargestellt.
+Um den Computer zu besiegen müssen die Schildgeneratoren zerstört werden. Nachdem
+alle vier Schildgeneratoren zerstört wurden, kann der Computer mit einer Bombe
+zerstört werden. Das Zerstören eines Schildgenerators ist in foglender Abbildung dargestellt.
 
 ![Zerstörter Schildgenerator](./pics/unity_shielddestroyed.png){#fig:unity_bossshield}
 
-Nachdem der Computer besiegt wurde, verschwindet die Lava sowie alle Monster aus dem Raum. Die Türen öffnen sich und der Spieler kann den Cyberspace verlassen.
+Nachdem der Computer besiegt wurde, verschwindet die Lava sowie alle Monster aus
+dem Raum. Die Türen öffnen sich und der Spieler kann den Cyberspace verlassen.
 
 ## Spielanleitung ##
 
