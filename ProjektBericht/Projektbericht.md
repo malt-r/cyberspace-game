@@ -27,11 +27,122 @@ toc-own-page: true
 
 ### Framework ###
 
-### GUI unnd Menüs ###
+#### GameManager ####
 
-### Geberator ###
+Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
+- Laden der Spielszenen und Zwischenmenüs
+- Anstoßen der Level-Generierung
+- Instanziierung des Spielers am Spawnpunkt
+- Erstellung der Minimap
+- Logging von Statistiken über den aktuellen Spieldurchlauf
+- Exportieren der Statistiken als `.json`-Datei
+
+### Generator ###
+
+Der Level-Generator wird vom GameManager nach dem Laden der Spielszene aufgerufen.
+Die Aufgabe des Level-Generators ist die Konstruktion eines Levels aus bereits
+vordefinierten Räumen in einer teilweise randomisierten Anordnung. Zwischen den
+Räume bestehen teilweise Abhängigkeiten, z.B. muss vor einem Raum mit einem Abgrund
+der Raum erreichbar sein, in dem der Spieler die Fähigkeit Springen erlernt.
+
+Um diese Abhängigkeiten besser abbilden zu können, werden die Räume in Partitionen aufgeteilt,
+alle Räume in einer Partition können beliebig miteinander durch Korridore verbunden werden.
+Diese Partitionierung geschieht auf Basis von "StoryMarker"-Komponenten, die den Raum-Objekten
+untergeordnet sind und eine "StoryIndex"-Property haben. Der StoryIndex gibt die
+grobe Reihenfolge vor, in der die Räume von Spieler durchlaufen werden. Ein StoryMarker
+kann als "Barriere" markiert werden, wodurch angegeben wird, dass durch diesen Raum
+eine Partition beendet und eine neue begonnen werden muss.
+
+Zur Vereinfachung der Arbeit des Generators operiert dieser auf einem Gitter. Die
+zu platierenden Räume und Korridore sind auf die Dimensionen der Gitterzellen abgestimmt.
+
+TODO: Gitterbild
+
+Basierend auf den Dimensionen der Räume in einer Partition berechnet der Generator einen
+Bereich auf dem Gitter, in dem die Räume mit zufälliger Position und Rotation platziert werden können.
+Stellt der Generator eine Kollision der Räume fest, wird dieser Prozess erneut gestartet,
+bis eine gültige Raumanordnung gefunden wird.
+
+TODO: Platierungsbild
+
+Anschließend müssen die Räume durch Korridore verbunden werden. Die Türen der Räume
+sind durch "DoorMarker"-Komponenten markiert, aus deren Positionen die passenden Gitterzellen-Indizes
+berechnet werden. Die so markierten Zellen fasst der Generator anschließend zu
+Türpartitionen zusammen. Enthält eine Raum eine Barriere, so wird die Tür vor der Barriere
+zu der Türpartition hinzugefügt, in der auch die Türen der Räume mit kleineren StoryIndizes
+enthalten sind. So wird sichergestellt, dass alle Türen vor der Barriere miteinander verbunden werden.
+Die Tür hinter der Barriere wird dementsprechend zu der nachfolgenden Türpartition hinzugefügt.
+
+Um Pfade zwischen den Türen einer Türpartition zu definieren wird im ersten Schritt eine
+Delauney-Triangulation zwischen allen betroffenene Türen berechnet (bzw. der ersten Zellen,
+die im Korridor an die Tür andocken).
+
+TODO: Delauneybild
+
+Um die Verbindungen zwischen den Türen zu reduzieren wird ein minimaler Spannbaum auf
+der Delauney-Triangulation konstruiert. Das Ergebnis ist im untenstehenden Bild zu erkennen.
+
+TODO: MSTBild
+
+Mit dem minimalen Spannbaum sind die finalen Verbindungen zwischen den Türen bekannt.
+Für jede dieser Verbindungen muss anschließend ein Pfad im Gitter gefunden werden, sodass
+die Korridore zwischen den Räumen platziert werden können. Hierfür wird der A\*-Algorithmus
+verwendet. Die Kostenfunktion wird dabei so gewählt, dass der Generator keine Pfade
+durch andere Räume oder Pfade einer anderen Partition wählt. Das Ergebnis dieser
+Phase ist im untenstehenden Bild zu sehen.
+
+TODO: PFadbild
+
+Entlang der so definierten Pfade werden pro Zelle Korridormodule eingesetzt, um einen
+zusammenhängenden Korridor zu erzeugen. Hierfür muss der Korridortyp für jede Zelle
+ermittelt werden (gerades Stück, Kurve, T-Kreuzung) und die Rotation, mit der das
+entsprechende Korridormodul eingesetzt werden muss. Die fertig konstruierten Korridore
+sind in der untenstehenden Abbildung zu erkennen.
+
+TODO: Korridorbild
+
+### GUI und Menüs ###
+
+#### Minimap ####
+
+Die Minimap zeigt in zwei unterschiedlichen Formen einen kleinen Ausschnitt des Levels
+an, um die Orientierung im Level zu erleichtern. Hierfür verwendet die Minimap die
+Gitterdaten, welche bei der Erstellung des Levels durch den Level-Generator erzeugt werden,
+um eine Miniatur des Levels aufzubauen. Diese Miniatur besteht aus Kacheln, welche
+die Wände des Levels als grüne Linien darstellen. Über der Miniatur wird ein Pfeil
+passend zur Spielerbewegung bewegt und mit einer orthografischen Kamera auf eine
+Rendertextur in der GUI projeziert.
+
+In der Basisminimap ist anfangs nur ein kleiner Teil der Minimap sichtbar. Beim Betreten
+einer neuen Zelle oder eines neuen Raums werden diese auf der Minimap aufgedeckt.
+Um besser erkennen zu können, an welchen Stellen der Spieler das Level noch weiter erkunden kann,
+werden die angrenzenden (aber noch nicht betretenen) Zellen abgedunkelt dargestellt.
+Hierzu wird eine dunkle, transparente Kachel über die entsprechenden Minimap-Kacheln gelegt.
+Ein Beispiel ist in den untenstehenden Abbildungen zu erkennen.
+
+TODO: Basisminimap-Bilder
+
+Die erweiterte Minimap zeigt den Weg zur nächsten Story-Aufgabe als rote Linie durch das Level
+an. Hierfür wird auf Basis der Gitterdaten der A\*-Algorithmus angewandt, um einen Pfad
+von der aktuellen Spielerposition zu der Position des aktuell aktiven Storymarkers
+zu finden. Die Punkte dieses Pfads werden anschließend in einem Linerenderer über den Minimap-Kacheln
+dargestellt. Ein Beispiel ist den untenstehenden Abbildungen zu entnehmen.
+
+TODO: erweiterte Minimap Bilder
 
 ### Story ###
+
+Die Story wird insbesondere durch die angezeigten Aufgaben an den Spieler kommuniziert.
+Hierfür ließt der StoryManager aller StoryMarker des Levels ein und sortiert diese
+nach StoryIndex.
+
+Jeder StoryMarker kann eine Beschreibung enthalten, welche bei dessen Aktivierung über
+die GUI angezeigt wird. Diese Beschreibung gibt an, welche Spieleraktion erforderlich ist,
+um die Story-Aufgabe abzuschließen. Da dies viele unterschiedliche Spieleraktivitäten beinhaltet
+(über einen Abgrund springen, ein Rätsel lösen, einen Gegner besiegen) ist die StoryTrigger-Komponente
+in der Lage, ein Event mit einem aktivierten StoryMarker an den StoryManager zu senden.
+Der StoryTrigger wird durch diverse spezifische Trigger überladen, um die verschiedenen
+zu absolvierenden Spieleraktionen zu erfassen.
 
 ### Räume ###
 
@@ -104,7 +215,7 @@ Neben der Evaluierung über Fragebögen werden folgende Daten während des Spiel
 
 - Logging der Probandenbewegung
 - Zeit zum Abschließen der Level
-- Zeit zum Abschließen der Rätsel 
+- Zeit zum Abschließen der Rätsel
 - Anzahl der gefundenen Collectibles mit Position
 - Anzahl der Tode pro Level mit Position
 
@@ -115,19 +226,19 @@ Beide Navigationsmethoden werden mit dem within Subject-Design evaluiert. Die Pr
 1. Einführung geben
     - Spiel bereitstellen
     - Link zur Umfrage schicken
-1. Gesundheitszustand abfragen  
-    - Ausschluss von Schwangeren oder Epilepsieerkrankten 
-    - Abbruch des Versuchs bei Schwindel, Kopfschmerzen etc. 
+1. Gesundheitszustand abfragen
+    - Ausschluss von Schwangeren oder Epilepsieerkrankten
+    - Abbruch des Versuchs bei Schwindel, Kopfschmerzen etc.
 1. Einverständniserklärung einholen
 2. Fragebogen zum Bartletyp ausfüllen
-3. Spielen des ersten Levels  
-    - Hier wird die erste Variation der Minimap evaluiert 
-4. Ausfüllen des Minimap-Fragebogens 
-5. Spielen des zweiten Levels  
-    - Hier wird die zweite Variation der Minimap evaluiert 
-6. Ausfüllen des Minimap-Fragebogens 
-7. Spielen des Boss-Levels 
-8. Ausfüllen des Allgemeinen Fragebogens 
+3. Spielen des ersten Levels
+    - Hier wird die erste Variation der Minimap evaluiert
+4. Ausfüllen des Minimap-Fragebogens
+5. Spielen des zweiten Levels
+    - Hier wird die zweite Variation der Minimap evaluiert
+6. Ausfüllen des Minimap-Fragebogens
+7. Spielen des Boss-Levels
+8. Ausfüllen des Allgemeinen Fragebogens
 
 
 ## Ergebnisse ##
@@ -140,9 +251,9 @@ Insgesamt haben 41 Personen teilgenommen. Eine Person musste die Evaluierung weg
 
 ![Alter der Probanden](./pics/evaluation/age_subjects.png){#fig:subjects_age}
 
-| Mittelwert | Median| 
+| Mittelwert | Median|
 |--------------|--------|
-|  24,25   | 24 | 
+|  24,25   | 24 |
 
 Das Alter der Probanden liegt zwischen 18 und 37 Jahren. Das Durchschnittsalter liegt bei 24,25 und der Median bei 24 Jahren. Die Verteilung der Geschlechter der Probanden ist in folgender Abbildung dargestellt.
 
@@ -179,7 +290,7 @@ In jedem Level können 6 Collectibles gefunden werden. Die Mittelwerte bzw. Medi
 | Mittelwert   | Median | Mittelwert         | Median |
 | 4,55         | 5      | 3,12               | 3,5    |
 
-Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen. 
+Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelten Collectibles 4,55 und der Median 5. Bei der erweiterten Minimap beträgt der Mittelwert der gesammelten Collectibles 3,12 und der Median 3,5. Es zeigt sich eine Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren lassen die Messwerte die Vermutung zu, dass die Probanden insbesondere bei der Basisminimap Collectibles gesucht haben. Durch die Ermittlung des Bartletyps lassen sich die gesammelten Collectibles in Abhängigkeit des Bartletyps untersuchen.
 
 ![](./pics/evaluation/collectibles_b_achiever.png){width=50%}
 ![](./pics/evaluation/collectibles_b_explorer.png){width=50%}
@@ -196,7 +307,7 @@ Bei den Durchläufen mit der Basisminimap beträgt der Mittelwert der gesammelte
 |          | Mittelwert   | Median  | Mittelwert         | Median |
 | Explorer | 4,22         | 5       | 2,78               | 2      |
 
-Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 6 Collectibles. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5 Collectibles. Bei den Explorern beträgt die Anzahl der Collectibles 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern gesucht wurden. 
+Der Mittelwert und Median bei der Basisminimap liegt bei den Achievern bei 5,23 bzw. 6 Collectibles. Bei der erweiterten Minimap liegen diese Werte bei 3,85 bzw. 5 Collectibles. Bei den Explorern beträgt die Anzahl der Collectibles 4,22 bzw. 5 bei der Basisminimap und 2,78 bzw. 2 bei der erweiterten Minimap. Auch bei der Unterteilung nach Achiever und Explorer zeigt sich die Tendenz, dass mit der Basisminimap mehr Collectibles gefunden werden, als mit der erweiterten Minimap. Des Weiteren zeigen die Messwerte Tendenzen, dass die Collectibles insbesondere von den Achievern gesucht wurden.
 
 ### Forschungsfrage 1 Hypothese 2 ###
 
@@ -211,7 +322,7 @@ Die zweite Hypothese (H2) nimmt an, dass Probanden mit der erweiterten Minimap d
 | Mittelwert   | Median | Mittelwert         | Median |
 | 387,06       | 463,10 | 303,67             | 358,97 |
 
-Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. Es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen. 
+Der Mittelwert und Median beträgt für die Basisminimap 387,06 bzw 463,10 Sekunden. Bei der erweiterten Minimap betragen diese Werte 303,67 bzw 358,97 Sekunden. Es zeigt sich eine leichte Tedenz, dass Probanden mit der erweiterten Minimap das Level abschließen.
 
 Wie bei der Betrachtung der Collectibles lässt sich die gemessene Spielzeit auch in Hinblick auf den Bartletypen evaluieren.
 
@@ -288,66 +399,66 @@ Neben den Fragen zur Evaluierung der Hypothesen werden die Probanden zu allgemei
 
 ![Das Spiel war anspruchsvoll](./pics/evaluation/gamehard_b.png){#fig:gamehard}
 
-|          |  |         |     
+|          |  |         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | -0,31                       | 0       |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | 0,41                        | 1       |
 
 Es lässt sich eine leichte Tendenz erkennen, dass Explorer das Spiel als eher anspruchsvoll bewerten. Bei den Achievern hingegen gibt es eine leichte Tendenz, dass das Spiel als eher nicht anspruchsvoll bewertet wird. Als nächstes wurden die Probanden gefragt, ob es Momente gab, in denen sie aufgeben wollten. Die Ergebnisse sind in folgender Abbildung dargestellt.
 
 ![Es gab Momente in denen aufgeben wollte](./pics/evaluation/all_giveup_ae.png){#fig:wingame}
 
-|          ||         |     
+|          ||         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | -1                          | -2      |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | -1,15                       | -2      |
 
 Bei beiden Spielergruppen gibt es eine Tendenz dazu, dass es keine Momente gab, in denen sie aufgeben wollten. Dieses Ergebnis deckt sich mit den Antworten zu der Frage, ob das Spiel unbedingt absolviert werden wollte.
 
 ![Ich wollte das Spiel unbedingt erfolgreich absolvieren](./pics/evaluation/all_wingame_ae.png){#fig:wingame}
 
-|          | |         |     
+|          | |         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | 1,46                        | 2       |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | 1,37                        | 2       |
 
 Diese Ergebnisse zeigen Tendenzen, dass die Achiever und Explorer gleichermaßen motiviert waren das Spiel abzuschließen und nicht aufzugeben. Diese Tendenzen spiegeln sich auch im den Anspruch wieder, das Spiel mit möglichst wenig Toden zu beenden.
 
 ![Ich wollte das Spiel mit möglichst wenig Toden beenden](./pics/evaluation/all_lowdeaths_ae.png){#fig:playdeaths}
 
-|          ||         |     
+|          ||         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | 0,59                        | 1       |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | 0,62                        | 1       |
 
 Dieselben Tendenzen zeigen sich auch beim Spielspaß, der in folgender Abbildung dargestellt ist.
 
 ![Mir hat das Spiel Spaß gemacht](./pics/evaluation/all_fun_ae.png){#fig:playfun}
 
-|          ||         |     
+|          ||         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | 1,46                        | 2       |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | 1,41                        | 1       |
 
 Die Ergebnisse zeigen Tendenzen, dass das Spiel den Probanten, unabhängig vom Spielertyp, Spaß gemacht hat. Dabei gibt es eine leichte Tendenz, dass das Spiel den Achievern mehr Spaß gehabt hat, da der Median um einen Punkt höher ist. Als nächstes wurden die Probanden befragt, ob sie das Spiel erneut spielen wollen würden. Die Ergebnisse sind in folgender Abbildung dargestellt.
 
 ![Ich würde das Spiel erneut spielen wollen](./pics/evaluation/all_playagain.png){#fig:playagain}
 
-|          ||         |     
+|          ||         |
 |----------|-----------------------------|---------|
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Achiever | 0,08                        | 0       |
-|          | Mittelwert                  | Median  | 
+|          | Mittelwert                  | Median  |
 | Explorer | 0,56                        | 1       |
 
 Hier lässt sich eine leichte Tendenz erkennen, dass die Explorer eher gewillt wären, das Spiel noch mal zu spielen. Neben den Likert-Skala-Fragen werden auch die Freitextfragen evaluiert. In den Freitextfragen zu Verbesserungsvorschlägen zur Basisminimap wurden folgende Punkte genannt:
