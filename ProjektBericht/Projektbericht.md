@@ -7,6 +7,8 @@ titlepage: true
 toc-own-page: true
 secPrefix: "Kapitel"
 figPrefix: "Abbildung"
+lofTitle: "Abbildungsverzeichnis"
+figureTitle: "Abbildung"
 
 ---
 
@@ -89,11 +91,13 @@ zu der ebenfalls kostenlos nutzbaren Unreal Engine ist die Lernkurve deutlich fl
 ## Arbeitspakete und Zuständigkeiten ##
 
 Tim Lücking:
+
 - Level-Design
 - Minispiel
 - Türmechanik
 
 Dennis Eller:
+
 - Spielerbewegung
 - Aufsammelbares
 - Kampfmechanik
@@ -102,6 +106,7 @@ Dennis Eller:
 - Menüs
 
 Malte Reinsch:
+
 - Level-Generator
 - Minimap
 - Story & Erzähler
