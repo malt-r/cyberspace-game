@@ -15,13 +15,88 @@ toc-own-page: true
 
 # Einleitung #
 
+Im Rahmen des Moduls "Computer Games (Visualisierung)" wurde das Videospiel "Escape
+the Cyberspace" entwickelt. Dieser Projektbericht dokumentiert das Konzept, die Umsetzung
+und die daran anschließende Evaluierung des Spiels.
+
 # Konzept und Umsetzung #
 
 ## Spielidee ##
 
-## Meilenstiene ##
+Die Idee des Spiels ist, dass der Spielcharakter von einem Computer in einem 3D-Level
+gefangen gehalten wird (dem "Cyberspace"). Anfangs startet der Spielcharakter ohne die
+oftmals in Videospielen vorausgesetzten Fähigkeiten (wie z.B. Springen und Sprinten) und
+muss den Cyberspace erkunden, um diese Fähigkeiten zu erlernen. Das Spielziel dabei ist,
+den Computer zu besiegen und anschließend aus dem Cyberspace zu entkommen.
+
+Das Spiel ist in drei Level aufgeteilt. Im ersten Level erlernt der Spielcharakter
+die Fähigkeiten Springen und Sprinten und muss dazu Rätsel lösen, welche im Level
+versteckt sind. Dabei werden die Aktionen des Spielcharakters sarkastisch vom Computer
+kommentiert, um die Motivation zu erhöhen, den Computer zu besiegen.
+
+Im zweiten Level erlangt der Spielcharakter einen Scanner, mit dem bestimmte Items aufgesaugt werden
+können. Um weiter im Level voranzukommen, muss der Spielcharakter den Lasermodus
+für den Scanner finden, mit dem Gegner bekämpft werden können. Thematisch passend
+werden diese Gegner "Computerviren" genannt. Das zweite Level ist deutlich mehr von
+der Kampfmechanik bestimmt.
+
+Während der Erkundung der Level können sogenannte "Collectibles" gefunden werden,
+welche keine besondere Funktion haben, außer den Sammeltrieb anzusprechen und so
+die Erkundung der Level zu motivieren.
+
+Um den Wiederspielwert der Level zu erhöhen werden die beiden Level prozedural generiert.
+Dabei werden die Räume fest vordefiniert und in randomisierter Anordnung platziert und
+verbunden.
+
+Das dritte Level stellt den Abschluss der Geschichte des Spiels dar, daher muss
+der Spielcharakter in diesem Level gegen den Computer selbst antreten (dargestellt
+durch einen Röhrenmonitor). Der Bosskampf ist dabei in zwei Phasen aufgeteilt, indem
+erst Schildgeneratoren durch gezielte Bombenwürfe durch den Spielcharakter zerstört werden müssen.
+Abschließend muss der Computer noch mit einer Bombe getroffen werden.
+
+## Meilensteine ##
+
+| **KW** | **Meilenstein** |
+| - | --------|
+| 42 | Konzept verfeinert, Projektplanung und Zuständigkeiten geklärt|
+| 43 | Konzept für Generatoralgorithmus steht, Spielerbewegung funktioniert, Sandboxraum für Grafik- / Spielmechaniktests existiert|
+| 44 | Design für Collectibles finalisiert, Monsterdesign finalisiert, erste Räume vordefiniert, Levelgenerator prototypisch implementiert, Basis für Kampfmechanik steht​|
+| 45 | Levelgenerator finalisiert, Texturen für Dungeon finalisiert, Kampfmechanik prototypisch implementiert|
+| 46 | Kampfmechanik finalisiert, Collectible placement implementiert, Levelgenerator ist game-ready, Kampfmechanik implementiert, ​|
+| 47 | Fähigkeiten prototypisch implementiert, Rätselmechanik und erste Rätsel implementiert, Sprachausgabe (Computer) prototypisch implementiert, Minimap prototypisch implementiert|
+| 48 | Fähigkeiten implementiert, Hilfetaste prototypisch implementiert, Spielflussmanager|
+| 49 | Prototyp implementiert, Forschungsfragen sammeln |
+| 50 | Letzte Fehler behoben; fertige Versuchsdurchlaufsbeschreibung |
+| 51 | |
+| 52 | Spiel finalisiert |
+| 01 | Erste Evaluierungsrunde durchgeführt |
+| 02 | Evaluierung abgeschlossen |
+| 03 | Projektbericht abgeschlossen |
+| 04 | Abschlusspräsentation erstellt |
+| 05 | Abschlusspräsentation gehalten |
 
 ## Arbeitspakete und Zuständigkeiten ##
+
+Tim Lücking:
+- Level-Design
+- Minispiel
+- Türmechanik
+
+Dennis Eller:
+- Spielerbewegung
+- Aufsammelbares
+- Kampfmechanik
+- Gegner
+- Sound
+- Menüs
+
+Malte Reinsch:
+- Level-Generator
+- Minimap
+- Story & Erzähler
+- Tutorial
+- Bosskampf Soundtrack
+- GameManager
 
 ## Umsetzung ##
 
