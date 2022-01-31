@@ -306,7 +306,7 @@ Bei den Likert-Skala-Fragen wird eine 5er Skala von -2 bis 2 ("Stimme garnicht z
 
 **Bartletest**
 
-Der Bartletest klassifiziert die Probanden in vier Typen.
+Der Bartletest klassifiziert die Probanden in vier Spielertypen nach Bartle (von nun an: "Bartletyp").
 Die Fragen dienen der Bestimmung der Spielinteressen.
 Der Test basiert auf einem Paper von Richard Bartle und wurde ursprünglich für
 Multiplayer-Spiele entworfen, wird jedoch mittlerweile auch für Singleplayer-Spiele verwendet.
