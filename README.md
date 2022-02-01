@@ -8,6 +8,6 @@ The game was used to evaluate the effect of two different minimap types on the p
 
 ## How to start the game
 
-Download one of the included zip-archives in `evaluation/evaluation_builds'. The only difference between the two builds is, which minimaptype is used in the first level.
+Download one of the included zip-archives in `evaluation/evaluation_builds`. The only difference between the two builds is, which minimaptype is used in the first level.
 
 Unzip the archive and start the included `cyberspace.exe`. Only supports Windows.
