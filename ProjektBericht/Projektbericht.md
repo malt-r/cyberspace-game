@@ -23,8 +23,11 @@ figureTitle: "Abbildung"
 Im Rahmen des Moduls "Computer Games (Visualisierung)" wurde das Videospiel "Escape
 the Cyberspace" entwickelt. Dieser Projektbericht dokumentiert das Konzept, die Umsetzung
 und die daran anschließende Evaluierung des Spiels.
+Hierzu wird zunächst das Konzept und die Projektplanung beschrieben. Hierauf folgt
+eine detaillierte Beschreibung der Umsetzung des Konzepts und eine Spielanleitung.
+Abschließend werden das Vorgehen und die Ergebnisse der Evaluierung dargestellt.
 
-# Konzept und Umsetzung #
+# Konzept #
 
 ## Spielidee ##
 
@@ -114,14 +117,14 @@ Malte Reinsch:
 - Bosskampf Soundtrack
 - GameManager
 
-## Umsetzung ##
+# Umsetzung #
 
-### Framework ###
+## Framework ##
 
 Das Framework sammelt einige Komponenten, die in jeder Szene für den Spielablauf benötigt werden.
 Im Folgenden werden die wichtigsten Komponenten kurz vorgestellt.
 
-#### GameManager ####
+### GameManager ###
 
 Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
 - Laden der Spielszenen und Zwischenmenüs
@@ -131,7 +134,7 @@ Der GameManager ist für übergeordnete Aufgaben zuständig. Hierzu zählen:
 - Logging von Statistiken über den aktuellen Spieldurchlauf
 - Exportieren der Statistiken als `.json`-Datei
 
-### Generator ###
+## Generator ##
 
 Der Level-Generator wird vom GameManager nach dem Laden der Spielszene aufgerufen.
 Die Aufgabe des Level-Generators ist die Konstruktion eines Levels aus bereits
@@ -194,9 +197,9 @@ sind in der untenstehenden Abbildung zu erkennen.
 
 ![Eingesetzte Korridormodule](./pics/corridor.png)
 
-### GUI und Menüs ###
+## GUI und Menüs ##
 
-#### Zwischenmenü ####
+### Zwischenmenü ###
 
 Das Zwischenmenü wird nach Vollendung des ersten und zweiten Levels angezeigt und
 fasst den Durchlauf des Levels zusammen. Es zeigt, wie in der untenstehenden
@@ -206,7 +209,7 @@ die Evaluierung dargestellt.
 
 ![Zwischenmenü](./pics/zwischenmenu.png)
 
-#### Minimap ####
+### Minimap ###
 
 Die Minimap zeigt in zwei unterschiedlichen Formen einen kleinen Ausschnitt des Levels
 an, um die Orientierung im Level zu erleichtern. Hierfür verwendet die Minimap die
@@ -237,7 +240,7 @@ dargestellt. Ein Beispiel ist den untenstehenden Abbildungen zu entnehmen.
 
 ![Erweiterte Minimap](./pics/extended_minimap.png){width=40%}
 
-### Story ###
+## Story ##
 
 Die Story wird insbesondere durch die angezeigten Aufgaben an den Spieler kommuniziert.
 Hierfür ließt der StoryManager aller StoryMarker des Levels ein und sortiert diese
@@ -372,19 +375,9 @@ die Waffe dargestellt.
 
 ![Waffe](./pics/Design/Waffe.png){width=50%}
 
-### Probanden oder Testpersonen? ###
+## Spielmechanik ##
 
-### Gegner ###
-
-### Kampfsystem ###
-
-### Aufsammelbares ###
-
-### Bosskampf ###
-
-### Spielmechanik ###
-
-#### Spielbewegung ####
+### Spielbewegung ###
 
 Für die Bewegung des Spielercharakters wird der First Person Controller (FPS-Controller)
 von Unity verwendet. Dabei handelt es sich um einen Playercontroller auf Basis des
@@ -409,7 +402,7 @@ Actionmaps wird komplexer Code vermieden, der Eingaben der Teilnehmenden verarbe
 Des Weiteren können an dieser Stelle ohne Änderungen am Code weitere Eingabegeräte
 hinzugefügt werden, wie z.B. Gamepad oder VR-Controller.
 
-#### Aufsammelbares ####
+### Aufsammelbares ###
 
 Im Spiel kann der Charakter verschiedene Gegenstände einsammeln. Bis auf die
 Collectibles und den Scanner können die Gegenstände nur durch den Absorbermodus
@@ -425,7 +418,7 @@ einmal der Lasermodus, mit dem Gegner im Level besiegt werden können. Des Weite
 kann auch ein Bombenmodus aufgesammelt werden, mit dem der Teilnehmende Bomben
 werfen kann, die mehrere Gegner und sich selbst Schaden zufügt.
 
-#### Gegner ####
+### Gegner ###
 
 Im Spiel muss der Teilnehmende verschiedene Gegner besiegen. Damit die Gegner
 für den Teilnehmenden eine Herausforderung darstellen, können die Gegner den
@@ -457,7 +450,7 @@ Das hat den Vorteil, dass Animationen nicht mit der Spiellogik interferieren.
 
 <!-- Virenarten aufzählen?-->
 
-#### Kampfmechanik ####
+### Kampfmechanik ###
 
 Im Konzept wird ein Scanner als Waffe vorgeschlagen der über Energie statt
 Munition verfügt. Damit wird verhindert, dass dem Spielcharakter die Munition
@@ -491,7 +484,7 @@ Um die Begegnungen mit den Monstern herausfordernd zu gestalten, können sie dem
 Spielcharakter Schaden zufügen. Der zuvor gezeigte Nahkampfvirus kann nur Nahkampfschaden
 austeilen, während die anderen beiden Virenarten dem Spielcharakter mit Projektilen oder Bomben Schaden zufügen können.
 
-#### Bosskampf ####
+### Bosskampf ###
 
 Im letzten Level findet ein Bosskampf statt. Hier trifft der Teilnehmde auf den
 Computer, der den Teilnehmenden im Cyberspace eingesperrt hat. Beim Betreten des
@@ -512,7 +505,9 @@ zerstört werden. Das Zerstören eines Schildgenerators ist in foglender Abbildu
 Nachdem der Computer besiegt wurde, verschwindet die Lava sowie alle Monster aus
 dem Raum. Die Türen öffnen sich und der Spieler kann den Cyberspace verlassen.
 
-## Spielanleitung ##
+# Spielanleitung #
+
+TODO.
 
 # Evaluierung #
 
